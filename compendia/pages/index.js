@@ -1,12 +1,12 @@
 import Head from "next/head";
 import styles from "../styles/Home.module.css";
-import Header from "../components/Header";
+import Header from "../components/header/Header";
 import BottomNav from "../components/BottomNav";
 import { useState } from "react";
-import Login from "./login";
+import Login from "./login/Login";
 
 export default function Home() {
-    const [isAuthed, setIsAuthed] = useState(false);
+    const [authToken, setAuthToken] = useState("");
 
     return (
         <div className={styles.container}>
@@ -16,7 +16,7 @@ export default function Home() {
             </Head>
             <Header />
 
-            {!isAuthed && <Login />}
+            {authToken === "" && <Login setAuthToken={setAuthToken} />}
 
             <BottomNav />
         </div>

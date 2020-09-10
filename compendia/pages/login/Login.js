@@ -1,23 +1,29 @@
 import axios from "axios";
-import { apiURL } from "../util/api";
-import login from "./api/login";
+import { apiURL } from "../../util/api";
+import login from "../api/login";
 import { useState } from "react";
 
-export default function Login() {
+export default function Login(props) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
     const handleEmailChange = (event) => {
-        setEmail(e.target.value);
+        setEmail(event.target.value);
     };
 
     const handlePasswordChange = (event) => {
-        setPassword(e.target.value);
+        setPassword(event.target.value);
     };
 
-    const handleLogin = (event) => {
-        e.preventDefault;
-        axios.post("/api/login", { email: email, password: password });
+    const handleLogin = async (event) => {
+        event.preventDefault();
+        try {
+            const res = await axios.post("/api/login", { email: email, password: password });
+            props.setAuthToken(res.data.token);
+        } catch (e) {
+            //TODO handle error
+            console.log(e);
+        }
     };
 
     return (
