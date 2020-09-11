@@ -1,4 +1,4 @@
-.loginHeader {
+.authHeader {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -7,4 +7,4 @@
           justify-content: center;
   height: 20vh;
 }
-/*# sourceMappingURL=LoginHeader.module.css.map */
+/*# sourceMappingURL=AuthHeader.module.css.map */

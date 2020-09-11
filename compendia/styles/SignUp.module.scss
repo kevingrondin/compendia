@@ -1,15 +1,12 @@
-.signUpContainer {
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
+@import "UserAuth.module";
 
-.signUpForm {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+.forgotPassword {
+    display: inline-block;
+    margin: 1.5rem 0 0.2rem 1rem;
+    color: gray;
+    text-decoration: underline;
+
+    &:hover {
+        color: black;
+    }
 }

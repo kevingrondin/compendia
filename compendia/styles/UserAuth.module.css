@@ -209,16 +209,6 @@
   text-decoration: underline;
   font-size: 1.2rem;
   text-align: center;
+  cursor: pointer;
 }
-
-.forgotPassword {
-  display: inline-block;
-  margin: 1.5rem 0 0.2rem 1rem;
-  color: gray;
-  text-decoration: underline;
-}
-
-.forgotPassword:hover {
-  color: black;
-}
-/*# sourceMappingURL=Login.module.css.map */
+/*# sourceMappingURL=UserAuth.module.css.map */

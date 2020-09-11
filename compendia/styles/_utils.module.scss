@@ -1,6 +1,134 @@
-.loginBackground {
-    background-image: linear-gradient(103deg, #1a6bad 0%, #79c2d7 72%);
-    border: 1px solid #979797;
-    width: 100vw;
-    height: 100vh;
+.button {
+    text-align: center;
+    padding: 0.5rem 1rem;
+    border-radius: 18px;
+    background-color: #1f8ec1;
+    border: none;
+    color: #ffffff;
+    font-size: 1.2rem;
+    cursor: pointer;
+    box-shadow: 0 2px 8px 2px;
+
+    &:hover {
+        background-color: darken(#1f8ec1, 4%);
+    }
+}
+
+/* FORM STYLING */
+/* Taken from codepen credits to chrisoncode */
+.group {
+    position: relative;
+    margin-bottom: 1.8rem;
+}
+
+.input {
+    font-size: 18px;
+    padding: 10px 10px 10px 5px;
+    display: block;
+    width: 300px;
+    border: none;
+    border-bottom: 1px solid #757575;
+
+    &:focus {
+        outline: none;
+    }
+}
+
+.label {
+    color: #999;
+    font-size: 18px;
+    font-weight: normal;
+    position: absolute;
+    pointer-events: none;
+    left: 5px;
+    top: 10px;
+    transition: 0.2s ease all;
+    -moz-transition: 0.2s ease all;
+    -webkit-transition: 0.2s ease all;
+}
+
+.input:focus ~ .label,
+.input:valid ~ .label {
+    top: -20px;
+    font-size: 14px;
+    color: #1f8ec1;
+}
+
+.bar {
+    position: relative;
+    display: block;
+    width: 300px;
+
+    &:before,
+    &:after {
+        content: "";
+        height: 2px;
+        width: 0;
+        bottom: 1px;
+        position: absolute;
+        background: #1f8ec1;
+        transition: 0.2s ease all;
+        -moz-transition: 0.2s ease all;
+        -webkit-transition: 0.2s ease all;
+    }
+
+    &:before {
+        left: 50%;
+    }
+
+    &:after {
+        right: 50%;
+    }
+}
+
+.input:focus ~ .bar:before,
+.input:focus ~ .bar:after {
+    width: 50%;
+}
+
+.highlight {
+    position: absolute;
+    height: 60%;
+    width: 100px;
+    top: 25%;
+    left: 0;
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+/* active state */
+.input:focus ~ .highlight {
+    -webkit-animation: inputHighlighter 0.3s ease;
+    -moz-animation: inputHighlighter 0.3s ease;
+    animation: inputHighlighter 0.3s ease;
+}
+
+@-webkit-keyframes inputHighlighter {
+    from {
+        background: #1f8ec1;
+    }
+    to {
+        width: 0;
+        background: transparent;
+    }
+}
+
+@-moz-keyframes inputHighlighter {
+    from {
+        background: #1f8ec1;
+    }
+    to {
+        width: 0;
+        background: transparent;
+    }
+}
+
+@keyframes inputHighlighter {
+    from {
+        background: #1f8ec1;
+    }
+    to {
+        width: 0;
+        background: transparent;
+    }
 }
