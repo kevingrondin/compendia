@@ -1,4 +1,4 @@
-.button, .authPrimaryButton {
+.button {
   text-align: center;
   padding: 0.5rem 1rem;
   border-radius: 18px;
@@ -11,7 +11,7 @@
           box-shadow: 0 2px 8px 2px;
 }
 
-.button:hover, .authPrimaryButton:hover {
+.button:hover {
   background-color: #1c81af;
 }
 
@@ -136,104 +136,12 @@
   }
 }
 
-.authBackground {
-  background-image: linear-gradient(103deg, #1a6bad 0%, #79c2d7 72%);
-  border: 1px solid #979797;
-  width: 100vw;
-  height: 100vh;
+.logo {
+  width: 3rem;
 }
 
-.authLayout {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-}
-
-.authContainer {
-  background-color: #ffffff;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  -ms-flex-line-pack: center;
-      align-content: center;
-  height: 80vh;
-  border-radius: 50px 0 0 0;
-}
-
-.authHeading {
-  padding: 2rem;
-  color: #1f8ec1;
-}
-
-.authForm {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-}
-
-.authPrimaryButton {
-  width: 100%;
-}
-
-.authSecondary {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-  padding: 2rem;
-}
-
-.authSecondaryPrompt {
-  display: block;
-  margin-bottom: 0.5rem;
-}
-
-.authSecondaryLink {
-  color: #1f8ec1;
-  text-decoration: underline;
-  font-size: 1.2rem;
-  text-align: center;
+.settings {
+  width: 2rem;
   cursor: pointer;
 }
-
-.forgotPassword {
-  display: inline-block;
-  margin: 1.5rem 0 0.2rem 1rem;
-  color: gray;
-  text-decoration: underline;
-}
-
-.forgotPassword:hover {
-  color: black;
-}
-/*# sourceMappingURL=Login.module.css.map */
+/*# sourceMappingURL=AppHeader.module.css.map */

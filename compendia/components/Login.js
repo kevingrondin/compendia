@@ -1,7 +1,6 @@
 import axios from "axios";
 import { useState } from "react";
 import styles from "../styles/Login.module.scss";
-import Link from "next/link";
 import { authTypes } from "../util/auth";
 
 export default function Login(props) {
@@ -20,7 +19,10 @@ export default function Login(props) {
         event.preventDefault();
         try {
             const res = await axios.post("/api/login", { email: email, password: password });
-            props.setAuthToken(res.data.token);
+            if (res.data.token) {
+                console.log("Got the token: " + res.data.token);
+                props.authorizeUser(res.data.token, res.data.username, res.data.email);
+            }
         } catch (e) {
             //TODO handle error
             console.log(e);

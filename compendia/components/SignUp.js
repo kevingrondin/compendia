@@ -4,9 +4,14 @@ import styles from "../styles/SignUp.module.scss";
 import { authTypes } from "../util/auth";
 
 export default function SignUp(props) {
+    const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [passwordConfirm, setPasswordConfirm] = useState("");
+
+    const handleUsernameChange = (event) => {
+        setUsername(event.target.value);
+    };
 
     const handleEmailChange = (event) => {
         setEmail(event.target.value);
@@ -24,11 +29,14 @@ export default function SignUp(props) {
         event.preventDefault();
         try {
             const res = await axios.post("/api/signUp", {
+                username: username,
                 email: email,
                 password: password,
                 passwordConfirm: passwordConfirm,
             });
-            props.setAuthToken(res.data.token);
+            if (res.data.token) {
+                props.authorizeUser(res.data.token, res.data.username, res.data.email);
+            }
         } catch (e) {
             //TODO handle error
             console.log(e);
@@ -40,6 +48,19 @@ export default function SignUp(props) {
             <h1 className={styles.authHeading}>Sign Up</h1>
 
             <form className={styles.authForm}>
+                <div className={styles.group}>
+                    <input
+                        type="text"
+                        value={username}
+                        onChange={handleUsernameChange}
+                        className={styles.input}
+                        required
+                    />
+                    <span className={styles.highlighter}></span>
+                    <span className={styles.bar}></span>
+                    <label className={styles.label}>Username</label>
+                </div>
+
                 <div className={styles.group}>
                     <input
                         type="email"
@@ -69,7 +90,7 @@ export default function SignUp(props) {
                 <div className={styles.group}>
                     <input
                         type="password"
-                        value={password}
+                        value={passwordConfirm}
                         onChange={handlePasswordConfirmChange}
                         className={styles.input}
                         required

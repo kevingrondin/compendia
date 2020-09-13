@@ -14,11 +14,11 @@ export default function UserAuth(props) {
                 <AuthHeader />
                 <div className={styles.authContainer}>
                     {authType === authTypes.LOGIN && (
-                        <Login setAuthToken={props.setAuthToken} setAuthType={setAuthType} />
+                        <Login authorizeUser={props.authorizeUser} setAuthType={setAuthType} />
                     )}
 
                     {authType === authTypes.SIGNUP && (
-                        <SignUp setAuthToken={props.setAuthToken} setAuthType={setAuthType} />
+                        <SignUp authorizeUser={props.authorizeUser} setAuthType={setAuthType} />
                     )}
 
                     {authType === authTypes.FORGOT_PASS && (
