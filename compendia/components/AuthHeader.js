@@ -1,4 +1,4 @@
-import styles from "../styles/AuthHeader.module.scss";
+import styles from "../styles/components/auth/auth-header/AuthHeader.module.scss";
 
 export default function AuthHeader() {
     return (

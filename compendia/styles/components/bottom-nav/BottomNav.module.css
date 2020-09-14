@@ -1,0 +1,58 @@
+.bottomNav {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background-image: white;
+  -webkit-box-shadow: 0px 2px 7px -1px rgba(0, 0, 0, 0.75);
+          box-shadow: 0px 2px 7px -1px rgba(0, 0, 0, 0.75);
+}
+
+.bottomNavList {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: space-evenly;
+      -ms-flex-pack: space-evenly;
+          justify-content: space-evenly;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.bottomNavListItem {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  list-style: none;
+  padding: 0.5rem 1.7rem;
+  font-size: 0.8rem;
+}
+
+.bottomNavListItem button {
+  background: transparent;
+  border: none;
+}
+
+.bottomNavListItem img {
+  width: 2rem;
+}
+/*# sourceMappingURL=BottomNav.module.css.map */
