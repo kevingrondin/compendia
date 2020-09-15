@@ -1,7 +1,9 @@
+/** @jsx jsx */
+import { jsx } from "@emotion/core";
+import * as styles from "../styles/pages/Settings.js";
 import { useContext, useEffect } from "react";
 import { UserContext } from "./_app";
 import { useRouter } from "next/router";
-import styles from "../styles/pages/settings/settings.module.scss";
 import SecondaryPage from "../components/SecondaryPage";
 import useVerifyAuth from "../util/useVerifyAuth";
 
@@ -16,12 +18,12 @@ export default function Settings() {
 
     return (
         <SecondaryPage pageTitle="Settings">
-            <div className={styles.screenContent}>
+            <div css={styles.screenContent}>
                 <h2>Account</h2>
-                <div className={styles.accountSettingsList}>
+                <div css={styles.accountSettingsList}>
                     <p>Username: {user.username}</p>
                     <p>Email: {user.email}</p>
-                    <div className={styles.signOut}>
+                    <div css={styles.signOut}>
                         <button onClick={user.signOut}>Sign Out</button>
                     </div>
                 </div>

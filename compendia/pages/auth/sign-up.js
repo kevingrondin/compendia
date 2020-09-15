@@ -1,9 +1,12 @@
-import axios from "axios";
+/** @jsx jsx */
+import { jsx } from "@emotion/core";
+import * as styles from "../../styles/components/AuthPage.js";
+import * as formStyles from "../../styles/Form.js";
 import { useState, useContext, useEffect } from "react";
 import { useRouter } from "next/router";
-import AuthPage from "../../components/AuthPage";
 import { UserContext } from "../_app";
-import styles from "../../styles/components/auth/auth-page/AuthPage.module.scss";
+import AuthPage from "../../components/AuthPage";
+import axios from "axios";
 
 export default function SignUp() {
     const router = useRouter();
@@ -14,7 +17,7 @@ export default function SignUp() {
     const [passwordConfirm, setPasswordConfirm] = useState("");
 
     useEffect(() => {
-        router.prefetch("/login");
+        router.prefetch("/auth/login");
     });
 
     const handleUsernameChange = (event) => {
@@ -53,68 +56,68 @@ export default function SignUp() {
 
     return (
         <AuthPage pageTitle="Sign Up">
-            <form className={styles.authForm}>
-                <div className={styles.group}>
+            <form css={styles.authForm}>
+                <div css={formStyles.group}>
                     <input
                         type="text"
                         value={username}
                         onChange={handleUsernameChange}
-                        className={styles.input}
+                        css={formStyles.input}
                         required
                     />
-                    <span className={styles.highlighter}></span>
-                    <span className={styles.bar}></span>
-                    <label className={styles.label}>Username</label>
+                    <span css={formStyles.highlight}></span>
+                    <span css={formStyles.bar}></span>
+                    <label css={formStyles.label}>Username</label>
                 </div>
 
-                <div className={styles.group}>
+                <div css={formStyles.group}>
                     <input
                         type="email"
                         value={email}
                         onChange={handleEmailChange}
-                        className={styles.input}
+                        css={formStyles.input}
                         required
                     />
-                    <span className={styles.highlighter}></span>
-                    <span className={styles.bar}></span>
-                    <label className={styles.label}>Email</label>
+                    <span css={formStyles.highlight}></span>
+                    <span css={formStyles.bar}></span>
+                    <label css={formStyles.label}>Email</label>
                 </div>
 
-                <div className={styles.group}>
+                <div css={formStyles.group}>
                     <input
                         type="password"
                         value={password}
                         onChange={handlePasswordChange}
-                        className={styles.input}
+                        css={formStyles.input}
                         required
                     />
-                    <span className={styles.highlight}></span>
-                    <span className={styles.bar}></span>
-                    <label className={styles.label}>Password</label>
+                    <span css={formStyles.highlight}></span>
+                    <span css={formStyles.bar}></span>
+                    <label css={formStyles.label}>Password</label>
                 </div>
 
-                <div className={styles.group}>
+                <div css={formStyles.group}>
                     <input
                         type="password"
                         value={passwordConfirm}
                         onChange={handlePasswordConfirmChange}
-                        className={styles.input}
+                        css={formStyles.input}
                         required
                     />
-                    <span className={styles.highlight}></span>
-                    <span className={styles.bar}></span>
-                    <label className={styles.label}>Password (again)</label>
+                    <span css={formStyles.highlight}></span>
+                    <span css={formStyles.bar}></span>
+                    <label css={formStyles.label}>Password (again)</label>
                 </div>
 
-                <button className={styles.authPrimaryButton} onClick={handleSignUp}>
+                <button css={styles.authPrimaryButton} onClick={handleSignUp}>
                     Sign Up
                 </button>
 
-                <div className={styles.authSecondary}>
-                    <p className={styles.authSecondaryPrompt}>Already have an account?</p>
+                <div css={styles.authSecondary}>
+                    <p css={styles.authSecondaryPrompt}>Already have an account?</p>
                     <a
                         onClick={() => router.push("/auth/login", "/login")}
-                        className={styles.authSecondaryLink}
+                        css={styles.authSecondaryLink}
                     >
                         Login!
                     </a>

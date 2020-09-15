@@ -1,13 +1,14 @@
-@import "../../util/utils.scss";
+/** @jsx jsx */
+import { css } from "@emotion/core";
 
-.pageNavBack {
+export const pageNavBack = css`
     width: 3rem;
-}
+`;
 
-.pageTitle {
+export const pageTitle = css`
     position: relative;
     text-align: center;
     align-self: center;
     width: 100%;
     font-size: 1.8em;
-}
+`;

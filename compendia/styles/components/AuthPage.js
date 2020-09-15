@@ -1,18 +1,20 @@
-@import "../../../util/utils.scss";
+/** @jsx jsx */
+import { css } from "@emotion/core";
+import { button, primaryColor, primaryColorDark } from "../Utils.js";
 
-.authBackground {
+export const authBackground = css`
     background-image: linear-gradient(103deg, #1a6bad 0%, #79c2d7 72%);
     border: 1px solid #979797;
     width: 100vw;
     height: 100vh;
-}
+`;
 
-.authLayout {
+export const authLayout = css`
     display: flex;
     flex-direction: column;
-}
+`;
 
-.authContainer {
+export const authContainer = css`
     background-color: #ffffff;
     display: flex;
     flex-direction: column;
@@ -21,46 +23,50 @@
     align-content: center;
     height: 80vh;
     border-radius: 50px 0 0 0;
-}
+`;
 
-.authHeading {
+export const authHeading = css`
     padding: 2rem;
-    color: #1f8ec1;
-}
+    color: ${primaryColor};
+`;
 
-.authForm {
+export const authForm = css`
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-}
+`;
 
-.authPrimaryButton {
-    @extend .button;
+export const authPrimaryButton = css`
+    ${button};
     width: 100%;
-}
+`;
 
-.authSecondary {
+export const authSecondary = css`
     display: flex;
     flex-direction: column;
     justify-content: center;
     padding: 2rem;
-}
+`;
 
-.authSecondaryPrompt {
+export const authSecondaryPrompt = css`
     display: block;
     margin-bottom: 0.5rem;
-}
+`;
 
-.authSecondaryLink {
-    color: #1f8ec1;
+export const authSecondaryLink = css`
+    color: ${primaryColor};
     text-decoration: underline;
     font-size: 1.2rem;
     text-align: center;
     cursor: pointer;
-}
 
-.forgotPassword {
+    &:hover {
+        color: ${primaryColorDark};
+    }
+`;
+
+export const forgotPassword = css`
     display: inline-block;
     margin: 1.5rem 0 0.2rem 1rem;
     color: gray;
@@ -69,4 +75,4 @@
     &:hover {
         color: black;
     }
-}
+`;

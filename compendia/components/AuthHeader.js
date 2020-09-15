@@ -1,8 +1,15 @@
-import styles from "../styles/components/auth/auth-header/AuthHeader.module.scss";
+/** @jsx jsx */
+import { css, jsx } from "@emotion/core";
+
+const authHeaderStyles = css`
+    display: flex;
+    justify-content: center;
+    height: 20vh;
+`;
 
 export default function AuthHeader() {
     return (
-        <div className={styles.authHeader}>
+        <div css={authHeaderStyles}>
             <img src="/CompendiaLogo.svg" />
         </div>
     );

@@ -1,13 +1,15 @@
-@import "../../util/utils";
+/** @jsx jsx */
+import { css } from "@emotion/core";
+import { button } from "../Utils.js";
 
-.screenContent {
+export const screenContent = css`
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 2rem;
-}
+`;
 
-.accountSettingsList {
+export const accountSettingsList = css`
     > * {
         padding: 0.3rem;
     }
@@ -16,16 +18,16 @@
         text-align: left;
         list-style: none;
     }
-}
+`;
 
-.signOut {
+export const signOut = css`
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
 
     button {
-        @extend .button;
+        ${button};
         width: 8rem;
     }
-}
+`;
