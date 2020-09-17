@@ -5,17 +5,27 @@ import { useState } from "react";
 import PrimaryPage from "../components/PrimaryPage";
 import useVerifyAuth from "../util/useVerifyAuth";
 import Head from "next/head";
+import Link from "next/link";
 
 const tabType = {
     PULL_LIST: 0,
     ALL_RELEASES: 1,
 };
 
-export default function Releases() {
-    const [activeTab, setActiveTab] = useState(0);
-    useVerifyAuth();
+export async function getServerSideProps() {
+    const res = await fetch(`https://.../data`);
+    const data = await res.json();
 
-    const pullListTabStyle = activeTab === tabType.PULL_LIST ? styles.activeTab : styles.tab;
+    return { props: { data } };
+}
+
+export default function Releases() {
+    useVerifyAuth();
+    const [activeTab, setActiveTab] = useState(0);
+    const pullListTabStyle =
+        activeTab === tabType.PULL_LIST ? [styles.activeTab, styles.tab] : styles.tab;
+    const allReleasesTabStyle =
+        activeTab === tabType.ALL_RELEASES ? [styles.activeTab, styles.tab] : styles.tab;
 
     return (
         <PrimaryPage>
@@ -36,15 +46,12 @@ export default function Releases() {
                     alt="next comic week"
                 />
             </div>
-
+            <Link href="/testGQL">link me</Link>
             <div css={styles.tabs}>
                 <h3 css={pullListTabStyle} onClick={() => setActiveTab(tabType.PULL_LIST)}>
                     My Pull List
                 </h3>
-                <h3
-                    css={activeTab === tabType.ALL_RELEASES ? styles.activeTab : styles.tab}
-                    onClick={() => setActiveTab(tabType.ALL_RELEASES)}
-                >
+                <h3 css={allReleasesTabStyle} onClick={() => setActiveTab(tabType.ALL_RELEASES)}>
                     All Releases
                 </h3>
             </div>

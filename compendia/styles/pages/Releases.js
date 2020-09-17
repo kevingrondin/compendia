@@ -42,8 +42,7 @@ export const tab = css`
 `;
 
 export const activeTab = css`
-    ${tab};
-    background-color: "yellow";
+    background-color: yellow;
 `;
 
 export const releasesContent = css`
