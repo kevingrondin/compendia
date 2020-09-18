@@ -1,0 +1,19 @@
+type Comic {
+    _id: ID!
+    title: String!
+    spec: String!
+}
+
+input ComicInput {
+    _id: ID
+    title: String!
+    spec: String!
+}
+
+type Mutation {
+    addComic(comic: ComicInput): Comic
+}
+
+type Query {
+    comics: [Comic]
+}

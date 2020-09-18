@@ -13,7 +13,7 @@ function testGQL() {
 
     if (loading) return <div />;
 
-    return <h1>{data.sayHello}</h1>;
+    return <h1></h1>;
 }
 
 export default withApollo(testGQL);
