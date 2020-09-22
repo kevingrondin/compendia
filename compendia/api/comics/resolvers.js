@@ -1,14 +1,14 @@
+import Comics from "./comics";
+
 export const comicsResolvers = {
     Query: {
         async comics() {
-            console.log("comics");
-            return [
-                {
-                    _id: "awdawd",
-                    title: "SWEET Title dog",
-                    spec: "SWEET spec dog",
-                },
-            ];
+            try {
+                const comics = await Comics.find();
+                return comics;
+            } catch (e) {
+                console.log("e", e);
+            }
         },
     },
 };

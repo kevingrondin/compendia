@@ -1,13 +1,33 @@
 type Comic {
     _id: ID!
     title: String!
-    spec: String!
+    # releaseDate: Date!
+    # coverPrice: Number!
+    # cover: String!
+    # description: String!
+    # printing: String!
+    # formatType: String!
+    # variantCode: String
+    # totalWanted: Number
+    # totalFavorited: Number
+    # totalOwned: Number
+    # totalRead: Number
 }
 
 input ComicInput {
     _id: ID
     title: String!
-    spec: String!
+    # releaseDate: Date!
+    # coverPrice: Number!
+    # cover: String!
+    # description: String!
+    # printing: String!
+    # formatType: String!
+    # variantCode: String!
+    # totalWanted: Number
+    # totalFavorited: Number
+    # totalOwned: Number
+    # totalRead: Number
 }
 
 type Mutation {

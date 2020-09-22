@@ -3,10 +3,10 @@ import { mergeResolvers, mergeTypeDefs } from "graphql-tools";
 import { comicsResolvers } from "../../api/comics/resolvers";
 import { comicsMutations } from "../../api/comics/mutations";
 import connectDb from "../../lib/mongoose";
-import comics from "../../api/comics/Comics.graphql";
+import Comics from "../../api/comics/Comics.graphql";
 
 const resolvers = mergeResolvers([comicsResolvers, comicsMutations]);
-const typeDefs = mergeTypeDefs([comics]);
+const typeDefs = mergeTypeDefs([Comics]);
 
 const apolloServer = new ApolloServer({ typeDefs, resolvers });
 

@@ -6,26 +6,56 @@ import PrimaryPage from "../components/PrimaryPage";
 import useVerifyAuth from "../util/useVerifyAuth";
 import Head from "next/head";
 import Link from "next/link";
+import { withApollo } from "../lib/apollo";
+import { useQuery } from "@apollo/react-hooks";
+import gql from "graphql-tag";
+import ComicCover from "../components/ComicCover.js";
+import { useMutation } from "@apollo/react-hooks";
+
+const GET_COMICS = gql`
+    query getComics {
+        comics {
+            _id
+            title
+        }
+    }
+`;
+
+const ADD_COMIC = gql`
+    mutation addComic($comic: ComicInput) {
+        addComic(comic: $comic) {
+            _id
+            title
+        }
+    }
+`;
 
 const tabType = {
     PULL_LIST: 0,
     ALL_RELEASES: 1,
 };
 
-export async function getServerSideProps() {
-    const res = await fetch(`https://.../data`);
-    const data = await res.json();
-
-    return { props: { data } };
-}
-
-export default function Releases() {
+function Releases() {
     useVerifyAuth();
+
+    // Get Comics from DB
+    const { data, loading } = useQuery(GET_COMICS);
+
+    // Add comic to DB
+    const [addComic] = useMutation(ADD_COMIC, {
+        refetchQueries: ["getComics"],
+    });
+
+    // Set active releases tab
     const [activeTab, setActiveTab] = useState(0);
     const pullListTabStyle =
         activeTab === tabType.PULL_LIST ? [styles.activeTab, styles.tab] : styles.tab;
     const allReleasesTabStyle =
         activeTab === tabType.ALL_RELEASES ? [styles.activeTab, styles.tab] : styles.tab;
+
+    if (loading) return <PrimaryPage></PrimaryPage>;
+
+    const { comics } = data;
 
     return (
         <PrimaryPage>
@@ -58,7 +88,22 @@ export default function Releases() {
             <section css={styles.releasesContainer}>
                 {activeTab === tabType.ALL_RELEASES && (
                     <div css={styles.releasesContent}>
-                        <p>ALL RELEASES!</p>
+                        {comics.map((comic, index) => (
+                            <ComicCover key={comic._id} comic={comic} index={index} />
+                        ))}
+                        <button
+                            onClick={() => {
+                                addComic({
+                                    variables: {
+                                        comic: {
+                                            title: "First Next Comic",
+                                        },
+                                    },
+                                });
+                            }}
+                        >
+                            Add comic
+                        </button>
                     </div>
                 )}
 
@@ -71,3 +116,5 @@ export default function Releases() {
         </PrimaryPage>
     );
 }
+
+export default withApollo(Releases);
