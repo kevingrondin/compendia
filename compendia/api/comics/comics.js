@@ -1,27 +1,5 @@
 import mongoose, { Schema } from "mongoose";
 
-export const PublishersSchema = new Schema({
-    name: {
-        type: String,
-        required: true,
-    },
-    altID: {
-        type: String,
-        required: false,
-    },
-});
-
-export const SeriesSchema = new Schema({
-    name: {
-        type: String,
-        required: true,
-    },
-    altID: {
-        type: String,
-        required: false,
-    },
-});
-
 export const ComicsSchema = new Schema({
     // diamondID: {
     //     type: String,
@@ -29,6 +7,11 @@ export const ComicsSchema = new Schema({
     // },
     title: {
         type: String,
+        required: true,
+    },
+    series: {
+        type: Schema.Types.ObjectId,
+        ref: "series",
         required: true,
     },
     // releaseDate: {

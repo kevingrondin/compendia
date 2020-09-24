@@ -1,6 +1,7 @@
 type Comic {
     _id: ID!
     title: String!
+    series: Series!
     # releaseDate: Date!
     # coverPrice: Number!
     # cover: String!
@@ -17,6 +18,7 @@ type Comic {
 input ComicInput {
     _id: ID
     title: String!
+    series: Series!
     # releaseDate: Date!
     # coverPrice: Number!
     # cover: String!

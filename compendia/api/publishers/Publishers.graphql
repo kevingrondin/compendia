@@ -1,0 +1,21 @@
+type Publisher {
+    _id: ID!
+    name: String!
+    altID: String
+    series: [Series]
+}
+
+type PublisherInput {
+    _id: ID
+    name: String!
+    altID: String
+    series: [Series]
+}
+
+type Mutation {
+    addPublisher(publisher: PublisherInput): Publisher
+}
+
+type Query {
+    publishers: [Publisher]
+}
