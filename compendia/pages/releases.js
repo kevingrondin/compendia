@@ -22,13 +22,52 @@ const GET_COMICS = gql`
 `;
 
 const ADD_COMIC = gql`
-    mutation addComic($comic: ComicInput) {
-        addComic(comic: $comic) {
+    mutation addComic($comic: ComicInput, $series: SeriesInput) {
+        addComic(comic: $comic, series: $series) {
             _id
             title
+            series
         }
     }
 `;
+
+// const GET_SERIES = gql`
+//     query getSeries {
+//         series {
+//             _id
+//             name
+//             publisher
+//         }
+//     }
+// `;
+
+// const ADD_SERIES = gql`
+//     mutation addSeries($series: SeriesInput) {
+//         addSeries(series: $series) {
+//             _id
+//             name
+//             publisher
+//         }
+//     }
+// `;
+
+// const GET_PUBLISHERS = gql`
+//     query getPublishers {
+//         publishers {
+//             _id
+//             name
+//         }
+//     }
+// `;
+
+// const ADD_PUBLISHER = gql`
+//     mutation addPublisher($publisher: PublisherInput) {
+//         addPublisher(publisher: $publisher) {
+//             _id
+//             name
+//         }
+//     }
+// `;
 
 const tabType = {
     PULL_LIST: 0,
@@ -39,12 +78,28 @@ function Releases() {
     useVerifyAuth();
 
     // Get Comics from DB
-    const { data, loading } = useQuery(GET_COMICS);
+    const { comicData, comicLoading } = useQuery(GET_COMICS);
 
     // Add comic to DB
     const [addComic] = useMutation(ADD_COMIC, {
         refetchQueries: ["getComics"],
     });
+
+    // // Get Series from DB
+    // const { seriesData, seriesLoading } = useQuery(GET_SERIES);
+
+    // // Add series to DB
+    // const [addSeries] = useMutation(ADD_SERIES, {
+    //     refetchQueries: ["getSeries"],
+    // });
+
+    // // Get Publishers from DB
+    // const { publisherData, publisherLoading } = useQuery(GET_PUBLISHERS);
+
+    // // Add publisher to DB
+    // const [addPublisher] = useMutation(ADD_PUBLISHER, {
+    //     refetchQueries: ["getPublishers"],
+    // });
 
     // Set active releases tab
     const [activeTab, setActiveTab] = useState(0);
@@ -53,9 +108,11 @@ function Releases() {
     const allReleasesTabStyle =
         activeTab === tabType.ALL_RELEASES ? [styles.activeTab, styles.tab] : styles.tab;
 
-    if (loading) return <PrimaryPage></PrimaryPage>;
+    if (comicLoading /*|| seriesLoading || publisherLoading*/) return <PrimaryPage></PrimaryPage>;
 
-    const { comics } = data;
+    // const { comics } = comicData;
+    // const { series } = seriesData;
+    // const { publishers } = publisherData;
 
     return (
         <PrimaryPage>
@@ -104,6 +161,44 @@ function Releases() {
                         >
                             Add comic
                         </button>
+
+                        {/* {series.map((series, index) => (
+                            <h2 key={series._id} index={index}>
+                                {series.name}
+                            </h2>
+                        ))}
+                        <button
+                            onClick={() => {
+                                addSeries({
+                                    variables: {
+                                        series: {
+                                            name: "Gideon Falls",
+                                        },
+                                    },
+                                });
+                            }}
+                        >
+                            Add series
+                        </button>
+
+                        {publishers.map((publisher, index) => (
+                            <h2 key={publisher._id} index={index}>
+                                {publisher.name}
+                            </h2>
+                        ))}
+                        <button
+                            onClick={() => {
+                                addPublisher({
+                                    variables: {
+                                        publisher: {
+                                            name: "Image Comics",
+                                        },
+                                    },
+                                });
+                            }}
+                        >
+                            Add publisher
+                        </button> */}
                     </div>
                 )}
 

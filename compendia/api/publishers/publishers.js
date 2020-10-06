@@ -9,6 +9,12 @@ export const PublishersSchema = new Schema({
         type: String,
         required: false,
     },
+    series: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: "series",
+        },
+    ],
 });
 
 export default mongoose.models.publishers || mongoose.model("publishers", PublishersSchema);

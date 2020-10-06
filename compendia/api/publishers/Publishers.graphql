@@ -5,11 +5,11 @@ type Publisher {
     series: [Series]
 }
 
-type PublisherInput {
+input PublisherInput {
     _id: ID
     name: String!
     altID: String
-    series: [Series]
+    series: [SeriesInput]
 }
 
 type Mutation {

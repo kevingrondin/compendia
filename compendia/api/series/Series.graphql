@@ -2,16 +2,16 @@ type Series {
     _id: ID!
     name: String!
     altID: String
-    publisher: Publisher!
-    comics: [Comic]
+    publisher: PublisherInput!
+    comics: [ComicInput]
 }
 
-type SeriesInput {
+input SeriesInput {
     _id: ID
     name: String!
     altID: String
-    publisher: Publisher!
-    comics: [Comic]
+    publisher: PublisherInput!
+    comics: [ComicInput]
 }
 
 type Mutation {

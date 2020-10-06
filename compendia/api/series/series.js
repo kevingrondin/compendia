@@ -5,9 +5,10 @@ export const SeriesSchema = new Schema({
         type: String,
         required: true,
     },
-    altID: {
-        type: String,
-        required: false,
+    altID: String,
+    publisher: {
+        type: Schema.Types.ObjectId,
+        ref: "publishers",
     },
     comics: [
         {
