@@ -11,20 +11,20 @@ import { publishersResolvers } from "../../api/publishers/resolvers";
 import { publishersMutations } from "../../api/publishers/mutations";
 
 // GraphQL Schema
-import Comics from "../../api/comics/Comics.graphql";
-import Series from "../../api/series/Series.graphql";
 import Publishers from "../../api/publishers/Publishers.graphql";
+import Series from "../../api/series/Series.graphql";
+import Comics from "../../api/comics/Comics.graphql";
 
 // Merge type resolvers, mutations, and type definitions
 const resolvers = mergeResolvers([
-    comicsResolvers,
-    comicsMutations,
-    seriesResolvers,
-    seriesMutations,
-    publishersResolvers,
     publishersMutations,
+    publishersResolvers,
+    seriesMutations,
+    seriesResolvers,
+    comicsMutations,
+    comicsResolvers,
 ]);
-const typeDefs = mergeTypeDefs([Comics, Series, Publishers]);
+const typeDefs = mergeTypeDefs([Publishers, Series, Comics]);
 
 // Create apollo server and connect db
 const apolloServer = new ApolloServer({ typeDefs, resolvers });
