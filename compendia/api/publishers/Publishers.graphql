@@ -6,7 +6,7 @@ type Publisher {
 }
 
 input PublisherInput {
-    _id: ID
+    _id: ID!
     name: String!
     altID: String
     series: [SeriesInput]

@@ -31,43 +31,49 @@ const ADD_COMIC = gql`
     }
 `;
 
-// const GET_SERIES = gql`
-//     query getSeries {
-//         series {
-//             _id
-//             name
-//             publisher
-//         }
-//     }
-// `;
+const GET_SERIES = gql`
+    query getSeries {
+        series {
+            _id
+            name
+            publisher {
+                _id
+                name
+            }
+        }
+    }
+`;
 
-// const ADD_SERIES = gql`
-//     mutation addSeries($series: SeriesInput) {
-//         addSeries(series: $series) {
-//             _id
-//             name
-//             publisher
-//         }
-//     }
-// `;
+const ADD_SERIES = gql`
+    mutation addSeries($series: SeriesInput) {
+        addSeries(series: $series) {
+            _id
+            name
+            publisher {
+                _id
+                name
+            }
+        }
+    }
+`;
 
-// const GET_PUBLISHERS = gql`
-//     query getPublishers {
-//         publishers {
-//             _id
-//             name
-//         }
-//     }
-// `;
+const GET_PUBLISHERS = gql`
+    query getPublishers {
+        publishers {
+            _id
+            name
+        }
+    }
+`;
 
-// const ADD_PUBLISHER = gql`
-//     mutation addPublisher($publisher: PublisherInput) {
-//         addPublisher(publisher: $publisher) {
-//             _id
-//             name
-//         }
-//     }
-// `;
+const ADD_PUBLISHER = gql`
+    mutation addPublisher($publisher: PublisherInput) {
+        addPublisher(publisher: $publisher) {
+            _id
+            name
+        }
+    }
+`;
 
 const tabType = {
     PULL_LIST: 0,
@@ -75,31 +81,33 @@ const tabType = {
 };
 
 function Releases() {
-    useVerifyAuth();
+    //useVerifyAuth();
 
     // Get Comics from DB
-    const { comicData, comicLoading } = useQuery(GET_COMICS);
+    const { data: comicsData, loading: comicsLoading, error: comicsError } = useQuery(GET_COMICS);
 
     // Add comic to DB
     const [addComic] = useMutation(ADD_COMIC, {
         refetchQueries: ["getComics"],
     });
 
-    // // Get Series from DB
-    // const { seriesData, seriesLoading } = useQuery(GET_SERIES);
+    // Get Series from DB
+    const { data: seriesData, loading: seriesLoading, error: seriesError } = useQuery(GET_SERIES);
 
-    // // Add series to DB
-    // const [addSeries] = useMutation(ADD_SERIES, {
-    //     refetchQueries: ["getSeries"],
-    // });
+    // Add series to DB
+    const [addSeries] = useMutation(ADD_SERIES, {
+        refetchQueries: ["getSeries"],
+    });
 
-    // // Get Publishers from DB
-    // const { publisherData, publisherLoading } = useQuery(GET_PUBLISHERS);
+    // Get Publishers from DB
+    const { data: publishersData, loading: publishersLoading, error: publishersError } = useQuery(
+        GET_PUBLISHERS
+    );
 
-    // // Add publisher to DB
-    // const [addPublisher] = useMutation(ADD_PUBLISHER, {
-    //     refetchQueries: ["getPublishers"],
-    // });
+    // Add publisher to DB
+    const [addPublisher] = useMutation(ADD_PUBLISHER, {
+        refetchQueries: ["getPublishers"],
+    });
 
     // Set active releases tab
     const [activeTab, setActiveTab] = useState(0);
@@ -108,11 +116,11 @@ function Releases() {
     const allReleasesTabStyle =
         activeTab === tabType.ALL_RELEASES ? [styles.activeTab, styles.tab] : styles.tab;
 
-    if (comicLoading /*|| seriesLoading || publisherLoading*/) return <PrimaryPage></PrimaryPage>;
+    if (comicsLoading || seriesLoading || publishersLoading) return <PrimaryPage></PrimaryPage>;
 
-    // const { comics } = comicData;
-    // const { series } = seriesData;
-    // const { publishers } = publisherData;
+    const { comics } = comicsData;
+    const { series } = seriesData;
+    const { publishers } = publishersData;
 
     return (
         <PrimaryPage>
@@ -162,7 +170,7 @@ function Releases() {
                             Add comic
                         </button>
 
-                        {/* {series.map((series, index) => (
+                        {series.map((series, index) => (
                             <h2 key={series._id} index={index}>
                                 {series.name}
                             </h2>
@@ -173,6 +181,10 @@ function Releases() {
                                     variables: {
                                         series: {
                                             name: "Gideon Falls",
+                                            publisher: {
+                                                _id: "5f7e6e26c0b6b05025c40016",
+                                                name: "Image Comics",
+                                            },
                                         },
                                     },
                                 });
@@ -198,7 +210,7 @@ function Releases() {
                             }}
                         >
                             Add publisher
-                        </button> */}
+                        </button>
                     </div>
                 )}
 
