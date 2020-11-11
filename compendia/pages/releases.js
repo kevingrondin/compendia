@@ -93,6 +93,8 @@ function Releases() {
 
     // Get Series from DB
     const { data: seriesData, loading: seriesLoading, error: seriesError } = useQuery(GET_SERIES);
+    // const seer = useQuery(GET_SERIES);
+    // console.log({ seer });
 
     // Add series to DB
     const [addSeries] = useMutation(ADD_SERIES, {
@@ -119,7 +121,8 @@ function Releases() {
     if (comicsLoading || seriesLoading || publishersLoading) return <PrimaryPage></PrimaryPage>;
 
     const { comics } = comicsData;
-    const { series } = seriesData;
+    const { series = [] } = seriesData || [];
+    console.log({ series });
     const { publishers } = publishersData;
 
     return (
@@ -172,7 +175,7 @@ function Releases() {
 
                         {series.map((series, index) => (
                             <h2 key={series._id} index={index}>
-                                {series.name}
+                                {series.name + " " + series.publisher.name}
                             </h2>
                         ))}
                         <button
