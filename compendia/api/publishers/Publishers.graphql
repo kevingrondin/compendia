@@ -1,6 +1,6 @@
 type Publisher {
     _id: ID!
-    name: String!
+    name: String
     altID: String
     series: [Series]
 }
@@ -9,7 +9,7 @@ input PublisherInput {
     _id: ID!
     name: String!
     altID: String
-    series: [SeriesInput]
+    series: [Series]
 }
 
 type Mutation {

@@ -30,6 +30,7 @@
     "sass": "^1.26.10"
   },
   "devDependencies": {
+    "apollo": "^2.31.1",
     "babel-plugin-import-graphql": "^2.7.0"
   }
 }

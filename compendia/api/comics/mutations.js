@@ -3,11 +3,10 @@ import Series from "../series/series";
 
 export const comicsMutations = {
     Mutation: {
-        async addComic(_, { comic }, { series }) {
+        async addComic(_, { comic }) {
             try {
                 const newComic = await Comics.create({
                     ...comic,
-                    series,
                 });
                 return newComic;
             } catch (e) {

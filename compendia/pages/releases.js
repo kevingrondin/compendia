@@ -17,16 +17,29 @@ const GET_COMICS = gql`
         comics {
             _id
             title
+            series {
+                _id
+                name
+                publisher {
+                    _id
+                    name
+                }
+            }
         }
     }
 `;
 
 const ADD_COMIC = gql`
-    mutation addComic($comic: ComicInput, $series: SeriesInput) {
-        addComic(comic: $comic, series: $series) {
+    mutation addComic($comic: ComicInput) {
+        addComic(comic: $comic) {
             _id
             title
-            series
+            series {
+                _id
+                publisher {
+                    _id
+                }
+            }
         }
     }
 `;
@@ -51,7 +64,6 @@ const ADD_SERIES = gql`
             name
             publisher {
                 _id
-                name
             }
         }
     }
@@ -165,6 +177,12 @@ function Releases() {
                                     variables: {
                                         comic: {
                                             title: "First Next Comic",
+                                            series: {
+                                                _id: "5f7e779bc0b6b05025c40017",
+                                                publisher: {
+                                                    _id: "5f7e6e26c0b6b05025c40016",
+                                                }
+                                            }
                                         },
                                     },
                                 });
@@ -175,7 +193,7 @@ function Releases() {
 
                         {series.map((series, index) => (
                             <h2 key={series._id} index={index}>
-                                {series.name + " " + series.publisher.name}
+                                {series.name + " - " + series.publisher.name}
                             </h2>
                         ))}
                         <button
@@ -183,10 +201,9 @@ function Releases() {
                                 addSeries({
                                     variables: {
                                         series: {
-                                            name: "Gideon Falls",
+                                            name: "New Falls",
                                             publisher: {
                                                 _id: "5f7e6e26c0b6b05025c40016",
-                                                name: "Image Comics",
                                             },
                                         },
                                     },

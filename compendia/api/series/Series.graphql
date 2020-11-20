@@ -10,8 +10,8 @@ input SeriesInput {
     _id: ID
     name: String!
     altID: String
-    publisher: PublisherInput!
-    comics: [ComicInput]
+    publisher: Publisher!
+    comics: [Comic]
 }
 
 type Mutation {
