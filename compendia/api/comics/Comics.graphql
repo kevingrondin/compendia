@@ -1,7 +1,7 @@
 type Comic {
     _id: ID!
-    title: String!
-    series: Series!
+    title: String
+    series: Series
     # releaseDate: Date!
     # coverPrice: Number!
     # cover: String!

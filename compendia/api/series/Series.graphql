@@ -1,8 +1,8 @@
 type Series {
     _id: ID!
-    name: String!
+    name: String
     altID: String
-    publisher: Publisher!
+    publisher: Publisher
     comics: [Comic]
 }
 
