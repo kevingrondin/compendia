@@ -1,141 +1,72 @@
 /** @jsx jsx */
-import { jsx } from "@emotion/core";
-import * as styles from "../styles/pages/Releases.js";
-import { useState } from "react";
-import PrimaryPage from "../components/PrimaryPage";
-import useVerifyAuth from "../util/useVerifyAuth";
-import Head from "next/head";
-import Link from "next/link";
-import { withApollo } from "../lib/apollo";
-import { useQuery } from "@apollo/react-hooks";
-import gql from "graphql-tag";
-import ComicCover from "../components/ComicCover.js";
-import { useMutation } from "@apollo/react-hooks";
-
-const GET_COMICS = gql`
-    query getComics {
-        comics {
-            _id
-            title
-            series {
-                _id
-                name
-                publisher {
-                    _id
-                    name
-                }
-            }
-        }
-    }
-`;
-
-const ADD_COMIC = gql`
-    mutation addComic($comic: ComicInput) {
-        addComic(comic: $comic) {
-            _id
-            title
-            series {
-                _id
-                publisher {
-                    _id
-                }
-            }
-        }
-    }
-`;
-
-const GET_SERIES = gql`
-    query getSeries {
-        series {
-            _id
-            name
-            publisher {
-                _id
-                name
-            }
-        }
-    }
-`;
-
-const ADD_SERIES = gql`
-    mutation addSeries($series: SeriesInput) {
-        addSeries(series: $series) {
-            _id
-            name
-            publisher {
-                _id
-            }
-        }
-    }
-`;
-
-const GET_PUBLISHERS = gql`
-    query getPublishers {
-        publishers {
-            _id
-            name
-        }
-    }
-`;
-
-const ADD_PUBLISHER = gql`
-    mutation addPublisher($publisher: PublisherInput) {
-        addPublisher(publisher: $publisher) {
-            _id
-            name
-        }
-    }
-`;
+import { jsx } from "@emotion/core"
+import * as styles from "../styles/pages/Releases.js"
+import { useEffect, useReducer, useState } from "react"
+import PrimaryPage from "../components/PrimaryPage"
+import useVerifyAuth from "../util/useVerifyAuth"
+import Head from "next/head"
+import Link from "next/link"
+import { withApollo } from "../lib/apollo"
+import { useQuery } from "@apollo/react-hooks"
+import ComicCover from "../components/ComicCover.js"
+import { useMutation } from "@apollo/react-hooks"
 
 const tabType = {
     PULL_LIST: 0,
     ALL_RELEASES: 1,
-};
+}
 
-function Releases() {
-    //useVerifyAuth();
+function newReleasesReducer(state, value) {
+    if (value.action === "loading") {
+        return {
+            ...state,
+            loading: true,
+        }
+    } else if (value.action === "success") {
+        return {
+            loading: false,
+            newReleases: value.data,
+            error: null,
+        }
+    } else if (value.action === "error") {
+        return {
+            ...state,
+            loading: false,
+            error: value.error,
+        }
+    } else {
+        throw new Error("Unsupported action type")
+    }
+}
 
-    // Get Comics from DB
-    const { data: comicsData, loading: comicsLoading, error: comicsError } = useQuery(GET_COMICS);
-
-    // Add comic to DB
-    const [addComic] = useMutation(ADD_COMIC, {
-        refetchQueries: ["getComics"],
-    });
-
-    // Get Series from DB
-    const { data: seriesData, loading: seriesLoading, error: seriesError } = useQuery(GET_SERIES);
-    // const seer = useQuery(GET_SERIES);
-    // console.log({ seer });
-
-    // Add series to DB
-    const [addSeries] = useMutation(ADD_SERIES, {
-        refetchQueries: ["getSeries"],
-    });
-
-    // Get Publishers from DB
-    const { data: publishersData, loading: publishersLoading, error: publishersError } = useQuery(
-        GET_PUBLISHERS
-    );
-
-    // Add publisher to DB
-    const [addPublisher] = useMutation(ADD_PUBLISHER, {
-        refetchQueries: ["getPublishers"],
-    });
-
+export default function Releases() {
     // Set active releases tab
-    const [activeTab, setActiveTab] = useState(0);
+    const [activeTab, setActiveTab] = useState(0)
     const pullListTabStyle =
-        activeTab === tabType.PULL_LIST ? [styles.activeTab, styles.tab] : styles.tab;
+        activeTab === tabType.PULL_LIST ? [styles.activeTab, styles.tab] : styles.tab
     const allReleasesTabStyle =
-        activeTab === tabType.ALL_RELEASES ? [styles.activeTab, styles.tab] : styles.tab;
+        activeTab === tabType.ALL_RELEASES ? [styles.activeTab, styles.tab] : styles.tab
 
-    if (comicsLoading || seriesLoading || publishersLoading) return <PrimaryPage></PrimaryPage>;
+    const [state, dispatch] = useReducer(newReleasesReducer, {
+        newReleases: null,
+        loading: true,
+        error: null,
+    })
 
-    const { comics } = comicsData;
-    const { series = [] } = seriesData || [];
-    console.log({ series });
-    const { publishers } = publishersData;
+    useEffect(() => {
+        dispatch({ action: "loading" })
+
+        fetch("/api/newReleases")
+            .then((res) => res.json())
+            .then((data) => dispatch({ action: "success", data }))
+            .catch((e) => {
+                console.warn(e)
+                dispatch({
+                    action: "error",
+                    error: "Something went wrong retrieving the New Releases...",
+                })
+            })
+    }, [])
 
     return (
         <PrimaryPage>
@@ -156,7 +87,6 @@ function Releases() {
                     alt="next comic week"
                 />
             </div>
-            <Link href="/testGQL">link me</Link>
             <div css={styles.tabs}>
                 <h3 css={pullListTabStyle} onClick={() => setActiveTab(tabType.PULL_LIST)}>
                     My Pull List
@@ -168,69 +98,9 @@ function Releases() {
             <section css={styles.releasesContainer}>
                 {activeTab === tabType.ALL_RELEASES && (
                     <div css={styles.releasesContent}>
-                        {comics.map((comic, index) => (
-                            <ComicCover key={comic._id} comic={comic} index={index} />
+                        {state.newReleases.map((comic, index) => (
+                            <ComicCover key={comic.id} comic={comic} index={index} />
                         ))}
-                        <button
-                            onClick={() => {
-                                addComic({
-                                    variables: {
-                                        comic: {
-                                            title: "First Next Comic",
-                                            series: {
-                                                _id: "5f7e779bc0b6b05025c40017",
-                                                publisher: {
-                                                    _id: "5f7e6e26c0b6b05025c40016",
-                                                }
-                                            }
-                                        },
-                                    },
-                                });
-                            }}
-                        >
-                            Add comic
-                        </button>
-
-                        {series.map((series, index) => (
-                            <h2 key={series._id} index={index}>
-                                {series.name + " - " + series.publisher.name}
-                            </h2>
-                        ))}
-                        <button
-                            onClick={() => {
-                                addSeries({
-                                    variables: {
-                                        series: {
-                                            name: "New Falls",
-                                            publisher: {
-                                                _id: "5f7e6e26c0b6b05025c40016",
-                                            },
-                                        },
-                                    },
-                                });
-                            }}
-                        >
-                            Add series
-                        </button>
-
-                        {publishers.map((publisher, index) => (
-                            <h2 key={publisher._id} index={index}>
-                                {publisher.name}
-                            </h2>
-                        ))}
-                        <button
-                            onClick={() => {
-                                addPublisher({
-                                    variables: {
-                                        publisher: {
-                                            name: "Image Comics",
-                                        },
-                                    },
-                                });
-                            }}
-                        >
-                            Add publisher
-                        </button>
                     </div>
                 )}
 
@@ -241,7 +111,5 @@ function Releases() {
                 )}
             </section>
         </PrimaryPage>
-    );
+    )
 }
-
-export default withApollo(Releases);
