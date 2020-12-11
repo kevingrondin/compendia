@@ -1,15 +1,15 @@
-export default function ComicCover({
-    comic: {
-        id,
-        title,
-        cover,
-        series: { name: seriesName },
-    },
-}) {
+import Image from "next/image"
+
+export default function ComicCover({ comic: { id, title, cover } }) {
     return (
-        <article key={id}>
-            <p>{`${seriesName} ${title}`}</p>
-            <img className="h-72" src={cover} alt={`Comic cover for ${title}`} />
+        <article className="flex mr-10 shadow-xl" key={id}>
+            <Image
+                width="200"
+                height="310"
+                className="h-full rounded"
+                src={cover}
+                alt={`Comic cover for ${title}`}
+            />
         </article>
     )
 }

@@ -6,11 +6,32 @@ export default function handler(req, res) {
             {
                 id: 1,
                 title: "#1",
-                cover:
-                    "https://cdn.imagecomics.com/assets/i/releases/27803/gideon-falls-1_9f981b8583.jpg",
-                series: {
-                    name: "Gideon Falls",
-                },
+                cover: "/GideonFalls1.jpg",
+                releaseDate: "12/09/2020",
+                coverPrice: "$3.99",
+                description: "",
+                series: "Gideon Falls",
+                publisher: "Image Comics",
+            },
+            {
+                id: 2,
+                title: "#1",
+                cover: "/IceCreamMan1.jpg",
+                releaseDate: "12/09/2020",
+                coverPrice: "$3.99",
+                description: "",
+                series: "Ice Cream Man",
+                publisher: "Image Comics",
+            },
+            {
+                id: 3,
+                title: "#163",
+                cover: "/TheWalkingDead163.png",
+                releaseDate: "12/09/2020",
+                coverPrice: "$3.99",
+                description: "",
+                series: "The Walking Dead",
+                publisher: "Image Comics",
             },
         ])
     )
