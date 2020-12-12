@@ -1,19 +1,15 @@
-/** @jsx jsx */
-import { css, jsx } from "@emotion/core";
-import PrimaryHeader from "./PrimaryHeader";
-import BottomNav from "./BottomNav";
-
-const container = css`
-    width: 90%;
-    margin: 0 auto;
-`;
+import PrimaryHeader from "./PrimaryHeader"
+import Head from "next/head"
 
 export default function PrimaryPage(props) {
     return (
         <>
-            <PrimaryHeader pageTitle={props.pageTitle} />
-            <div css={container}>{props.children}</div>
-            <BottomNav />
+            <PrimaryHeader />
+            <Head>
+                <title>{props.title}</title>
+                <link rel="icon" href="/favicon.ico" />
+            </Head>
+            <div className="w-11/12 my-0 mx-auto pb-20">{props.children}</div>
         </>
-    );
+    )
 }

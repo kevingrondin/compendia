@@ -1,7 +1,7 @@
 import { useReducer, useEffect } from "react"
 import ComicCover from "../ComicCover"
 
-function newReleasesReducer(state, value) {
+function releasesReducer(state, value) {
     if (value.action === "loading") {
         return {
             ...state,
@@ -10,7 +10,7 @@ function newReleasesReducer(state, value) {
     } else if (value.action === "success") {
         return {
             loading: false,
-            newReleases: value.data,
+            data: value.data,
             error: null,
         }
     } else if (value.action === "error") {
@@ -24,9 +24,9 @@ function newReleasesReducer(state, value) {
     }
 }
 
-export default function AllReleases({ activeTab, newReleases }) {
-    const [state, dispatch] = useReducer(newReleasesReducer, {
-        newReleases: null,
+export default function AllReleases() {
+    const [state, dispatch] = useReducer(releasesReducer, {
+        data: null,
         loading: true,
         error: null,
     })
@@ -34,7 +34,7 @@ export default function AllReleases({ activeTab, newReleases }) {
     useEffect(() => {
         dispatch({ action: "loading" })
 
-        fetch("/api/newReleases")
+        fetch("/api/releases?sortBy=publisher")
             .then((res) => res.json())
             .then((data) => dispatch({ action: "success", data }))
             .catch((e) => {
@@ -46,15 +46,24 @@ export default function AllReleases({ activeTab, newReleases }) {
             })
     }, [])
 
-    {
-        if (activeTab === "all releases")
-            return (
-                <div className="flex flex-row">
-                    {state.newReleases.map((comic, index) => (
-                        <ComicCover key={comic.id} comic={comic} index={index} />
-                    ))}
-                </div>
-            )
-        else return null
-    }
+    return (
+        <>
+            {state.data &&
+                !state.loading &&
+                !state.error &&
+                state.data.map((publisher) => (
+                    <section className="mt-5" key={publisher.id}>
+                        <h3 className="text-2xl text-blue-primaryDark bg-blue-100 font-bold mb-5 w-min py-1 px-2 whitespace-nowrap">
+                            {publisher.name}
+                        </h3>
+                        <div className="flex flex-row">
+                            {publisher.releases &&
+                                publisher.releases.map((comic, index) => (
+                                    <ComicCover key={comic.id} comic={comic} index={index} />
+                                ))}
+                        </div>
+                    </section>
+                ))}
+        </>
+    )
 }

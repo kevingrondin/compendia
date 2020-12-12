@@ -1,22 +1,22 @@
 export default function ReleaseTabs({ activeTab, setActiveTab }) {
     return (
-        <div className="flex justify-evenly border-b-1 border-b-black border-b-solid pt-4">
-            <h3
-                className={`bg-white p-3 hover:text-blue-500 active:text-blue-500 ${
-                    activeTab === "pull list" && "bg-yellow-200"
+        <div className="flex pt-4">
+            <button
+                className={`bg-white px-3 m-2 hover:text-blue-500 active:text-blue-500 rounded-xl ${
+                    activeTab === "pull list" && "bg-blue-primary"
                 }`}
                 onClick={() => setActiveTab("pull list")}
             >
-                My Pull List
-            </h3>
-            <h3
-                className={`bg-white p-3 hover:text-blue-500 active:text-blue-500 ${
+                Pull List
+            </button>
+            <button
+                className={`bg-white p-4 m-2 hover:text-blue-500 active:text-blue-500 rounded-xl ${
                     activeTab === "all releases" && "bg-yellow-200"
                 }`}
                 onClick={() => setActiveTab("all releases")}
             >
                 All Releases
-            </h3>
+            </button>
         </div>
     )
 }
