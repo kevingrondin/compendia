@@ -1,21 +1,26 @@
+import AllReleasesIcon from "../utils/AllReleasesIcon"
+import PullListIcon from "../utils/PullListIcon"
+
 export default function ReleaseTabs({ activeTab, setActiveTab }) {
     return (
-        <div className="flex pt-4">
+        <div className="mt-4 bg-gray-200 text-xl font-bold text-gray-500 leading-none rounded-full inline-flex">
             <button
-                className={`bg-white px-3 m-2 hover:text-blue-500 active:text-blue-500 rounded-xl ${
-                    activeTab === "pull list" && "bg-blue-primary"
+                className={`inline-flex items-center outline-none rounded-l-full px-4 py-2  ${
+                    activeTab === "pull list" && "bg-blue-primary-200 text-white"
                 }`}
                 onClick={() => setActiveTab("pull list")}
             >
-                Pull List
+                <PullListIcon isActive={activeTab === "pull list"} />
+                <span>Pull List</span>
             </button>
             <button
-                className={`bg-white p-4 m-2 hover:text-blue-500 active:text-blue-500 rounded-xl ${
-                    activeTab === "all releases" && "bg-yellow-200"
+                className={`inline-flex items-center outline-none rounded-r-full px-4 py-2  ${
+                    activeTab === "all releases" && "bg-blue-primary-200 text-white"
                 }`}
                 onClick={() => setActiveTab("all releases")}
             >
-                All Releases
+                <AllReleasesIcon isActive={activeTab === "all releases"} />
+                <span>All Releases</span>
             </button>
         </div>
     )

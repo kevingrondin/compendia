@@ -2,7 +2,7 @@ import Image from "next/image"
 
 export default function ComicCover({ comic: { id, title, cover } }) {
     return (
-        <article className="flex mr-10 shadow-xl" key={id}>
+        <article className="flex mr-10 mb-10 shadow-xl" key={id}>
             <Image
                 width="200"
                 height="310"
