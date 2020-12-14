@@ -1,24 +1,29 @@
-import { useEffect, useState } from "react"
-import useRequest from "../../hooks/useRequest"
+import { useQuery } from "react-query"
 import ComicCover from "../ComicCover"
+import axios from "axios"
+
+function usePullList() {
+    return useQuery("pull-list", async () => {
+        const { data } = await axios.get("/api/pull-list")
+        return data
+    })
+}
 
 export default function PullList() {
-    const [pullListRes, setPullListRes] = useState([])
-    const [fetchedData] = useRequest("/api/pull-list", "Pull List", [])
-
-    useEffect(() => {
-        setPullListRes(fetchedData)
-    }, [fetchedData])
+    const { status, error, data } = usePullList()
 
     return (
         <>
             <div className="flex flex-row flex-wrap mt-10">
-                {pullListRes.data &&
-                    !pullListRes.loading &&
-                    !pullListRes.error &&
-                    pullListRes.data.map((comic, index) => (
+                {status === "loading" ? (
+                    <div>Loading ...</div>
+                ) : status === "error" ? (
+                    <div>Error: {error.message}</div>
+                ) : (
+                    data.map((comic, index) => (
                         <ComicCover key={comic.id} comic={comic} index={index} />
-                    ))}
+                    ))
+                )}
             </div>
         </>
     )
