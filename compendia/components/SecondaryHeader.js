@@ -1,20 +1,16 @@
-/** @jsx jsx */
-import { jsx } from "@emotion/core";
-import { header } from "../styles/Utils.js";
-import * as styles from "../styles/components/SecondaryHeader.js";
-import { useRouter } from "next/router";
+import { useRouter } from "next/router"
 
 export default function SecondaryHeader(props) {
-    const router = useRouter();
+    const router = useRouter()
     return (
-        <header css={header}>
+        <header className="flex justify-between w-full p-2 bg-gradient-to-r from-blue-primary-200 to bg-blue-primary-50 shadow-sm">
             <img
                 src="/arrowLeft.svg"
-                css={styles.pageNavBack}
+                className="w-12"
                 alt="Go back"
                 onClick={() => router.back()}
             />
-            <h1 css={styles.pageTitle}>{props.pageTitle}</h1>
+            <h1 className="relative text-center self-center w-full text-lg">{props.pageTitle}</h1>
         </header>
-    );
+    )
 }
