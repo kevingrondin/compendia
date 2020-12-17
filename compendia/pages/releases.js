@@ -5,16 +5,23 @@ import AllReleases from "../components/new-releases/AllReleases"
 import PullList from "../components/new-releases/PullList"
 import ReleasesHeading from "../components/new-releases/ReleasesHeading"
 import ReleaseWeekSelector from "../components/new-releases/ReleaseWeekSelector"
+import useComicDay from "../hooks/useComicDay"
+import dayjs from "dayjs"
 
 export default function Releases() {
     const [activeTab, setActiveTab] = useState("pull list")
+    const [comicDay, setComicDay] = useState(useComicDay("current", dayjs()))
 
     return (
         <PrimaryPage title="Compendia - Releases">
-            <ReleasesHeading />
-            <menu className="flex flex-nowrap justify-between items-center p-0">
+            <ReleasesHeading comicDay={comicDay} />
+            <menu className="flex flex-nowrap justify-between lg:justify-start items-center p-0">
                 <ReleaseTabs setActiveTab={setActiveTab} activeTab={activeTab} />
-                <ReleaseWeekSelector />
+                <ReleaseWeekSelector
+                    getNextComicDay={() => setComicDay(useComicDay("next", comicDay))}
+                    getPrevComicDay={() => setComicDay(useComicDay("prev", comicDay))}
+                    comicDay={comicDay}
+                />
             </menu>
             <section className="pt-5">
                 {activeTab === "pull list" ? <PullList /> : <AllReleases />}

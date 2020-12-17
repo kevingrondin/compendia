@@ -3,7 +3,7 @@ import PullListIcon from "../utils/PullListIcon"
 
 export default function ReleaseTabs({ activeTab, setActiveTab }) {
     return (
-        <div className="bg-gray-200 text-xl font-bold text-gray-500 leading-none rounded-full inline-flex">
+        <div className="bg-gray-200 text-xl text-gray-500 leading-none rounded-full inline-flex">
             <button
                 className={`inline-flex items-center outline-none rounded-l-full px-4 py-2  ${
                     activeTab === "pull list" && "bg-blue-primary-200 text-white"

@@ -1,16 +1,26 @@
-import DatePicker from "react-datepicker"
-import "react-datepicker/dist/react-datepicker.css"
-import { useState } from "react"
+import * as dayjs from "dayjs"
+import * as advancedFormat from "dayjs/plugin/advancedFormat"
+dayjs.extend(advancedFormat)
 import Arrow from "../utils/Arrow"
 
-export default function ReleaseWeekSelector() {
-    const [releaseDate, setReleaseDate] = useState(new Date())
-
+export default function ReleaseWeekSelector({ getNextComicDay, getPrevComicDay, comicDay }) {
     return (
-        <div className="flex items-center">
-            <Arrow direction="left" className="py-2 pr-3 pl-2 rounded-full bg-gray-200" />
-            <DatePicker selected={releaseDate} onChange={(date) => setReleaseDate(date)} />
-            <Arrow direction="right" className="p-3" />
+        <div className="flex items-center lg:ml-8">
+            <Arrow
+                direction="left"
+                className="p-3"
+                colorClass="text-blue-primary-100"
+                onClick={getPrevComicDay}
+            />
+            <p className="rounded-full py-3 px-6 text-center text-gray-500 text-xl leading-none bg-gray-200 border-none">
+                {comicDay.format(MMM, D, YYYY)}
+            </p>
+            <Arrow
+                direction="right"
+                className="p-3"
+                colorClass="text-blue-primary-100"
+                onClick={getNextComicDay}
+            />
         </div>
     )
 }
