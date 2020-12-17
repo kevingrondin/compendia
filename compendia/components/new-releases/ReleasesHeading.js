@@ -1,19 +1,25 @@
 import useComicDay from "../../hooks/useComicDay"
-import * as dayjs from "dayjs"
-import * as advancedFormat from "dayjs/plugin/advancedFormat"
-dayjs.extend(advancedFormat)
+import { format } from "date-fns"
+
+function comicDaysMatch(date1, date2) {
+    return (
+        date1.getFullYear() === date2.getFullYear() &&
+        date1.getMonth() === date2.getMonth() &&
+        date1.getDate() === date2.getDate()
+    )
+}
 
 function getHeadingText(comicDay) {
     let headingText = ""
 
-    if (comicDay === useComicDay("current", dayjs())) {
+    if (comicDaysMatch(comicDay, useComicDay("current", new Date()))) {
         headingText = "this week's"
-    } else if (comicDay === useComicDay("next", dayjs())) {
+    } else if (comicDaysMatch(comicDay, useComicDay("next", new Date()))) {
         headingText = "next week's"
-    } else if (comicDay === useComicDay("prev", dayjs())) {
+    } else if (comicDaysMatch(comicDay, useComicDay("prev", new Date()))) {
         headingText = "last week's"
     } else {
-        headingText = `${comicDay.format(MMM, Do)}'s`
+        headingText = `${format(comicDay, "MMM do")}'s`
     }
 
     return headingText

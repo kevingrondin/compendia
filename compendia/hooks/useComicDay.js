@@ -1,20 +1,23 @@
-// Depending on the action passed in, returns the next, previous, or current comic book day (tuesday) from the dayjs date passed in
+import { addDays, subDays, isSameWeek } from "date-fns"
+
+// Depending on the action passed in, returns the next, previous, or current comic book day (tuesday) from the date passed in
 export default function useComicDay(action, date) {
     const TUESDAY = 2
+    let newDate = new Date(date.getFullYear(), date.getMonth(), date.getDate())
 
-    function setClosestComicDay(d, direction) {
+    if (action === "next" || (action === "current" && newDate.getDay() < TUESDAY)) {
         do {
-            direction === "next" ? d.add(1, "day") : d.subtract(1, "day")
-        } while (d.day() !== TUESDAY)
-    }
-
-    if (action === "next") {
-        setClosestComicDay(date, "next")
+            newDate = addDays(newDate, 1)
+        } while (newDate.getDay() !== TUESDAY)
     } else if (action === "prev") {
-        setClosestComicDay(date, "prev")
-    } else if (action === "current" && date.day() !== TUESDAY) {
-        date.day() > TUESDAY ? setClosestComicDay(date, "prev") : setClosestComicDay(date, "next")
+        do {
+            newDate = subDays(newDate, 1)
+        } while (newDate.getDay() !== TUESDAY || isSameWeek(newDate, date))
+    } else if (action === "current" && newDate.getDay() > TUESDAY) {
+        do {
+            newDate = subDays(newDate, 1)
+        } while (newDate.getDay() !== TUESDAY)
     }
 
-    return date
+    return newDate
 }

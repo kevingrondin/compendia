@@ -6,11 +6,10 @@ import PullList from "../components/new-releases/PullList"
 import ReleasesHeading from "../components/new-releases/ReleasesHeading"
 import ReleaseWeekSelector from "../components/new-releases/ReleaseWeekSelector"
 import useComicDay from "../hooks/useComicDay"
-import dayjs from "dayjs"
 
 export default function Releases() {
     const [activeTab, setActiveTab] = useState("pull list")
-    const [comicDay, setComicDay] = useState(useComicDay("current", dayjs()))
+    const [comicDay, setComicDay] = useState(useComicDay("current", new Date()))
 
     return (
         <PrimaryPage title="Compendia - Releases">
@@ -24,7 +23,11 @@ export default function Releases() {
                 />
             </menu>
             <section className="pt-5">
-                {activeTab === "pull list" ? <PullList /> : <AllReleases />}
+                {activeTab === "pull list" ? (
+                    <PullList comicDay={comicDay} />
+                ) : (
+                    <AllReleases comicDay={comicDay} />
+                )}
             </section>
         </PrimaryPage>
     )

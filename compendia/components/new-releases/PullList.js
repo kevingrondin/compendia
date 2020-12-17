@@ -1,16 +1,23 @@
 import { useQuery } from "react-query"
 import ComicCover from "../ComicCover"
 import axios from "axios"
+import { format } from "date-fns"
 
-function usePullList() {
-    return useQuery("pull-list", async () => {
-        const { data } = await axios.get("/api/pull-list")
-        return data
-    })
+function usePullList(comicDay) {
+    return useQuery(
+        ["pull-list", format(comicDay, "MM-dd-yyyy")],
+        async () => {
+            const { data } = await axios.get(
+                `/api/pull-list?comicDay=${format(comicDay, "MM-dd-yyyy")}`
+            )
+            return data
+        },
+        { staleTime: 600000 }
+    )
 }
 
-export default function PullList() {
-    const { status, error, data } = usePullList()
+export default function PullList({ comicDay }) {
+    const { status, error, data } = usePullList(comicDay)
 
     return (
         <>

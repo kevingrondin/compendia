@@ -1,16 +1,23 @@
 import ComicCover from "../ComicCover"
 import axios from "axios"
 import { useQuery } from "react-query"
+import { format } from "date-fns"
 
-function useAllReleases() {
-    return useQuery("all-releases", async () => {
-        const { data } = await axios.get("/api/releases?sortBy=publisher")
-        return data
-    })
+function useAllReleases(comicDay) {
+    return useQuery(
+        ["all-releases", format(comicDay, "MM-dd-yyyy")],
+        async () => {
+            const { data } = await axios.get(
+                `/api/releases?sortBy=publisher&comicDay=${format(comicDay, "MM-dd-yyyy")}`
+            )
+            return data
+        },
+        { staleTime: 600000 }
+    )
 }
 
-export default function AllReleases() {
-    const { status, error, data } = useAllReleases()
+export default function AllReleases({ comicDay }) {
+    const { status, error, data } = useAllReleases(comicDay)
 
     return (
         <>
