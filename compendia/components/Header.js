@@ -2,7 +2,7 @@ import { useEffect } from "react"
 import { useRouter } from "next/router"
 import Link from "next/link"
 
-export default function PrimaryHeader(props) {
+export default function Header(props) {
     const router = useRouter()
 
     useEffect(() => {

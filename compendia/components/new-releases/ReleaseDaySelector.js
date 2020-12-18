@@ -1,9 +1,9 @@
 import Arrow from "../utils/Arrow"
 import { format } from "date-fns"
 
-export default function ReleaseWeekSelector({ getNextComicDay, getPrevComicDay, comicDay }) {
+export default function ReleaseDaySelector({ getNextComicDay, getPrevComicDay, comicDay }) {
     return (
-        <div className="flex items-center lg:ml-8">
+        <div className="mb-6 px-4 flex items-center sm:mb-0 md:px-0 md:ml-6">
             <Arrow
                 direction="left"
                 className="p-3"
