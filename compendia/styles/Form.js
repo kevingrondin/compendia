@@ -1,14 +1,8 @@
 /** @jsx jsx */
-import { css, keyframes } from "@emotion/core";
-import { primaryColor } from "./Utils";
+import { css } from "@emotion/core"
 
 /* FORM STYLING */
 /* Taken and edited from codepen. Credits to chrisoncode. */
-
-export const group = css`
-    position: relative;
-    margin-bottom: 1.8rem;
-`;
 
 export const input = css`
     font-size: 18px;
@@ -25,14 +19,14 @@ export const input = css`
     &:valid ~ label {
         top: -20px;
         font-size: 14px;
-        color: ${primaryColor};
+        color: "#1f8ec1";
     }
 
     &:focus ~ span:nth-of-type(2):before,
     &:focus ~ span:nth-of-type(2):after {
         width: 50%;
     }
-`;
+`
 
 export const label = css`
     color: #999;
@@ -43,7 +37,7 @@ export const label = css`
     left: 5px;
     top: 10px;
     transition: 0.2s ease all;
-`;
+`
 
 export const bar = css`
     position: relative;
@@ -56,7 +50,7 @@ export const bar = css`
         width: 0;
         bottom: 1px;
         position: absolute;
-        background: ${primaryColor};
+        background: "#1f8ec1";
         transition: 0.2s ease all;
     }
 
@@ -66,7 +60,7 @@ export const bar = css`
     &:after {
         right: 50%;
     }
-`;
+`
 
 export const highlight = css`
     position: absolute;
@@ -76,4 +70,4 @@ export const highlight = css`
     left: 0;
     pointer-events: none;
     opacity: 0.5;
-`;
+`

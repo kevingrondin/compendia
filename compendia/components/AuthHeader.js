@@ -1,16 +1,7 @@
-/** @jsx jsx */
-import { css, jsx } from "@emotion/core";
-
-const authHeaderStyles = css`
-    display: flex;
-    justify-content: center;
-    height: 20vh;
-`;
-
 export default function AuthHeader() {
     return (
-        <div css={authHeaderStyles}>
+        <div className="flex justify-center h-48">
             <img src="/CompendiaLogo.svg" />
         </div>
-    );
+    )
 }

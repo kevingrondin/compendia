@@ -2,6 +2,8 @@ import { useRouter } from "next/router"
 import Page from "../../components/Page"
 import { useQuery } from "react-query"
 import axios from "axios"
+import Link from "next/link"
+import Arrow from "../../components/utils/Arrow"
 
 function useComicDetail(id) {
     return useQuery(`comic-detail-${id}`, async () => {
@@ -12,7 +14,7 @@ function useComicDetail(id) {
 
 function ComicDetail({ itemName, item }) {
     return (
-        <div className="pr-14">
+        <div className="px-6 py-2 flex flex-col items-center">
             <p className="text-gray-900 font-extrabold text-lg">{itemName}</p>
             <p>{item}</p>
         </div>
@@ -32,29 +34,47 @@ export default function Comic() {
                 <div>Error: {error.message}</div>
             ) : (
                 <Page title={`${comic.series.name} ${comic.title} - ${comic.publisher.name}`}>
-                    <div className="flex justify-center">
+                    <div className="flex flex-wrap justify-center sm:inline-block">
                         <img
                             src={comic.cover}
                             alt={`Cover art for ${comic.title}`}
-                            className="rounded h-96"
+                            className="rounded h-72 sm:float-left lg:h-96"
                         />
-                        <article className="w-2/5 ml-10 mt-5">
-                            <h2 className="font-bold text-3xl">{`${comic.series.name} ${comic.title}`}</h2>
-                            <p className="italic text-xl">{comic.publisher.name}</p>
+                        <article className="mt-8 float-left sm:float-none sm:ml-6 sm:mt-6">
+                            <h2 className="font-bold text-3xl text-center sm:text-left">{`${comic.series.name} ${comic.title}`}</h2>
+                            <div className="flex flex-col items-center pt-1 sm:items-start">
+                                <p className="italic text-xl mr-2 mb-1">{comic.publisher.name}</p>
 
-                            <div className="flex py-6">
+                                {comic.versions > 1 && (
+                                    <Link href={`/comics/${comic.id}/versions`} passHref>
+                                        <a className="flex items-center w-min whitespace-nowrap text-gray-800 font-bold text-md">
+                                            <span>{`${comic.versions - 1} Other Version${
+                                                comic.versions > 2 ? "s" : ""
+                                            }`}</span>
+                                            <Arrow
+                                                colorClass="text-blue-primary-200"
+                                                className="pl-1"
+                                                pixelHeight="16px"
+                                            />
+                                        </a>
+                                    </Link>
+                                )}
+                            </div>
+
+                            <div className="flex flex-wrap justify-center py-5 sm:pt-2 ">
                                 <ComicDetail itemName="Price" item={comic.coverPrice} />
                                 <ComicDetail itemName="Released" item={comic.releaseDate} />
                                 <ComicDetail itemName="Format" item={comic.format} />
                                 <ComicDetail itemName="Rating" item={comic.rating} />
                             </div>
-
-                            {comic.description ? (
-                                <p>{comic.description}</p>
-                            ) : (
-                                <p className="text-gray-600 text-xl">No Description...</p>
-                            )}
                         </article>
+                        {comic.description ? (
+                            <p className="m-4 max-w-md float-left clear-left">
+                                {comic.description}
+                            </p>
+                        ) : (
+                            <p className="text-gray-600 text-xl m-4">No Description...</p>
+                        )}
                     </div>
                 </Page>
             )}
