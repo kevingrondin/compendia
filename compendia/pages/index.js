@@ -1,5 +1,10 @@
-import Releases from "./releases";
+import Store from "../components/auth/Store"
+import Releases from "./releases"
 
 export default function Home() {
-    return <Releases />;
+    return (
+        <Store>
+            <Releases />
+        </Store>
+    )
 }
