@@ -17,7 +17,6 @@
         "axios": "^0.21.0",
         "cookie": "^0.4.1",
         "date-fns": "^2.16.1",
-        "dotenv": "^8.2.0",
         "jsonwebtoken": "^8.5.1",
         "magic-sdk": "^4.0.2",
         "mongoose": "^5.11.8",

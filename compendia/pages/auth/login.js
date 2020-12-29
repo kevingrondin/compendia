@@ -4,7 +4,7 @@ import { Magic } from "magic-sdk"
 import { OAuthExtension } from "@magic-ext/oauth"
 import { useUser } from "../../hooks/magic"
 import { validateEmail } from "../../util/validateEmail"
-import AuthPage from "../../components/AuthPage"
+import Head from "next/head"
 import Button from "../../components/utils/Button"
 
 export default function Login() {
@@ -28,9 +28,9 @@ export default function Login() {
             setDisabled(true) // disable login button to prevent multiple emails from being triggered
             let didToken = await magic.auth.loginWithMagicLink({
                 email,
-                redirectURI: `${process.env.NEXT_PUBLIC_SERVER_URL}/callback`,
+                redirectURI: `${process.env.NEXT_PUBLIC_SERVER_URL}/auth/callback`,
             })
-            authenticateWithServer(didToken)
+            await authenticateWithServer(didToken)
         } catch (error) {
             setDisabled(false) // re-enable login button - user may have requested to edit their email
             console.log(error)
@@ -49,33 +49,49 @@ export default function Login() {
     }
 
     return (
-        <AuthPage title="Login">
-            <div className="p-2">
-                <form>
-                    <label className="p-5">
-                        <input
-                            className=""
-                            type="email"
-                            value={email}
-                            required
-                            placeholder="Email"
-                            onChange={(e) => {
-                                setEmail(e.target.value)
-                            }}
-                        />
-                    </label>
-                    <Button
-                        type="submit"
-                        disabled={disabled}
-                        onClick={(e) => {
-                            e.preventDefault()
-                            email && validateEmail(email) && handleLoginWithEmail(email)
-                        }}
-                    >
-                        Send Magic Link
-                    </Button>
-                </form>
+        <>
+            <Head>
+                <title>Compendia - Login</title>
+                <link rel="icon" href="/favicon.ico" />
+            </Head>
+            <div className="border border-solid border-gray-500 w-screen h-screen bg-gradient-to-r from-blue-primary-200 to bg-blue-primary-50">
+                <div className="flex flex-col h-full">
+                    <div className="flex justify-center h-1/5">
+                        <img src="/CompendiaLogo.svg" />
+                    </div>
+                    <div className="bg-white flex flex-col justify-center items-center content-center h-4/5 rounded-tl-4xl">
+                        <h1 className="p-10 text-blue-primary-100 text-3xl font-bold">
+                            Login / Sign Up
+                        </h1>
+                        <div className="p-2">
+                            <form className="flex flex-col">
+                                <label className="p-5">
+                                    <input
+                                        className="rounded-full"
+                                        type="email"
+                                        value={email}
+                                        required
+                                        placeholder="Email"
+                                        onChange={(e) => {
+                                            setEmail(e.target.value)
+                                        }}
+                                    />
+                                </label>
+                                <Button
+                                    type="submit"
+                                    disabled={disabled}
+                                    onClick={(e) => {
+                                        e.preventDefault()
+                                        email && validateEmail(email) && handleLoginWithEmail(email)
+                                    }}
+                                >
+                                    Send Link to Login
+                                </Button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </AuthPage>
+        </>
     )
 }
