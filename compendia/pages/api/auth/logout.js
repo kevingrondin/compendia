@@ -1,36 +1,16 @@
-import { magic } from "../../../utils/magic"
-import { cookie } from "../../../utils/cookie"
-import { serialize } from "cookie"
+import { magic } from "../../../util/magic"
+import { removeTokenCookie } from "../../../util/cookie"
+import jwt from "jsonwebtoken"
 
-export default async (req, res) => {
-    /* replace current auth cookie with an expired one */
-    res.setHeader(
-        "Set-Cookie",
-        serialize("auth", "", {
-            ...cookie,
-            expires: new Date(Date.now() - 1),
-        })
-    )
-
-    let userFromCookie
-
+export default async function logout(req, res) {
     try {
-        /**
-         * `userFromCookie` will be on the form of:
-         * {
-         * issuer: 'did:ethr:0x84Ebf7BD2b35aD715A5351948f52ebcB57B7916A',
-         * publicAddress: '0x84Ebf7BD2b35aD715A5351948f52ebcB57B7916A',
-         * email: 'example@gmail.com'
-         * }
-         */
-        userFromCookie = await decryptCookie(req.cookies.auth)
+        let token = req.cookies.token
+        let user = jwt.verify(token, process.env.JWT_SECRET)
+        await magic.users.logoutByIssuer(user.issuer)
+        removeTokenCookie(res)
+        res.writeHead(302, { Location: "/login" })
+        res.end()
     } catch (error) {
-        /* if there's no valid auth cookie, user is not logged in */
-        return res.json({ authorized: false, error })
+        res.status(401).json({ message: "User is not logged in" })
     }
-
-    /* log use out of Magic */
-    await magic.users.logoutByToken(userFromCookie.publicAddress)
-
-    return res.json({ authorized: false })
 }

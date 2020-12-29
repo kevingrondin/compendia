@@ -1,10 +1,9 @@
-import Store from "../components/auth/Store"
 import Releases from "./releases"
+import Login from "./auth/login"
+import { useUser } from "../hooks/magic"
 
 export default function Home() {
-    return (
-        <Store>
-            <Releases />
-        </Store>
-    )
+    const user = useUser()
+
+    return <>{user ? <Releases /> : <Login />}</>
 }

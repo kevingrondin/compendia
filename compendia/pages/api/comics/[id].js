@@ -18,6 +18,7 @@ const sortByNone = [
         rating: "MA",
         format: "Comic",
         versions: 3,
+        lists: [{}],
     },
     {
         id: 2,

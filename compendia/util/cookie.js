@@ -1,18 +1,25 @@
-import Iron from "@hapi/iron"
+import { serialize } from "cookie"
 
-/* defining the cookie attributes */
-export const cookie = {
-    maxAge: 60 * 60, // 1 hour
-    secure: false, // set `true` for https only
-    path: "/", // send the cookie on all requests
-    httpOnly: true, // makes cookie inaccessible from browser (only transfered through http requests, and protects against XSS attacks)
-    sameSite: "strict", // cookie can only be sent from the same domain
+const TOKEN_NAME = "token"
+const MAX_AGE = 60 * 60 * 24 * 7 // one week
+
+export function setTokenCookie(res, token) {
+    const cookie = serialize(TOKEN_NAME, token, {
+        maxAge: MAX_AGE,
+        expires: new Date(Date.now() + MAX_AGE * 1000),
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        path: "/",
+        sameSite: "lax",
+    })
+    res.setHeader("Set-Cookie", cookie)
 }
 
-export const decryptCookie = async (cookie) => {
-    return await Iron.unseal(cookie, process.env.ENCRYPTION_SECRET, Iron.defaults)
-}
+export function removeTokenCookie(res) {
+    const cookie = serialize(TOKEN_NAME, "", {
+        maxAge: -1,
+        path: "/",
+    })
 
-export const encryptCookie = async (userMetadata) => {
-    return await Iron.seal(userMetadata, process.env.ENCRYPTION_SECRET, Iron.defaults)
+    res.setHeader("Set-Cookie", cookie)
 }

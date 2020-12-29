@@ -4,6 +4,9 @@ import { useQuery } from "react-query"
 import axios from "axios"
 import Link from "next/link"
 import Arrow from "../../components/utils/Arrow"
+import Lists from "../../components/comic/Lists"
+
+const lists = ["Read", "Want", "Favorites"]
 
 function useComicDetail(id) {
     return useQuery(`comic-detail-${id}`, async () => {
@@ -75,6 +78,7 @@ export default function Comic() {
                         ) : (
                             <p className="text-gray-600 text-xl m-4">No Description...</p>
                         )}
+                        <Lists lists={lists} />
                     </div>
                 </Page>
             )}
