@@ -37,13 +37,13 @@ export default function Comic() {
                 <div>Error: {error.message}</div>
             ) : (
                 <Page title={`${comic.series.name} ${comic.title} - ${comic.publisher.name}`}>
-                    <div className="flex flex-wrap justify-center sm:inline-block">
+                    <div className="flex flex-wrap justify-center">
                         <img
                             src={comic.cover}
                             alt={`Cover art for ${comic.title}`}
-                            className="rounded h-72 sm:float-left lg:h-96"
+                            className="rounded h-72 lg:h-96"
                         />
-                        <article className="mt-8 float-left sm:float-none sm:ml-6 sm:mt-6">
+                        <article className="mt-8 sm:ml-6 sm:mt-6">
                             <h2 className="font-bold text-3xl text-center sm:text-left">{`${comic.series.name} ${comic.title}`}</h2>
                             <div className="flex flex-col items-center pt-1 sm:items-start">
                                 <p className="italic text-xl mr-2 mb-1">{comic.publisher.name}</p>
@@ -72,9 +72,7 @@ export default function Comic() {
                             </div>
                         </article>
                         {comic.description ? (
-                            <p className="m-4 max-w-md float-left clear-left">
-                                {comic.description}
-                            </p>
+                            <p className="m-4 max-w-md">{comic.description}</p>
                         ) : (
                             <p className="text-gray-600 text-xl m-4">No Description...</p>
                         )}

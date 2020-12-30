@@ -31,7 +31,7 @@ export default function AllReleases({ comicDay }) {
                         <h3 className="text-2xl text-blue-primary-200 bg-blue-100 font-bold mb-5 w-min py-1 px-2 whitespace-nowrap">
                             {publisher.name}
                         </h3>
-                        <div className="flex flex-wrap">
+                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 justify-items-center gap-y-10 sm:gap-y-16 sm:gap-x-0 ">
                             {publisher.releases &&
                                 publisher.releases.map((comic, index) => (
                                     <ComicCover key={comic.id} comic={comic} index={index} />
