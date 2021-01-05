@@ -8,7 +8,7 @@ export default async function user(req, res) {
         let user = jwt.verify(token, process.env.JWT_SECRET)
         let newToken = jwt.sign(
             {
-                issuer: user.issuer,
+                id: user.id,
                 publicAddress: user.publicAddress,
                 email: user.email,
                 exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 7, // one week

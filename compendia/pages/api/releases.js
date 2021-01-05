@@ -1,3 +1,7 @@
+import dbConnect from "../../database/connection"
+import Publisher from "../../database/models/Publisher"
+import Comic from "../../database/models/Comic"
+
 const sortByPublisher = JSON.stringify([
     {
         id: 1,
@@ -91,8 +95,40 @@ const sortByPublisher = JSON.stringify([
     },
 ])
 
-export default function handler(req, res) {
-    res.statusCode = 200
+function groupBy(property, objectArray) {
+    return objectArray.reduce(function (acc, obj) {
+        let key = obj[property]
+        if (!acc[key]) {
+            acc[key] = []
+        }
+        acc[key].push(obj)
+        return acc
+    }, {})
+}
+
+dbConnect()
+
+export default async function handler(req, res) {
+    const { sortBy, comicDay } = req.query
+
     res.setHeader("Content-Type", "application/json")
-    res.end(sortByPublisher)
+
+    try {
+        try {
+            const releases = await Comic.find({ releaseDate: comicDay }).populate("publisher")
+            console.log("After pop", releases)
+            res.statusCode = 200
+
+            const sortedByPublisher = groupBy("publisher", releases)
+
+            console.log(sortedByPublisher)
+
+            res.end(sortByPublisher)
+        } catch (e) {
+            console.log(e)
+        }
+    } catch (error) {
+        res.statusCode = 500
+        res.end({ message: error.message })
+    }
 }

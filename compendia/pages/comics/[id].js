@@ -6,11 +6,16 @@ import Link from "next/link"
 import Arrow from "../../components/utils/Arrow"
 import Lists from "../../components/comic/Lists"
 
-const lists = ["Read", "Want", "Favorites"]
-
 function useComicDetail(id) {
     return useQuery(`comic-detail-${id}`, async () => {
         const { data } = await axios.get(`/api/comics/${id}`)
+        return data
+    })
+}
+
+function useComicLists() {
+    return useQuery(`user-comic-lists`, async () => {
+        const { data } = await axios.get(`/api/lists`)
         return data
     })
 }
@@ -27,14 +32,15 @@ function ComicDetail({ itemName, item }) {
 export default function Comic() {
     const router = useRouter()
     const { id } = router.query
-    const { status, error, data: comic } = useComicDetail(id)
+    const { status: detailStatus, error: detailError, data: comic } = useComicDetail(id)
+    const { status: listsStatus, error: listsError, data: lists } = useComicLists()
 
     return (
         <>
-            {status === "loading" ? (
+            {detailStatus === "loading" || listsStatus === "loading" ? (
                 <div>Loading...</div>
-            ) : status === "error" ? (
-                <div>Error: {error.message}</div>
+            ) : detailStatus === "error" ? (
+                <div>Error: {detailError.message}</div>
             ) : (
                 <Page title={`${comic.series.name} ${comic.title} - ${comic.publisher.name}`}>
                     <div className="flex flex-wrap justify-center">
@@ -44,8 +50,8 @@ export default function Comic() {
                             className="rounded h-72 lg:h-96"
                         />
                         <article className="mt-8 sm:ml-6 sm:mt-6">
-                            <h2 className="font-bold text-3xl text-center sm:text-left">{`${comic.series.name} ${comic.title}`}</h2>
-                            <div className="flex flex-col items-center pt-1 sm:items-start">
+                            <h2 className="font-bold text-3xl text-center md:text-left">{`${comic.series.name} ${comic.title}`}</h2>
+                            <div className="flex flex-col items-center pt-1 md:items-start">
                                 <p className="italic text-xl mr-2 mb-1">{comic.publisher.name}</p>
 
                                 {comic.versions > 1 && (
@@ -70,13 +76,13 @@ export default function Comic() {
                                 <ComicDetail itemName="Format" item={comic.format} />
                                 <ComicDetail itemName="Rating" item={comic.rating} />
                             </div>
+                            {comic.description ? (
+                                <p className="m-4 sm:m-0 max-w-md">{comic.description}</p>
+                            ) : (
+                                <p className="text-gray-600 text-xl m-4">No Description...</p>
+                            )}
+                            <Lists lists={lists} />
                         </article>
-                        {comic.description ? (
-                            <p className="m-4 max-w-md">{comic.description}</p>
-                        ) : (
-                            <p className="text-gray-600 text-xl m-4">No Description...</p>
-                        )}
-                        <Lists lists={lists} />
                     </div>
                 </Page>
             )}
