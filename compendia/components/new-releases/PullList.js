@@ -32,7 +32,7 @@ export default function PullList({ comicDay }) {
                             <ComicCover key={comic._id} comic={comic} index={index} />
                         ))
                     ) : (
-                        <p>Your Pull List is empty...</p>
+                        <p>Your Pull List is empty this week...</p>
                     )}
                 </div>
             )}

@@ -1,4 +1,6 @@
 import dbConnect from "../../../database/connection"
+import Publisher from "../../../database/models/Publisher"
+import Series from "../../../database/models/Series"
 import Comic from "../../../database/models/Comic"
 
 dbConnect()
@@ -8,11 +10,9 @@ export default async function handler(req, res) {
         query: { id },
     } = req
 
-    const comic = await Comic.findOne({ _id: id }).populate("Series").populate("Publisher")
-
-    await new Comic({})
-
     res.setHeader("Content-Type", "application/json")
+
+    const comic = await Comic.findOne({ _id: id }).populate("series").populate("publisher")
     if (comic) {
         res.statusCode = 200
         res.end(JSON.stringify(comic))

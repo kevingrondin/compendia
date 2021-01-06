@@ -1,5 +1,5 @@
 import "tailwindcss/tailwind.css"
-import { ReactQueryDevtools } from "react-query-devtools"
+import { ReactQueryDevtools } from "react-query/devtools"
 import { QueryCache, ReactQueryCacheProvider } from "react-query"
 
 // Required imports to prevent errors in any API routes

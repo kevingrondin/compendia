@@ -2,6 +2,7 @@ import { useRouter } from "next/router"
 import Page from "../../components/Page"
 import { useQuery } from "react-query"
 import axios from "axios"
+import { format } from "date-fns"
 import Link from "next/link"
 import Arrow from "../../components/utils/Arrow"
 import Lists from "../../components/comic/Lists"
@@ -13,18 +14,11 @@ function useComicDetail(id) {
     })
 }
 
-function useComicLists() {
-    return useQuery(`user-comic-lists`, async () => {
-        const { data } = await axios.get(`/api/lists`)
-        return data
-    })
-}
-
 function ComicDetail({ itemName, item }) {
     return (
         <div className="px-6 py-2 flex flex-col items-center">
             <p className="text-gray-900 font-extrabold text-lg">{itemName}</p>
-            <p>{item}</p>
+            <p>{item ? item : "-"}</p>
         </div>
     )
 }
@@ -33,11 +27,13 @@ export default function Comic() {
     const router = useRouter()
     const { id } = router.query
     const { status: detailStatus, error: detailError, data: comic } = useComicDetail(id)
-    const { status: listsStatus, error: listsError, data: lists } = useComicLists()
+
+    // Prevent further processing when the id query param doesn't exist
+    if (!id) return <></>
 
     return (
         <>
-            {detailStatus === "loading" || listsStatus === "loading" ? (
+            {detailStatus === "loading" ? (
                 <div>Loading...</div>
             ) : detailStatus === "error" ? (
                 <div>Error: {detailError.message}</div>
@@ -72,7 +68,10 @@ export default function Comic() {
 
                             <div className="flex flex-wrap justify-center py-5 sm:pt-2 ">
                                 <ComicDetail itemName="Price" item={comic.coverPrice} />
-                                <ComicDetail itemName="Released" item={comic.releaseDate} />
+                                <ComicDetail
+                                    itemName="Released"
+                                    item={format(Date.parse(comic.releaseDate), "MM-dd-yyyy")}
+                                />
                                 <ComicDetail itemName="Format" item={comic.format} />
                                 <ComicDetail itemName="Rating" item={comic.rating} />
                             </div>
@@ -81,7 +80,7 @@ export default function Comic() {
                             ) : (
                                 <p className="text-gray-600 text-xl m-4">No Description...</p>
                             )}
-                            <Lists lists={lists} />
+                            <Lists comicId={comic._id} />
                         </article>
                     </div>
                 </Page>
