@@ -8,7 +8,7 @@ function useAllReleases(comicDay) {
         ["all-releases", format(comicDay, "MM-dd-yyyy")],
         async () => {
             const { data } = await axios.get(
-                `/api/releases?sortBy=publisher&comicDay=${format(comicDay, "MM-dd-yyyy")}`
+                `/api/releases?comicDay=${format(comicDay, "MM-dd-yyyy")}`
             )
             return data
         },
