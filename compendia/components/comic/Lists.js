@@ -1,4 +1,4 @@
-import { useQuery } from "react-query"
+import { useQuery, useQueryClient, useMutation } from "react-query"
 import axios from "axios"
 
 function useComicLists(id) {
@@ -9,17 +9,29 @@ function useComicLists(id) {
 }
 
 export default function Lists({ comicId }) {
+    const queryClient = useQueryClient()
     const { status, error, data } = useComicLists(comicId)
 
-    function toggleIsInList(isInList, listId) {
-        const listEdit = data.find((list) => list._id === listId)
+    const mutation = useMutation(
+        (edit) =>
+            axios.put(`/api/lists/${edit.list._id}?comicId=${edit.comicId}`, {
+                ...edit.list,
+            }),
+        {
+            onSuccess: (updatedList) => {
+                const newLists = data.filter((list) => list._id !== updatedList.data._id)
+                newLists.push(updatedList.data)
 
-        console.log(listEdit)
+                function compare(a, b) {
+                    if (a.name < b.name) return -1
+                    else if (a.name > b.name) return 1
+                    else return 0
+                }
 
-        listEdit.isComicInList = isInList
-
-        console.log(listEdit)
-    }
+                queryClient.setQueryData("user-comic-lists", newLists.sort(compare))
+            },
+        }
+    )
 
     return (
         <div>
@@ -32,8 +44,14 @@ export default function Lists({ comicId }) {
                                 <label className="inline-flex items-center mt-3">
                                     <input
                                         type="checkbox"
-                                        onClick={() =>
-                                            toggleIsInList(!list.isComicInList, list._id)
+                                        onChange={() =>
+                                            mutation.mutate({
+                                                list: {
+                                                    ...list,
+                                                    isComicInList: list.isComicInList,
+                                                },
+                                                comicId: comicId,
+                                            })
                                         }
                                         className="form-checkbox h-5 w-5 text-red-600"
                                         checked={list.isComicInList}

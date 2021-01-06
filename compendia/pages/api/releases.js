@@ -20,21 +20,18 @@ function groupByPublisher(comics) {
 dbConnect()
 
 export default async function handler(req, res) {
-    const { sortBy, comicDay } = req.query
-
+    const { comicDay } = req.query
+    res.statusCode = 200
     res.setHeader("Content-Type", "application/json")
 
     try {
         const releases = await Comic.find({ releaseDate: comicDay }).populate("publisher")
         const sortedByPublisher = groupByPublisher(releases)
-        console.log("Returned: ", sortedByPublisher)
         res.statusCode = 200
-        console.log("1")
         res.end(JSON.stringify(sortedByPublisher))
-        console.log("2")
     } catch (error) {
         res.statusCode = 500
-        console.log("3", error.message)
+        console.log(error)
         res.end({ message: error.message })
     }
 }
