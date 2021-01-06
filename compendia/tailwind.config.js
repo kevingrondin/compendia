@@ -25,6 +25,9 @@ module.exports = {
                     "primary-300": "#094166",
                 },
             },
+            borderRadius: {
+                "4xl": "7rem",
+            },
         },
     },
     variants: {

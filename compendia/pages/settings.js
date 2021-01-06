@@ -1,33 +1,26 @@
-/** @jsx jsx */
-import { jsx } from "@emotion/core";
-import * as styles from "../styles/pages/Settings.js";
-import { useContext, useEffect } from "react";
-import { UserContext } from "./_app";
-import { useRouter } from "next/router";
-import SecondaryPage from "../components/SecondaryPage";
-import useVerifyAuth from "../util/useVerifyAuth";
+import { useEffect } from "react"
+import { useRouter } from "next/router"
+import { useUser } from "../hooks/magic"
 
 export default function Settings() {
-    useVerifyAuth();
-    const router = useRouter();
-    const user = useContext(UserContext);
+    const router = useRouter()
+    const user = useUser({ redirectTo: "/auth/login" })
 
     useEffect(() => {
-        router.prefetch("/");
-    });
+        router.prefetch("/")
+    })
 
     return (
-        <SecondaryPage pageTitle="Settings">
-            <div css={styles.screenContent}>
-                <h2>Account</h2>
-                <div css={styles.accountSettingsList}>
-                    <p>Username: {user.username}</p>
-                    <p>Email: {user.email}</p>
-                    <div css={styles.signOut}>
-                        <button onClick={user.signOut}>Sign Out</button>
-                    </div>
+        <div className="flex flex-col items-center p-8">
+            <h2>Account</h2>
+            <div className="p-2">
+                <p className="text-left list-none">Email: {user && user.email}</p>
+                <div className="flex flex-col justify-center items-center">
+                    <a className="w-32" href="/api/auth/logout">
+                        Log Out
+                    </a>
                 </div>
             </div>
-        </SecondaryPage>
-    );
+        </div>
+    )
 }

@@ -20,18 +20,22 @@ export default function PullList({ comicDay }) {
     const { status, error, data } = usePullList(comicDay)
 
     return (
-        <>
-            <div className="flex flex-row flex-wrap mt-10">
-                {status === "loading" ? (
-                    <div>Loading ...</div>
-                ) : status === "error" ? (
-                    <div>Error: {error.message}</div>
-                ) : (
-                    data.map((comic, index) => (
-                        <ComicCover key={comic.id} comic={comic} index={index} />
-                    ))
-                )}
-            </div>
-        </>
+        <div className="">
+            {status === "loading" ? (
+                <div>Loading ...</div>
+            ) : status === "error" ? (
+                <div>Error: {error.message}</div>
+            ) : (
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 justify-items-center gap-y-6 sm:gap-8 ">
+                    {data ? (
+                        data.map((comic, index) => (
+                            <ComicCover key={comic._id} comic={comic} index={index} />
+                        ))
+                    ) : (
+                        <p>Your Pull List is empty this week...</p>
+                    )}
+                </div>
+            )}
+        </div>
     )
 }
