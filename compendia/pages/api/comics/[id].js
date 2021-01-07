@@ -19,7 +19,10 @@ export default async function handler(req, res) {
 
     res.setHeader("Content-Type", "application/json")
 
-    const comic = await Comic.findOne({ _id: id }).populate("series").populate("publisher")
+    const comic = await Comic.findOne({ _id: id }).populate({
+        path: "series",
+        populate: { path: "publisher imprint" },
+    })
     const isCollected = await CollectedComic.findOne({ user: user.id, comic: id })
     if (comic) {
         res.statusCode = 200

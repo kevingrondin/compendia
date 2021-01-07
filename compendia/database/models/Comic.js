@@ -7,7 +7,6 @@ delete mongoose.connection.models["Comic"]
 const ComicSchema = new Schema({
     title: { type: String, required: true },
     series: { type: mongoose.Types.ObjectId, ref: "Series", required: true },
-    publisher: { type: mongoose.Types.ObjectId, ref: "Publisher", required: true },
     cover: String,
     releaseDate: Date,
     coverPrice: String,

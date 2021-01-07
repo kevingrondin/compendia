@@ -8,6 +8,7 @@ const SeriesSchema = new Schema({
     name: { type: String, required: true },
     altId: { type: String },
     publisher: { type: mongoose.Types.ObjectId, ref: "Publisher", required: true },
+    imprint: { type: mongoose.Types.ObjectId, ref: "Imprint" },
     isOneShot: { type: Boolean },
     isMiniSeries: { type: Boolean },
     miniSeriesLimit: { type: Number },

@@ -4,11 +4,11 @@ import Comic from "../../database/models/Comic"
 
 function groupByPublisher(comics) {
     return comics.reduce(function (acc, obj) {
-        const pubIndex = acc.findIndex((pub) => pub.name === obj.publisher.name)
+        const pubIndex = acc.findIndex((pub) => pub.name === obj.series.publisher.name)
         if (pubIndex < 0)
             acc.push({
-                _id: obj.publisher._id,
-                name: obj.publisher.name,
+                _id: obj.series.publisher._id,
+                name: obj.series.publisher.name,
                 releases: [obj],
             })
         else acc[pubIndex].releases.push(obj)
@@ -25,7 +25,7 @@ export default async function handler(req, res) {
     res.setHeader("Content-Type", "application/json")
 
     try {
-        const releases = await Comic.find({ releaseDate: comicDay }).populate("publisher")
+        const releases = await Comic.find({ releaseDate: comicDay }).populate("series")
         const sortedByPublisher = groupByPublisher(releases)
         res.statusCode = 200
         res.end(JSON.stringify(sortedByPublisher))

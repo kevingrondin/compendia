@@ -53,7 +53,7 @@ export default function Lists({ comicId }) {
                                                 comicId: comicId,
                                             })
                                         }
-                                        className="form-checkbox h-5 w-5 text-red-600"
+                                        className="form-checkbox h-5 w-5 text-blue-primary-200"
                                         checked={list.isComicInList}
                                     />
                                     <span className="ml-2 text-gray-700">{list.name}</span>
