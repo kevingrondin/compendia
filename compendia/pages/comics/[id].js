@@ -1,14 +1,15 @@
 import { useRouter } from "next/router"
 import Page from "../../components/Page"
-import { useQuery } from "react-query"
+import { useQuery, useMutation, useQueryClient } from "react-query"
 import axios from "axios"
 import { format } from "date-fns"
 import Link from "next/link"
 import Arrow from "../../components/utils/Arrow"
 import Lists from "../../components/comic/Lists"
+import Button from "../../components/utils/Button"
 
 function useComicDetail(id) {
-    return useQuery(`comic-detail-${id}`, async () => {
+    return useQuery(["comic-detail", id], async () => {
         const { data } = await axios.get(`/api/comics/${id}`)
         return data
     })
@@ -24,9 +25,17 @@ function ComicDetail({ itemName, item }) {
 }
 
 export default function Comic() {
+    const queryClient = useQueryClient()
     const router = useRouter()
     const { id } = router.query
     const { status: detailStatus, error: detailError, data: comic } = useComicDetail(id)
+
+    const mutation = useMutation(() => axios.post(`/api/collection/comics/${id}`), {
+        onSuccess: () => {
+            comic.isCollected = true
+            queryClient.setQueryData(["comic-detail", id], comic)
+        },
+    })
 
     // Prevent further processing when the id query param doesn't exist
     if (!id) return <></>
@@ -80,6 +89,20 @@ export default function Comic() {
                             ) : (
                                 <p className="text-gray-600 text-xl m-4">No Description...</p>
                             )}
+
+                            {comic.isCollected ? (
+                                <p className="mt-5 font-extrabold">Comic is in collection</p>
+                            ) : (
+                                <Button
+                                    className="mt-5"
+                                    onClick={() => {
+                                        mutation.mutate()
+                                    }}
+                                >
+                                    Add to Collection
+                                </Button>
+                            )}
+
                             <Lists comicId={comic._id} />
                         </article>
                     </div>

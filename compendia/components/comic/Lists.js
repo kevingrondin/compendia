@@ -34,7 +34,7 @@ export default function Lists({ comicId }) {
     )
 
     return (
-        <div>
+        <div className="mt-5">
             <h2 className="font-bold text-2xl">Lists</h2>
             <ul className="flex flex-col">
                 {data &&

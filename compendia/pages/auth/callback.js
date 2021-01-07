@@ -20,7 +20,6 @@ export default function Callback() {
     }, [magic, router.query])
 
     const finishEmailRedirectLogin = async () => {
-        console.log("YES")
         if (router.query.magic_credential) {
             try {
                 let didToken = await magic.auth.loginWithCredential()
