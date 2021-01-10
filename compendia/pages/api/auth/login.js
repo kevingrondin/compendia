@@ -1,40 +1,44 @@
+const db = require("../../../database").instance
 import { magic } from "../../../util/magic"
 import jwt from "jsonwebtoken"
 import { setTokenCookie } from "../../../util/cookie"
-import dbConnect from "../../../database/connection"
-import User from "../../../database/models/User"
-import ComicList from "../../../database/models/ComicList"
 
-dbConnect()
-
+// Create new user in db using issuer ID and email from Magic metadata
 const createNewUser = async (metadata) => {
-    await new User({
-        _id: metadata.issuer,
-        email: metadata.email,
-    }).save()
-
-    if (!metadata || !metadata.email || !metadata.issuer)
-        throw new Error("Could not create a new account. Please try again later.")
-
-    const starterLists = [
-        { name: "Favorites", user: metadata.issuer },
-        { name: "Read", user: metadata.issuer },
-        { name: "Want", user: metadata.issuer },
-    ]
-    ComicList.insertMany(starterLists, (error, docs) => {
-        if (error) throw new Error("There was an error creating your comic lists.")
-    })
+    const client = await db.connect()
+    try {
+        await client.query("INSERT INTO users (user_id, email) VALUES ($1, $2)", [
+            metadata.issuer,
+            metadata.email,
+        ])
+    } catch (error) {
+        console.log(error)
+    } finally {
+        client.release()
+    }
 }
 
 export default async function login(req, res) {
     try {
+        // Get user metadata from Magic Auth
         const didToken = req.headers.authorization.substr(7)
         await magic.token.validate(didToken)
         const metadata = await magic.users.getMetadataByToken(didToken)
 
-        const existingUser = await User.findOne({ _id: metadata.issuer })
-        if (!existingUser) createNewUser(metadata)
+        // Search db for existing user with Magic issuer ID, otherwise create one
+        const client = await db.connect()
+        try {
+            const res = await client.query("SELECT user_id, email FROM users WHERE $1 = user_id", [
+                metadata.issuer,
+            ])
+            if (res.rows.length < 1) createNewUser(metadata)
+        } catch (error) {
+            console.log(error)
+        } finally {
+            client.release()
+        }
 
+        // Create and save cookie to remember user
         let token = jwt.sign(
             {
                 id: metadata.issuer,
@@ -46,8 +50,9 @@ export default async function login(req, res) {
         )
         setTokenCookie(res, token)
 
-        res.status(200).json({ done: true })
+        res.status(200).end()
     } catch (error) {
+        console.log(error)
         res.status(500).json({ error: error.message })
     }
 }
