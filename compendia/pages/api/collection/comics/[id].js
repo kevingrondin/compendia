@@ -1,28 +1,24 @@
-import dbConnect from "../../../../database/connection"
-import CollectedComic from "../../../../database/models/CollectedComic"
-import jwt from "jsonwebtoken"
-
-dbConnect()
+const db = require("../../../../database").instance
+import { validateAndGetUser } from "../../../../util/cookie"
 
 export default async function handler(req, res) {
+    res.setHeader("Content-Type", "application/json")
     const { id } = req.query
 
-    res.setHeader("Content-Type", "application/json")
+    const user = validateAndGetUser(req, res)
 
-    let token = req.cookies.token
-    if (!token) return res.status(401).json({ message: "User is not logged in" })
-
-    let user = jwt.verify(token, process.env.JWT_SECRET)
-
+    const client = await db.connect()
     try {
         if (req.method === "POST") {
-            await new CollectedComic({ user: user.id, comic: id }).save()
-            res.statusCode = 200
-            res.end()
+            const insert = `INSERT INTO collected_comics(collection_id, comic_id) VALUES($1, $2) RETURNING collected_comic_id`
+            const insertParams = [user.collectionID, id]
+            const insertResult = await client.query(insert, insertParams)
+
+            if (insertResult.rows.length > 0) res.status(201).end()
+            else throw new Error()
         }
     } catch (error) {
         console.log(error)
-        res.statusCode = 500
-        res.end(`Could not add comic to your collection`)
+        res.status(500).json({ message: `Could not add comic to your collection` })
     }
 }

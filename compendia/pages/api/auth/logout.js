@@ -10,7 +10,7 @@ export default async function logout(req, res) {
         let user = jwt.verify(token, process.env.JWT_SECRET)
 
         // Logout user
-        await magic.users.logoutByIssuer(user.id)
+        if (user.id) await magic.users.logoutByIssuer(user.id)
         removeTokenCookie(res)
         res.writeHead(302, { Location: "/auth/login" })
         res.end()

@@ -13,6 +13,7 @@ import FullScreenModal from "../../components/utils/FullScreenModal"
 function useComicDetail(id) {
     return useQuery(["comic-detail", id], async () => {
         const { data } = await axios.get(`/api/comics/${id}`)
+        if (data) console.log(data.releaseDate, typeof data.releaseDate)
         return data
     })
 }
@@ -30,29 +31,30 @@ export default function Comic() {
     const queryClient = useQueryClient()
     const router = useRouter()
     const { id } = router.query
-    const { status: detailStatus, error: detailError, data: comic } = useComicDetail(id)
+    const { status, error, data: comic } = useComicDetail(id)
     const [showFullCover, setShowFullCover] = useState(false)
 
-    const mutation = useMutation(() => axios.post(`/api/collection/comics/${id}`), {
-        onSuccess: () => {
-            comic.isCollected = true
-            queryClient.setQueryData(["comic-detail", id], comic)
-        },
-    })
+    const toggleIsCollectedMutation = useMutation(
+        () => axios.post(`/api/collection/comics/${id}`),
+        {
+            onSuccess: () => {
+                comic.isCollected = true
+                queryClient.setQueryData(["comic-detail", id], comic)
+            },
+        }
+    )
 
     // Prevent further processing when the id query param doesn't exist
     if (!id) return <></>
 
     return (
         <>
-            {detailStatus === "loading" ? (
+            {status === "loading" ? (
                 <div>Loading...</div>
-            ) : detailStatus === "error" ? (
-                <div>Error: {detailError.message}</div>
+            ) : status === "error" ? (
+                <div>Error: {error.message}</div>
             ) : (
-                <Page
-                    title={`${comic.series.name} ${comic.title} - ${comic.series.publisher.name}`}
-                >
+                <Page title={`${comic.seriesName} ${comic.title} - ${comic.publisherName}`}>
                     <div className="flex flex-wrap justify-center">
                         <img
                             src={comic.cover}
@@ -61,21 +63,21 @@ export default function Comic() {
                             onClick={() => setShowFullCover(!showFullCover)}
                         />
                         <article className="mt-8 sm:ml-6 sm:mt-6">
-                            <h2 className="font-bold text-3xl text-center md:text-left">{`${comic.series.name} ${comic.title}`}</h2>
+                            <h2 className="font-bold text-3xl text-center md:text-left">{`${comic.seriesName} ${comic.title}`}</h2>
                             <div className="flex flex-col items-center pt-1 md:items-start">
                                 <p className="italic text-xl mr-2 mb-1">
-                                    {`${comic.series.publisher.name} ${
-                                        comic.series.imprint !== undefined
-                                            ? " - " + comic.series.imprint.name
+                                    {`${comic.publisherName} ${
+                                        comic.imprintID !== undefined
+                                            ? " - " + comic.imprintName
                                             : ""
                                     }`}
                                 </p>
 
-                                {comic.versions > 1 && (
+                                {comic.versions > 0 && (
                                     <Link href={`/comics/${comic.id}/versions`} passHref>
                                         <a className="flex items-center w-min whitespace-nowrap text-gray-800 font-bold text-md">
-                                            <span>{`${comic.versions - 1} Other Version${
-                                                comic.versions > 2 ? "s" : ""
+                                            <span>{`${comic.versions} Other Version${
+                                                comic.versions > 1 ? "s" : ""
                                             }`}</span>
                                             <Arrow
                                                 colorClass="text-blue-primary-200"
@@ -91,10 +93,10 @@ export default function Comic() {
                                 <ComicDetail itemName="Price" item={comic.coverPrice} />
                                 <ComicDetail
                                     itemName="Released"
-                                    item={format(Date.parse(comic.releaseDate), "MM-dd-yyyy")}
+                                    item={format(comic.releaseDate, "MM-dd-yyyy")}
                                 />
                                 <ComicDetail itemName="Format" item={comic.format} />
-                                <ComicDetail itemName="Rating" item={comic.rating} />
+                                <ComicDetail itemName="Rating" item={comic.ageRating} />
                             </div>
                             {comic.description ? (
                                 <p className="m-4 sm:m-0 max-w-md">{comic.description}</p>
@@ -108,14 +110,14 @@ export default function Comic() {
                                 <Button
                                     className="mt-5"
                                     onClick={() => {
-                                        mutation.mutate()
+                                        toggleIsCollectedMutation.mutate()
                                     }}
                                 >
                                     Add to Collection
                                 </Button>
                             )}
 
-                            <Lists comicId={comic._id} />
+                            <Lists comicId={comic.id} />
                         </article>
                     </div>
 

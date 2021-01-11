@@ -5,10 +5,10 @@ import { format } from "date-fns"
 
 function useAllReleases(comicDay) {
     return useQuery(
-        `all-releases-${format(comicDay, "MM-dd-yyyy")}`,
+        `all-releases-${format(comicDay, "yyyy-MM-dd")}`,
         async () => {
             const { data } = await axios.get(
-                `/api/releases?comicDay=${format(comicDay, "MM-dd-yyyy")}`
+                `/api/releases?comicDay=${format(comicDay, "yyyy-MM-dd")}`
             )
             return data
         },
@@ -28,13 +28,13 @@ export default function AllReleases({ comicDay }) {
             ) : data && data.length > 0 ? (
                 <ul>
                     {data.map((publisher) => (
-                        <li className="mt-10" key={publisher._id}>
+                        <li className="mt-10" key={publisher.id}>
                             <h3 className="text-2xl text-blue-primary-200 bg-blue-100 font-bold mb-5 w-min py-1 px-2 whitespace-nowrap">
                                 {publisher.name}
                             </h3>
                             <ul className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 justify-items-center gap-y-10 sm:gap-y-16 sm:gap-x-0 ">
                                 {publisher.releases.map((comic) => (
-                                    <li key={comic._id}>
+                                    <li key={comic.id}>
                                         <ComicCover comic={comic} />
                                     </li>
                                 ))}

@@ -1,4 +1,5 @@
 import { serialize } from "cookie"
+import jwt from "jsonwebtoken"
 
 const TOKEN_NAME = "token"
 const MAX_AGE = 60 * 60 * 24 * 7 // one week
@@ -22,4 +23,10 @@ export function removeTokenCookie(res) {
     })
 
     res.setHeader("Set-Cookie", cookie)
+}
+
+export function getUserOrRedirect(req, res) {
+    const token = req.cookies.token
+    if (!token) return res.status(401).json({ message: "User is not logged in" })
+    return jwt.verify(token, process.env.JWT_SECRET)
 }
