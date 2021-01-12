@@ -9,11 +9,11 @@ import Lists from "../../components/comic/Lists"
 import Button from "../../components/utils/Button"
 import { useState } from "react"
 import FullScreenModal from "../../components/utils/FullScreenModal"
+import CollectionDetails from "../../components/comic/CollectionDetails"
 
 function useComicDetail(id) {
     return useQuery(["comic-detail", id], async () => {
         const { data } = await axios.get(`/api/comics/${id}`)
-        if (data) console.log(data.releaseDate, typeof data.releaseDate)
         return data
     })
 }
@@ -55,7 +55,7 @@ export default function Comic() {
                 <div>Error: {error.message}</div>
             ) : (
                 <Page title={`${comic.seriesName} ${comic.title} - ${comic.publisherName}`}>
-                    <div className="flex flex-wrap justify-center">
+                    <div className="flex flex-wrap justify-center mb-10">
                         <img
                             src={comic.cover}
                             alt={`Cover art for ${comic.title}`}
@@ -67,9 +67,7 @@ export default function Comic() {
                             <div className="flex flex-col items-center pt-1 md:items-start">
                                 <p className="italic text-xl mr-2 mb-1">
                                     {`${comic.publisherName} ${
-                                        comic.imprintID !== undefined
-                                            ? " - " + comic.imprintName
-                                            : ""
+                                        comic.imprintID ? " - " + comic.imprintName : ""
                                     }`}
                                 </p>
 
@@ -93,7 +91,7 @@ export default function Comic() {
                                 <ComicDetail itemName="Price" item={comic.coverPrice} />
                                 <ComicDetail
                                     itemName="Released"
-                                    item={format(comic.releaseDate, "MM-dd-yyyy")}
+                                    item={format(new Date(comic.releaseDate), "MM-dd-yyyy")}
                                 />
                                 <ComicDetail itemName="Format" item={comic.format} />
                                 <ComicDetail itemName="Rating" item={comic.ageRating} />
@@ -116,9 +114,12 @@ export default function Comic() {
                                     Add to Collection
                                 </Button>
                             )}
-
-                            <Lists comicId={comic.id} />
                         </article>
+                    </div>
+                    <hr />
+                    <div className="flex mt-10">
+                        <Lists comicID={comic.id} />
+                        <CollectionDetails comic={comic} />
                     </div>
 
                     {showFullCover && (

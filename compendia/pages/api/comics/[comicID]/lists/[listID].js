@@ -15,7 +15,7 @@ export default async function handler(req, res) {
                 const listComicDeleteParams = [comicID, listID]
                 await client.query(listComicDelete, listComicDeleteParams)
 
-                res.status(200).end()
+                res.status(200).json({ id: listID, action: "remove" })
             } else {
                 const listComicInsert = `INSERT INTO comic_list_comics (comic_id, comic_list_id) VALUES ($1, $2) RETURNING comic_list_id`
                 const listComicInsertParams = [comicID, listID]
@@ -25,7 +25,8 @@ export default async function handler(req, res) {
                 )
 
                 res.status(200).json({
-                    id: listComicInsertResult.rows[0].comic_list_id,
+                    id: listID,
+                    action: "add",
                 })
             }
         }

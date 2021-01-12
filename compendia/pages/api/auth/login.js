@@ -61,7 +61,6 @@ export default async function login(req, res) {
                 id: user.id,
                 publicAddress: metadata.publicAddress,
                 email: user.email,
-                collectionID: user.collectionID,
                 exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 7, // one week
             },
             process.env.JWT_SECRET
