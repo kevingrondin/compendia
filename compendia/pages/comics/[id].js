@@ -1,15 +1,15 @@
-import { useRouter } from "next/router"
-import Page from "../../components/Page"
-import { useQuery, useMutation, useQueryClient } from "react-query"
 import axios from "axios"
-import { format } from "date-fns"
-import Link from "next/link"
-import Arrow from "../../components/utils/Arrow"
-import Lists from "../../components/comic/Lists"
-import Button from "../../components/utils/Button"
+import { useRouter } from "next/router"
 import { useState } from "react"
+import { useQuery } from "react-query"
+import Link from "next/link"
+import Page from "../../components/Page"
 import FullScreenModal from "../../components/utils/FullScreenModal"
 import CollectionDetails from "../../components/comic/CollectionDetails"
+import CollectionButton from "../../components/comic/CollectionButton"
+import Arrow from "../../components/utils/Arrow"
+import Lists from "../../components/comic/Lists"
+import { formatDateStringForView } from "../../util/date"
 
 function useComicDetail(id) {
     return useQuery(["comic-detail", id], async () => {
@@ -28,21 +28,10 @@ function ComicDetail({ itemName, item }) {
 }
 
 export default function Comic() {
-    const queryClient = useQueryClient()
     const router = useRouter()
     const { id } = router.query
-    const { status, error, data: comic } = useComicDetail(id)
+    const { status, error, data: comic } = useComicDetail(parseInt(id))
     const [showFullCover, setShowFullCover] = useState(false)
-
-    const toggleIsCollectedMutation = useMutation(
-        () => axios.post(`/api/collection/comics/${id}`),
-        {
-            onSuccess: () => {
-                comic.isCollected = true
-                queryClient.setQueryData(["comic-detail", id], comic)
-            },
-        }
-    )
 
     // Prevent further processing when the id query param doesn't exist
     if (!id) return <></>
@@ -85,13 +74,15 @@ export default function Comic() {
                                         </a>
                                     </Link>
                                 )}
+
+                                <CollectionButton comic={comic} />
                             </div>
 
                             <div className="flex flex-wrap justify-center py-5 sm:pt-2 ">
                                 <ComicDetail itemName="Price" item={comic.coverPrice} />
                                 <ComicDetail
                                     itemName="Released"
-                                    item={format(new Date(comic.releaseDate), "MM-dd-yyyy")}
+                                    item={formatDateStringForView(comic.releaseDate)}
                                 />
                                 <ComicDetail itemName="Format" item={comic.format} />
                                 <ComicDetail itemName="Rating" item={comic.ageRating} />
@@ -101,25 +92,12 @@ export default function Comic() {
                             ) : (
                                 <p className="text-gray-600 text-xl m-4">No Description...</p>
                             )}
-
-                            {comic.isCollected ? (
-                                <p className="mt-5 font-extrabold">Comic is in collection</p>
-                            ) : (
-                                <Button
-                                    className="mt-5"
-                                    onClick={() => {
-                                        toggleIsCollectedMutation.mutate()
-                                    }}
-                                >
-                                    Add to Collection
-                                </Button>
-                            )}
                         </article>
                     </div>
                     <hr />
                     <div className="flex mt-10">
                         <Lists comicID={comic.id} />
-                        <CollectionDetails comic={comic} />
+                        <CollectionDetails comicID={comic.id} isCollected={comic.isCollected} />
                     </div>
 
                     {showFullCover && (

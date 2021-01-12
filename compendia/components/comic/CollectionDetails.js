@@ -1,13 +1,14 @@
-import { useState } from "react"
-import { useMutation, useQueryClient } from "react-query"
+import { useState, useEffect } from "react"
+import { useMutation, useQueryClient, useQuery } from "react-query"
 import { format } from "date-fns"
 import axios from "axios"
+import { formatDateStringForView } from "../../util/date"
 import Button from "../utils/Button"
 
 function CollectionItem({ children, isEditMode, field, label }) {
     return (
         <label className="flex flex-col pr-10 pb-5">
-            <span className="font-bold">{label}</span>
+            <span className="font-bold pb-2">{label}</span>
             {isEditMode ? (
                 children
             ) : (
@@ -19,52 +20,49 @@ function CollectionItem({ children, isEditMode, field, label }) {
     )
 }
 
-export default function CollectionDetails({ comic }) {
+function useCollectedComicDetail(id) {
+    return useQuery(["collected-comic-detail", id], async () => {
+        const { data } = await axios.get(`/api/collection/comics/${id}`)
+        return data
+    })
+}
+
+export default function CollectionDetails({ comicID, isCollected }) {
     const queryClient = useQueryClient()
+    const { isLoading, isError, data } = useCollectedComicDetail(comicID)
     const [isEditMode, setIsEditMode] = useState(false)
 
-    const [editDateCollected, setEditDateCollected] = useState(comic.dateCollected)
-    const [editPurchasePrice, setEditPurchasePrice] = useState(comic.purchasePrice)
-    const [editBoughtAt, setEditBoughtAt] = useState(comic.boughtAt)
-    const [editCondition, setEditCondition] = useState(comic.condition)
-    const [editQuantity, setEditQuantity] = useState(comic.quantity)
-    const [editNotes, setEditNotes] = useState(comic.notes)
+    const [editDateCollected, setEditDateCollected] = useState()
+    const [editPurchasePrice, setEditPurchasePrice] = useState()
+    const [editBoughtAt, setEditBoughtAt] = useState()
+    const [editCondition, setEditCondition] = useState()
+    const [editQuantity, setEditQuantity] = useState()
+    const [editNotes, setEditNotes] = useState()
+
+    useEffect(() => {
+        if (!isLoading && !isError && data) resetCollectionFields()
+    }, [data])
 
     const resetCollectionFields = () => {
-        setIsEditMode(false)
-        setEditDateCollected(comic.dateCollected)
-        setEditPurchasePrice(comic.purchasePrice)
-        setEditBoughtAt(comic.boughtAt)
-        setEditCondition(comic.condition)
-        setEditQuantity(comic.quantity)
-        setEditNotes(comic.notes)
+        setEditDateCollected(data.dateCollected)
+        setEditPurchasePrice(data.purchasePrice)
+        setEditBoughtAt(data.boughtAt)
+        setEditCondition(data.condition)
+        setEditQuantity(data.quantity)
+        setEditNotes(data.notes)
     }
 
     const updateCollectionFields = useMutation(
-        () =>
-            axios.put(`/api/collection/comics/${comic.id}`, {
-                dateCollected: editDateCollected,
-                purchasePrice: editPurchasePrice,
-                boughtAt: editBoughtAt,
-                condition: editCondition,
-                quantity: editQuantity,
-                notes: editNotes,
-            }),
+        (data) => axios.put(`/api/collection/comics/${comicID}`, data),
         {
             onSuccess: (res) => {
-                const newComic = { ...comic }
-                newComic.dateCollected = res.data.dateCollected
-                newComic.purchasePrice = res.data.purchasePrice
-                newComic.boughtAt = res.data.boughtAt
-                newComic.condition = res.data.condition
-                newComic.quantity = res.data.quantity
-                newComic.notes = res.data.notes
-                queryClient.setQueryData(["comic-detail", comic.id], newComic)
+                setIsEditMode(false)
+                queryClient.setQueryData(["collected-comic-detail", comicID], { ...res.data })
             },
         }
     )
 
-    if (!comic.isCollected) return <></>
+    if (!isCollected) return <></>
     else
         return (
             <>
@@ -81,112 +79,137 @@ export default function CollectionDetails({ comic }) {
                         )}
                     </div>
 
-                    <form>
-                        <article className="flex flex-wrap">
-                            <CollectionItem
-                                isEditMode={isEditMode}
-                                field={editDateCollected}
-                                label="Date Collected"
+                    <article className="flex flex-wrap">
+                        <CollectionItem
+                            isEditMode={isEditMode}
+                            field={formatDateStringForView(editDateCollected)}
+                            label="Date Collected"
+                        >
+                            {" "}
+                            <input
+                                className="rounded-xl border-2"
+                                type="date"
+                                value={editDateCollected || ""}
+                                onChange={(e) => setEditDateCollected(e.target.value)}
+                            />
+                        </CollectionItem>
+
+                        <CollectionItem
+                            isEditMode={isEditMode}
+                            field={editPurchasePrice}
+                            label="Purchase Price"
+                        >
+                            <input
+                                className="w-28 rounded-xl border-2"
+                                type="text"
+                                maxLength="10"
+                                value={editPurchasePrice || ""}
+                                onChange={(e) => setEditPurchasePrice(e.target.value)}
+                            />
+                        </CollectionItem>
+
+                        <CollectionItem
+                            isEditMode={isEditMode}
+                            field={editBoughtAt}
+                            label="Bought At"
+                        >
+                            <input
+                                className="rounded-xl border-2"
+                                type="text"
+                                maxLength="50"
+                                value={editBoughtAt || ""}
+                                onChange={(e) => setEditBoughtAt(e.target.value)}
+                            />
+                        </CollectionItem>
+
+                        <CollectionItem
+                            isEditMode={isEditMode}
+                            field={editCondition}
+                            label="Condition"
+                        >
+                            <select
+                                className="rounded-xl border-2"
+                                value={editCondition || ""}
+                                onChange={(e) => setEditCondition(e.target.value)}
                             >
-                                <input
-                                    type="date"
-                                    value={editDateCollected || ""}
-                                    onChange={(e) =>
-                                        setEditDateCollected(
-                                            format(new Date(e.target.value), "yyyy-MM-dd")
-                                        )
-                                    }
-                                />
-                            </CollectionItem>
+                                <option value="">- Select -</option>
+                                <option value="Near Mint">Near Mint</option>
+                                <option value="Very Fine">Very Fine</option>
+                                <option value="Fine">Fine</option>
+                                <option value="Very Good">Very Good</option>
+                                <option value="Good">Good</option>
+                                <option value="Fair">Fair</option>
+                                <option value="Poor">Poor</option>
+                            </select>
+                        </CollectionItem>
 
-                            <CollectionItem
-                                isEditMode={isEditMode}
-                                field={editPurchasePrice}
-                                label="Purchase Price"
-                            >
-                                <input
-                                    className="w-28"
-                                    type="text"
-                                    maxLength="10"
-                                    value={editPurchasePrice || ""}
-                                    onChange={(e) => setEditPurchasePrice(e.target.value)}
-                                />
-                            </CollectionItem>
+                        <CollectionItem
+                            isEditMode={isEditMode}
+                            field={editQuantity}
+                            label="Quantity"
+                        >
+                            <input
+                                className="w-20 rounded-xl border-2"
+                                type="number"
+                                min="1"
+                                max="999"
+                                value={editQuantity || ""}
+                                onChange={(e) => setEditQuantity(e.target.value)}
+                            />
+                        </CollectionItem>
+                    </article>
 
-                            <CollectionItem
-                                isEditMode={isEditMode}
-                                field={editBoughtAt}
-                                label="Bought At"
-                            >
-                                <input
-                                    type="text"
-                                    maxLength="50"
-                                    value={editBoughtAt || ""}
-                                    onChange={(e) => setEditBoughtAt(e.target.value)}
-                                />
-                            </CollectionItem>
-
-                            <CollectionItem
-                                isEditMode={isEditMode}
-                                field={editCondition}
-                                label="Condition"
-                            >
-                                <select
-                                    value={editCondition || ""}
-                                    onChange={(e) => setEditCondition(e.target.value)}
-                                >
-                                    <option value="Near Mint">Near Mint</option>
-                                    <option value="Very Fine">Very Fine</option>
-                                    <option value="Fine">Fine</option>
-                                    <option value="Very Good">Very Good</option>
-                                    <option value="Good">Good</option>
-                                    <option value="Fair">Fair</option>
-                                    <option value="Poor">Poor</option>
-                                </select>
-                            </CollectionItem>
-
-                            <CollectionItem
-                                isEditMode={isEditMode}
-                                field={editQuantity}
-                                label="Quantity"
-                            >
-                                <input
-                                    className="w-20"
-                                    type="number"
-                                    min="1"
-                                    max="999"
-                                    value={editQuantity || ""}
-                                    onChange={(e) => setEditQuantity(e.target.value)}
-                                />
-                            </CollectionItem>
-
-                            <CollectionItem isEditMode={isEditMode} field={editNotes} label="Notes">
-                                <textarea
-                                    value={editNotes || ""}
-                                    maxLength="2000"
-                                    onChange={(e) => setEditNotes(e.target.value)}
-                                />
-                            </CollectionItem>
-                        </article>
-
-                        {isEditMode && (
-                            <div className="flex justify-end items-end">
-                                <Button
-                                    className="self-center mr-4"
-                                    onClick={() => updateCollectionFields.mutate()}
-                                >
-                                    Update
-                                </Button>{" "}
-                                <Button
-                                    className="self-center"
-                                    isSecondary={true}
-                                    onClick={resetCollectionFields}
-                                >
-                                    Cancel
-                                </Button>
+                    <label className="flex flex-col max-w-md pr-10 pb-5">
+                        <span className="font-bold pb-2">Notes</span>
+                        {isEditMode ? (
+                            <textarea
+                                className="rounded-xl rounded-br-none border-2"
+                                value={editNotes || ""}
+                                maxLength="2000"
+                                rows="3"
+                                onChange={(e) => setEditNotes(e.target.value)}
+                            />
+                        ) : (
+                            <div className={` ${!editNotes && "font-bold text-2xl"}`}>
+                                {editNotes ? editNotes : "-"}
                             </div>
                         )}
-                    </form>
+                    </label>
+
+                    {isEditMode && (
+                        <div className="flex justify-end items-end">
+                            <Button
+                                className="self-center mr-4"
+                                onClick={() => {
+                                    const dateParts = editDateCollected.split("-")
+
+                                    updateCollectionFields.mutate({
+                                        dateCollected: format(
+                                            new Date(dateParts[0], dateParts[1] - 1, dateParts[2]),
+                                            "yyyy-MM-dd"
+                                        ),
+                                        purchasePrice: editPurchasePrice,
+                                        boughtAt: editBoughtAt,
+                                        condition: editCondition,
+                                        quantity: editQuantity,
+                                        notes: editNotes,
+                                    })
+                                }}
+                            >
+                                Update
+                            </Button>{" "}
+                            <Button
+                                className="self-center"
+                                isSecondary={true}
+                                onClick={() => {
+                                    setIsEditMode(false)
+                                    resetCollectionFields()
+                                }}
+                            >
+                                Cancel
+                            </Button>
+                        </div>
+                    )}
                 </div>
             </>
         )
