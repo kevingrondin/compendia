@@ -12,7 +12,7 @@ export default async function handler(req, res) {
     const client = await db.connect()
     try {
         const comicQuery = `SELECT c.comic_id, title, cover, release_date, cover_price, description, age_rating, format, printing, p.publisher_id, p.name as publisher_name, s.series_id, s.name as series_name, i.imprint_id, i.name as imprint_name, versions,
-            EXISTS (SELECT 1 FROM collected_comics as cc FULL JOIN collections as col USING(collection_id) WHERE c.comic_id = $1 AND col.collection_id = cc.collection_id AND col.user_id = $2 ) as isCollected
+            EXISTS (SELECT 1 FROM collected_comics as cc FULL JOIN collections as col USING(collection_id) WHERE cc.comic_id = $1 AND col.collection_id = cc.collection_id AND col.user_id = $2 ) as isCollected
             FROM comics as c
             FULL JOIN series as s ON c.series_id = s.series_id
             FULL JOIN publishers as p ON s.publisher_id = p.publisher_id

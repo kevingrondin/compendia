@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react"
+import Router, { useRouter } from "next/router"
+
 import { Magic } from "magic-sdk"
 import { OAuthExtension } from "@magic-ext/oauth"
-import Router, { useRouter } from "next/router"
 
 export default function Callback() {
     const [magic, setMagic] = useState(null)

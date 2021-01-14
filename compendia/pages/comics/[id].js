@@ -1,23 +1,24 @@
-import axios from "axios"
-import { useRouter } from "next/router"
 import { useState } from "react"
-import { useQuery } from "react-query"
 import Link from "next/link"
+import { useRouter } from "next/router"
+
+import axios from "axios"
+import { useQuery } from "react-query"
+
 import Page from "../../components/Page"
 import FullScreenModal from "../../components/utils/FullScreenModal"
 import CollectionDetails from "../../components/comic/CollectionDetails"
-import CollectionButton from "../../components/comic/CollectionButton"
+import CollectButton from "../../components/comic/CollectButton"
 import ComicCreators from "../../components/comic/ComicCreators"
 import ComicDetails from "../../components/comic/ComicDetails"
-import Arrow from "../../components/utils/Arrow"
+import ArrowIcon from "../../components/utils/icons/Arrow"
 import Lists from "../../components/comic/Lists"
 
-function useComicDetail(comicID) {
-    return useQuery(["comic-detail", comicID], async () => {
+const useComicDetail = (comicID) =>
+    useQuery(["comic-detail", comicID], async () => {
         const { data } = await axios.get(`/api/comics/${comicID}`)
         return data
     })
-}
 
 export default function Comic() {
     const router = useRouter()
@@ -57,7 +58,8 @@ export default function Comic() {
                                             <span>{`${comic.versions} Other Version${
                                                 comic.versions > 1 ? "s" : ""
                                             }`}</span>
-                                            <Arrow
+
+                                            <ArrowIcon
                                                 colorClass="text-blue-primary-200"
                                                 className="pl-1"
                                                 pixelHeight="16px"
@@ -69,7 +71,7 @@ export default function Comic() {
 
                             <ComicDetails comic={comic} />
 
-                            <CollectionButton comic={comic} />
+                            <CollectButton comicID={comic.id} isCollected={comic.isCollected} />
 
                             {comic.description ? (
                                 <p className="m-4 sm:m-0 max-w-md">{comic.description}</p>
@@ -79,7 +81,7 @@ export default function Comic() {
                         </article>
                     </div>
 
-                    <ComicCreators creators={comic.creators} />
+                    {comic.creators.length > 0 && <ComicCreators creators={comic.creators} />}
 
                     <hr />
 

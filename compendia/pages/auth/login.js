@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react"
-import Router from "next/router"
-import { Magic } from "magic-sdk"
-import { OAuthExtension } from "@magic-ext/oauth"
-import { useUser } from "../../hooks/magic"
-import { validateEmail } from "../../util/validateEmail"
 import Head from "next/head"
+import Router from "next/router"
+
+import { OAuthExtension } from "@magic-ext/oauth"
+import { Magic } from "magic-sdk"
+import { useUser } from "../../hooks/magic"
+
+import { validateEmail } from "../../util/validateEmail"
 import Button from "../../components/utils/Button"
 
 export default function Login() {
@@ -63,6 +65,7 @@ export default function Login() {
                         <h1 className="p-10 text-blue-primary-100 text-3xl font-bold">
                             Login / Sign Up
                         </h1>
+
                         <div className="p-2">
                             <form className="flex flex-col">
                                 <label className="p-5">

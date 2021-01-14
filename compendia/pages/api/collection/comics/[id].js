@@ -19,7 +19,9 @@ export default async function handler(req, res) {
             if (getResult.rows.length > 0) {
                 const result = getResult.rows[0]
                 res.status(200).json({
-                    dateCollected: format(result.date_collected, "yyyy-MM-dd"),
+                    dateCollected: result.date_collected
+                        ? format(result.date_collected, "yyyy-MM-dd")
+                        : result.date_collected,
                     purchasePrice: result.purchase_price,
                     boughtAt: result.bought_at,
                     condition: result.condition,

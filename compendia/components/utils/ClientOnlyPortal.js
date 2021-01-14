@@ -1,7 +1,9 @@
 import { useRef, useEffect, useState } from "react"
 import { createPortal } from "react-dom"
 
-export default function ClientOnlyPortal({ children, selector }) {
+import PropTypes from "prop-types"
+
+export default function ClientOnlyPortal({ selector, children }) {
     const ref = useRef()
     const [mounted, setMounted] = useState(false)
 
@@ -11,4 +13,9 @@ export default function ClientOnlyPortal({ children, selector }) {
     }, [selector])
 
     return mounted ? createPortal(children, ref.current) : null
+}
+
+ClientOnlyPortal.propTypes = {
+    selector: PropTypes.string.isREquired,
+    children: PropTypes.node.isRequired,
 }

@@ -1,11 +1,13 @@
 import { useState } from "react"
+
+import useComicDay from "../hooks/useComicDay"
+
 import Page from "../components/Page"
-import ReleaseTabs from "../components/new-releases/ReleaseTabs"
+import ReleasesTypeTabs from "../components/new-releases/ReleasesTypeTabs"
 import AllReleases from "../components/new-releases/AllReleases"
-import PullList from "../components/new-releases/PullList"
+import PullListReleases from "../components/new-releases/PullListReleases"
 import ReleasesHeading from "../components/new-releases/ReleasesHeading"
 import ReleaseDaySelector from "../components/new-releases/ReleaseDaySelector"
-import useComicDay from "../hooks/useComicDay"
 
 export default function Releases() {
     const [activeTab, setActiveTab] = useState("pull list")
@@ -14,16 +16,19 @@ export default function Releases() {
     return (
         <Page title="Compendia - Releases">
             <ReleasesHeading comicDay={comicDay} />
+
             <menu className="flex flex-wrap-reverse justify-center items-center p-0 sm:flex-nowrap md:justify-start">
-                <ReleaseTabs setActiveTab={setActiveTab} activeTab={activeTab} />
+                <ReleasesTypeTabs onTabClick={setActiveTab} activeTab={activeTab} />
+
                 <ReleaseDaySelector
                     getNextComicDay={() => setComicDay(useComicDay("next", comicDay))}
                     getPrevComicDay={() => setComicDay(useComicDay("prev", comicDay))}
                     comicDay={comicDay}
                 />
             </menu>
+
             {activeTab === "pull list" ? (
-                <PullList comicDay={comicDay} />
+                <PullListReleases comicDay={comicDay} />
             ) : (
                 <AllReleases comicDay={comicDay} />
             )}

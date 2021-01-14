@@ -1,5 +1,6 @@
 import { useEffect } from "react"
 import { useRouter } from "next/router"
+
 import { useUser } from "../hooks/magic"
 
 export default function Settings() {
@@ -15,6 +16,7 @@ export default function Settings() {
             <h2>Account</h2>
             <div className="p-2">
                 <p className="text-left list-none">Email: {user && user.email}</p>
+
                 <div className="flex flex-col justify-center items-center">
                     <a className="w-32" href="/api/auth/logout">
                         Log Out

@@ -1,9 +1,10 @@
 import { useQuery, useQueryClient, useMutation } from "react-query"
+import PropTypes from "prop-types"
 import axios from "axios"
 
-function useComicLists(id) {
-    return useQuery([`user-comic-lists`, id], async () => {
-        const { data } = await axios.get(`/api/comics/${id}/lists`)
+function useComicLists(comicID) {
+    return useQuery([`user-comic-lists`, comicID], async () => {
+        const { data } = await axios.get(`/api/comics/${comicID}/lists`)
         return data
     })
 }
@@ -14,7 +15,7 @@ export default function Lists({ comicID }) {
 
     const toggleComicInList = useMutation(
         (edit) =>
-            axios.put(`/api/comics/${edit.comicID}/lists/${edit.id}`, {
+            axios.put(`/api/comics/${edit.comicID}/lists/${edit.listID}`, {
                 isComicInList: edit.isComicInList,
             }),
         {
@@ -29,6 +30,7 @@ export default function Lists({ comicID }) {
     return (
         <div className="pb-10 pr-10">
             <h2 className="font-bold text-2xl">Lists</h2>
+
             <ul className="flex flex-col">
                 {lists &&
                     lists.map((list) => {
@@ -39,7 +41,7 @@ export default function Lists({ comicID }) {
                                         type="checkbox"
                                         onChange={() =>
                                             toggleComicInList.mutate({
-                                                id: list.id,
+                                                listID: list.id,
                                                 isComicInList: list.isComicInList,
                                                 comicID: comicID,
                                             })
@@ -47,6 +49,7 @@ export default function Lists({ comicID }) {
                                         className="form-checkbox h-5 w-5 text-blue-primary-200"
                                         checked={list.isComicInList}
                                     />
+
                                     <span className="ml-2 text-gray-700">{list.name}</span>
                                 </label>
                             </li>
@@ -55,4 +58,8 @@ export default function Lists({ comicID }) {
             </ul>
         </div>
     )
+}
+
+Lists.propTypes = {
+    comicID: PropTypes.number.isRequired,
 }

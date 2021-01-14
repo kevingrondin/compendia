@@ -22,7 +22,8 @@ module.exports = {
                     "primary-50": "#78C1D7",
                     "primary-100": "#1f8ec1",
                     "primary-200": "#1b7fad",
-                    "primary-300": "#094166",
+                    "primary-300": "#026694",
+                    "primary-400": "#094166",
                 },
             },
             borderRadius: {
