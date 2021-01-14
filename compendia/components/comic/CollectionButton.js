@@ -32,7 +32,7 @@ export default function CollectionButton({ comic }) {
         <>
             {comic.isCollected ? (
                 <Button
-                    className="mt-3"
+                    className="mb-8"
                     roundedClass="rounded-lg"
                     isSecondary={true}
                     onClick={() => {

@@ -27,7 +27,7 @@ export default function Lists({ comicID }) {
     )
 
     return (
-        <div className="pr-10">
+        <div className="pb-10 pr-10">
             <h2 className="font-bold text-2xl">Lists</h2>
             <ul className="flex flex-col">
                 {lists &&

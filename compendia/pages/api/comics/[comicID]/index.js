@@ -11,20 +11,26 @@ export default async function handler(req, res) {
 
     const client = await db.connect()
     try {
-        // Get comic by the ID passed in
-        const comicQuery = `SELECT comic_id, title, cover, release_date, cover_price, description, age_rating, format, printing, p.publisher_id, p.name as publisher_name, s.series_id, s.name as series_name, i.imprint_id, i.name as imprint_name, versions,
+        const comicQuery = `SELECT c.comic_id, title, cover, release_date, cover_price, description, age_rating, format, printing, p.publisher_id, p.name as publisher_name, s.series_id, s.name as series_name, i.imprint_id, i.name as imprint_name, versions,
             EXISTS (SELECT 1 FROM collected_comics as cc FULL JOIN collections as col USING(collection_id) WHERE c.comic_id = $1 AND col.collection_id = cc.collection_id AND col.user_id = $2 ) as isCollected
             FROM comics as c
             FULL JOIN series as s ON c.series_id = s.series_id
             FULL JOIN publishers as p ON s.publisher_id = p.publisher_id
             FULL JOIN imprints as i ON i.publisher_id = p.publisher_id
             CROSS JOIN (SELECT COUNT(*) as versions FROM comics WHERE version_of = $1) as v
-            WHERE comic_id = $1`
+            WHERE c.comic_id = $1`
         const comicQueryParams = [comicID, user.id]
         const comicResult = await client.query(comicQuery, comicQueryParams)
 
+        const creatorsQuery = `SELECT creator_id, name, creator_types
+            FROM creators FULL JOIN comic_creators USING(creator_id)
+            WHERE comic_id = $1`
+        const creatorsParams = [comicID]
+        const creatorsResult = await client.query(creatorsQuery, creatorsParams)
+
         if (comicResult.rows.length > 0) {
             const comic = comicResult.rows[0]
+            const creators = creatorsResult.rows
 
             res.status(200).json({
                 id: parseInt(comic.comic_id),
@@ -44,6 +50,13 @@ export default async function handler(req, res) {
                 imprintName: comic.imprint_name,
                 versions: comic.versions,
                 isCollected: comic.iscollected,
+                creators: creators.map((creator) => {
+                    return {
+                        id: parseInt(creator.creator_id),
+                        name: creator.name,
+                        types: creator.creator_types,
+                    }
+                }),
             })
         } else res.status(404).json({ message: `Could not find a comic with ID of ${comicID}` })
     } catch (error) {
