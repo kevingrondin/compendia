@@ -7,12 +7,12 @@ import ArrowIcon from "../utils/icons/Arrow"
 const ComicCreators = ({ creators }) => (
     <>
         <hr />
-        <article className="my-8 mx-4">
+        <article className="py-8 px-4">
             <h2 className="font-bold text-2xl mb-3">Creators</h2>
-            <ul>
+            <ul className="flex flex-wrap">
                 {creators.map((creator) => {
                     return (
-                        <li key={creator.id} className="text-lg font-semibold mb-3">
+                        <li key={creator.id} className="text-lg font-semibold mb-3 mr-12">
                             {creator.types.join(" / ") + ":"}
                             <Link href={`/creators/${creator.id}`} passHref>
                                 <a className="flex items-center w-min whitespace-nowrap font-normal">

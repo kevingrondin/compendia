@@ -2,9 +2,9 @@ import { useMutation, useQueryClient } from "react-query"
 import PropTypes from "prop-types"
 import axios from "axios"
 
-import ActionButton from "../utils/ButtonAction"
+import ActionButton from "../utils/ActionButton"
 
-export default function PullComicButton({ comicID, isPulled }) {
+export default function PullComicButton({ comicID, isPulled, className }) {
     const queryClient = useQueryClient()
 
     const addToPullList = () => {}
@@ -18,6 +18,7 @@ export default function PullComicButton({ comicID, isPulled }) {
             isActive={isPulled}
             onAdd={addToPullList}
             onRemove={removeFromPullList}
+            className={className}
         />
     )
 }
@@ -25,4 +26,5 @@ export default function PullComicButton({ comicID, isPulled }) {
 PullComicButton.propTypes = {
     comicID: PropTypes.number.isRequired,
     isPulled: PropTypes.bool.isRequired,
+    className: PropTypes.string,
 }

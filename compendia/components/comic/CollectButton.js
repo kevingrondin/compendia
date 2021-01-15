@@ -4,7 +4,7 @@ import axios from "axios"
 
 import ActionButton from "../utils/ActionButton"
 
-export default function CollectButton({ comicID, isCollected }) {
+export default function CollectButton({ comicID, isCollected, className }) {
     const queryClient = useQueryClient()
 
     const addToCollection = useMutation(() => axios.post(`/api/collection/comics/${comicID}`), {
@@ -36,6 +36,7 @@ export default function CollectButton({ comicID, isCollected }) {
             isActive={isCollected}
             onAdd={addToCollection}
             onRemove={removeFromCollection}
+            className={className}
         />
     )
 }
@@ -43,4 +44,5 @@ export default function CollectButton({ comicID, isCollected }) {
 CollectButton.propTypes = {
     comicID: PropTypes.number.isRequired,
     isCollected: PropTypes.bool.isRequired,
+    className: PropTypes.string,
 }

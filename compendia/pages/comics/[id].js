@@ -9,6 +9,7 @@ import Page from "../../components/Page"
 import FullScreenModal from "../../components/utils/FullScreenModal"
 import CollectionDetails from "../../components/comic/CollectionDetails"
 import CollectButton from "../../components/comic/CollectButton"
+import PullComicButton from "../../components/comic/PullComicButton"
 import ComicCreators from "../../components/comic/ComicCreators"
 import ComicDetails from "../../components/comic/ComicDetails"
 import ArrowIcon from "../../components/utils/icons/Arrow"
@@ -71,12 +72,19 @@ export default function Comic() {
 
                             <ComicDetails comic={comic} />
 
-                            <CollectButton comicID={comic.id} isCollected={comic.isCollected} />
+                            <div className="flex justify-center">
+                                <CollectButton
+                                    comicID={comic.id}
+                                    isCollected={comic.isCollected}
+                                    className="mr-6"
+                                />
+                                <PullComicButton comicID={comic.id} isPulled={comic.isCollected} />
+                            </div>
 
                             {comic.description ? (
-                                <p className="m-4 sm:m-0 max-w-md">{comic.description}</p>
+                                <p className="mt-8 max-w-md">{comic.description}</p>
                             ) : (
-                                <p className="text-gray-600 text-xl m-4">No Description...</p>
+                                <p className="mt-8 text-gray-600 text-xl">No Description...</p>
                             )}
                         </article>
                     </div>
@@ -85,7 +93,7 @@ export default function Comic() {
 
                     <hr />
 
-                    <div className="flex flex-wrap mt-8 ml-4 sm:flex-nowrap">
+                    <div className="flex flex-wrap mt-8 sm:flex-nowrap">
                         <Lists comicID={comic.id} />
                         <CollectionDetails comicID={comic.id} isCollected={comic.isCollected} />
                     </div>

@@ -4,11 +4,11 @@ import Button from "./Button"
 import AddIcon from "./icons/Add"
 import CheckIcon from "./icons/Check"
 
-const ActionButton = ({ addText, removeText, isActive, onAdd, onRemove }) => (
+const ActionButton = ({ addText, removeText, isActive, onAdd, onRemove, className }) => (
     <>
         {isActive ? (
             <Button
-                className="mb-8"
+                className={className}
                 roundedClass="rounded-lg"
                 isSecondary={true}
                 onClick={() => onRemove.mutate()}
@@ -20,7 +20,7 @@ const ActionButton = ({ addText, removeText, isActive, onAdd, onRemove }) => (
                 </span>
             </Button>
         ) : (
-            <Button className="mb-8" roundedClass="rounded-lg" onClick={() => onAdd.mutate()}>
+            <Button className={className} roundedClass="rounded-lg" onClick={() => onAdd.mutate()}>
                 <span className="flex items-center">
                     <span className="pr-2">{addText}</span>
                     <AddIcon />
@@ -36,6 +36,7 @@ ActionButton.propTypes = {
     isActive: PropTypes.bool.isRequired,
     onAdd: PropTypes.object.isRequired,
     onRemove: PropTypes.object.isRequired,
+    className: PropTypes.string,
 }
 
 export default ActionButton

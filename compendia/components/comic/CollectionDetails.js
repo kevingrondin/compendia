@@ -25,7 +25,7 @@ const CollectionDetail = ({ isEditMode, field, label, children }) => (
 
 CollectionDetail.propTypes = {
     isEditMode: PropTypes.bool.isRequired,
-    field: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+    field: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     label: PropTypes.string.isRequired,
     children: PropTypes.element.isRequired,
 }

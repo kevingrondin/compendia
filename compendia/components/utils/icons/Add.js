@@ -1,7 +1,7 @@
 const AddIcon = () => (
     <svg
-        width="17px"
-        height="17px"
+        width="14px"
+        height="14px"
         viewBox="0 0 24 24"
         version="1.1"
         xmlns="http://www.w3.org/2000/svg"
