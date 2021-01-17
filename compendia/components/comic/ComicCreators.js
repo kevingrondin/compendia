@@ -20,8 +20,9 @@ const ComicCreators = ({ creators }) => (
                                     <ArrowIcon
                                         colorClass="text-blue-primary-200"
                                         className="pl-1"
-                                        pixelHeight="16"
-                                        pixelWidth="16"
+                                        height="35"
+                                        width="35"
+                                        viewBox="-8 -12 60 55"
                                         onClick={() => {}}
                                         direction="right"
                                     />

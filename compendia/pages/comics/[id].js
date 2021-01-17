@@ -43,7 +43,7 @@ export default function Comic() {
                             onClick={() => setShowFullCover(!showFullCover)}
                         />
 
-                        <article className="mt-8 sm:ml-6 sm:mt-6">
+                        <article className="mt-8 md:ml-6 sm:mt-6">
                             <h2 className="font-bold text-3xl text-center md:text-left">{`${comic.seriesName} ${comic.title}`}</h2>
 
                             <div className="flex flex-col items-center pt-1 md:items-start">
@@ -63,8 +63,9 @@ export default function Comic() {
                                             <ArrowIcon
                                                 colorClass="text-blue-primary-200"
                                                 className="pl-1"
-                                                pixelHeight={16}
-                                                pixelWidth={16}
+                                                height="35"
+                                                width="35"
+                                                viewBox="-8 -12 60 55"
                                                 onClick={() => {}}
                                                 direction="right"
                                             />
@@ -75,7 +76,7 @@ export default function Comic() {
 
                             <ComicDetails comic={comic} />
 
-                            <div className="flex justify-center">
+                            <div className="flex justify-center md:justify-start">
                                 <CollectButton
                                     comicID={comic.id}
                                     isCollected={comic.isCollected}
@@ -85,7 +86,7 @@ export default function Comic() {
                             </div>
 
                             {comic.description ? (
-                                <p className="mt-8 max-w-md">{comic.description}</p>
+                                <p className="mt-8 max-w-md m-auto md:mx-0">{comic.description}</p>
                             ) : (
                                 <p className="mt-8 text-gray-600 text-xl">No Description...</p>
                             )}
