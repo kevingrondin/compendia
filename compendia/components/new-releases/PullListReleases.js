@@ -10,7 +10,7 @@ function usePullList(comicDay) {
         ["pull-list", format(comicDay, "MM-dd-yyyy")],
         async () => {
             const { data } = await axios.get(
-                `/api/pull-list?comicDay=${format(comicDay, "MM-dd-yyyy")}`
+                `/api/collection/pull-list?comicDay=${format(comicDay, "MM-dd-yyyy")}`
             )
             return data
         },

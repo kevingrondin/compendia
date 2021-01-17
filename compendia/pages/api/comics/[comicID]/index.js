@@ -12,7 +12,8 @@ export default async function handler(req, res) {
     const client = await db.connect()
     try {
         const comicQuery = `SELECT c.comic_id, title, cover, release_date, cover_price, description, age_rating, format, printing, p.publisher_id, p.name as publisher_name, s.series_id, s.name as series_name, i.imprint_id, i.name as imprint_name, versions,
-            EXISTS (SELECT 1 FROM collected_comics as cc FULL JOIN collections as col USING(collection_id) WHERE cc.comic_id = $1 AND col.collection_id = cc.collection_id AND col.user_id = $2 ) as isCollected
+            EXISTS (SELECT 1 FROM collected_comics as cc FULL JOIN collections as col USING(collection_id) WHERE cc.comic_id = $1 AND col.collection_id = cc.collection_id AND col.user_id = $2 ) as is_collected,
+            (SELECT get_is_comic_pulled($1, s.series_id, $2)) as is_pulled
             FROM comics as c
             FULL JOIN series as s ON c.series_id = s.series_id
             FULL JOIN publishers as p ON s.publisher_id = p.publisher_id
@@ -49,7 +50,8 @@ export default async function handler(req, res) {
                 imprintID: comic.imprint_id,
                 imprintName: comic.imprint_name,
                 versions: comic.versions,
-                isCollected: comic.iscollected,
+                isCollected: comic.is_collected,
+                isPulled: comic.is_pulled,
                 creators: creators.map((creator) => {
                     return {
                         id: parseInt(creator.creator_id),
@@ -60,6 +62,7 @@ export default async function handler(req, res) {
             })
         } else res.status(404).json({ message: `Could not find a comic with ID of ${comicID}` })
     } catch (error) {
+        console.log(error)
         res.status(500).json({ message: error.message })
     } finally {
         client.release()

@@ -63,7 +63,10 @@ export default function Comic() {
                                             <ArrowIcon
                                                 colorClass="text-blue-primary-200"
                                                 className="pl-1"
-                                                pixelHeight="16px"
+                                                pixelHeight={16}
+                                                pixelWidth={16}
+                                                onClick={() => {}}
+                                                direction="right"
                                             />
                                         </a>
                                     </Link>
@@ -78,7 +81,7 @@ export default function Comic() {
                                     isCollected={comic.isCollected}
                                     className="mr-6"
                                 />
-                                <PullComicButton comicID={comic.id} isPulled={comic.isCollected} />
+                                <PullComicButton comicID={comic.id} isPulled={comic.isPulled} />
                             </div>
 
                             {comic.description ? (
