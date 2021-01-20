@@ -1,4 +1,7 @@
+import { useState, createRef, useEffect } from "react"
+
 import PropTypes from "prop-types"
+
 import ArrowIcon from "./icons/Arrow"
 
 const primaryColors =
@@ -14,40 +17,59 @@ const Button = ({
     isSecondary,
     isDisabled = false,
     isOptionsButton = false,
+    options,
     roundedClass = "rounded-full",
-}) => (
-    <>
-        <button
-            onClick={onClick}
-            className={`text-center text-white text-lg py-2 px-4 max-h-14 cursor-pointer shadow-sm border-b-4 hover:border-b-2 hover:border-t-2
-                ${roundedClass} ${isOptionsButton && "rounded-r-none"}
-                ${isSecondary ? secondaryColors : primaryColors}
-                ${isFullWidth && "w-full"}
-                ${className}`}
-            disabled={isDisabled}
-        >
-            {children}
-        </button>
-        {isOptionsButton && (
-            <div
-                className={`w-8 border-l-2 text-center flex justify-center items-center cursor-pointer shadow-sm max-h-14 rounded-full rounded-l-none border-b-4 hover:border-b-2 hover:border-t-2
-                ${isSecondary ? secondaryColors : primaryColors}
-                ${isFullWidth && "w-full"}
-                ${className}`}
-            >
-                <ArrowIcon
-                    direction="down"
-                    colorClass="text-white"
-                    className=""
-                    width="100"
-                    height=""
-                    viewBox="-10 -20 60 55"
-                    onClick={() => {}}
-                />
+}) => {
+    const [showOptions, setShowOptions] = useState(false)
+    const optionsRef = createRef()
+
+    const handleClickOutside = (event) => {
+        if (optionsRef.current && !optionsRef.current.contains(event.target)) setShowOptions(false)
+    }
+
+    useEffect(() => {
+        window.addEventListener("mousedown", handleClickOutside)
+
+        return () => window.removeEventListener("mousedown", handleClickOutside)
+    }, [handleClickOutside])
+
+    return (
+        <div className="flex flex-col relative">
+            <div className="flex">
+                <button
+                    onClick={onClick}
+                    className={`text-center text-white text-lg py-2 px-4 max-h-14 cursor-pointer shadow-sm border-b-4 hover:border-b-2 hover:border-t-2
+                        ${roundedClass} ${isOptionsButton && "rounded-r-none"}
+                        ${isSecondary ? secondaryColors : primaryColors}
+                        ${isFullWidth && "w-full"}
+                        ${className}`}
+                    disabled={isDisabled}
+                >
+                    {children}
+                </button>
+                {isOptionsButton && (
+                    <div
+                        className={`flex w-8 py-2 cursor-pointer shadow-sm border-l-2 border-b-4 hover:border-b-2 hover:border-t-2
+                            ${roundedClass} rounded-l-none
+                            ${isSecondary ? secondaryColors : primaryColors}`}
+                    >
+                        <ArrowIcon
+                            direction="down"
+                            colorClass="text-white"
+                            width="100"
+                            viewBox="-10 -20 60 55"
+                            onClick={() => {
+                                setShowOptions(!showOptions)
+                            }}
+                        />
+                    </div>
+                )}
             </div>
-        )}
-    </>
-)
+
+            {isOptionsButton && showOptions && <div ref={optionsRef}>{options}</div>}
+        </div>
+    )
+}
 
 Button.propTypes = {
     onClick: PropTypes.func.isRequired,
@@ -57,6 +79,7 @@ Button.propTypes = {
     isSecondary: PropTypes.bool,
     isDisabled: PropTypes.bool,
     isOptionsButton: PropTypes.bool,
+    options: PropTypes.element,
     roundedClass: PropTypes.string,
 }
 

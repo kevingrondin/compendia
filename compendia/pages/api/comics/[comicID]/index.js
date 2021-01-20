@@ -11,16 +11,22 @@ export default async function handler(req, res) {
 
     const client = await db.connect()
     try {
+        const collectionQuery = `SELECT collection_id FROM collections WHERE user_id = $1`
+        const collectionParams = [user.id]
+        const collectionResult = await client.query(collectionQuery, collectionParams)
+        if (collectionResult.rows.length !== 1) throw new Error("Could not find user")
+
+        const collectionID = collectionResult.rows[0].collection_id
+
         const comicQuery = `SELECT c.comic_id, title, cover, release_date, cover_price, description, age_rating, format, printing, p.publisher_id, p.name as publisher_name, s.series_id, s.name as series_name, i.imprint_id, i.name as imprint_name, versions,
-            EXISTS (SELECT 1 FROM collected_comics as cc FULL JOIN collections as col USING(collection_id) WHERE cc.comic_id = $1 AND col.collection_id = cc.collection_id AND col.user_id = $2 ) as is_collected,
-            (SELECT get_is_comic_pulled($1, s.series_id, $2)) as is_pulled
+            EXISTS (SELECT 1 FROM collected_comics WHERE comic_id = $1 AND collection_id = $2 ) as is_collected
             FROM comics as c
             FULL JOIN series as s ON c.series_id = s.series_id
             FULL JOIN publishers as p ON s.publisher_id = p.publisher_id
             FULL JOIN imprints as i ON i.publisher_id = p.publisher_id
             CROSS JOIN (SELECT COUNT(*) as versions FROM comics WHERE version_of = $1) as v
             WHERE c.comic_id = $1`
-        const comicQueryParams = [comicID, user.id]
+        const comicQueryParams = [comicID, collectionID]
         const comicResult = await client.query(comicQuery, comicQueryParams)
 
         const creatorsQuery = `SELECT creator_id, name, creator_types
@@ -51,7 +57,6 @@ export default async function handler(req, res) {
                 imprintName: comic.imprint_name,
                 versions: comic.versions,
                 isCollected: comic.is_collected,
-                isPulled: comic.is_pulled,
                 creators: creators.map((creator) => {
                     return {
                         id: parseInt(creator.creator_id),

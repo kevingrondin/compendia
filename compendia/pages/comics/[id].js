@@ -1,36 +1,46 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/router"
 
 import axios from "axios"
-import { useQuery } from "react-query"
+import { useQuery, useQueryClient } from "react-query"
 
 import Page from "../../components/Page"
 import FullScreenModal from "../../components/utils/FullScreenModal"
 import CollectionDetails from "../../components/comic/CollectionDetails"
 import CollectButton from "../../components/comic/CollectButton"
-import PullComicButton from "../../components/comic/PullComicButton"
+import PullButton from "../../components/comic/PullButton"
 import ComicCreators from "../../components/comic/ComicCreators"
 import ComicDetails from "../../components/comic/ComicDetails"
 import ArrowIcon from "../../components/utils/icons/Arrow"
 import Lists from "../../components/comic/Lists"
+import SubscribeButton from "../../components/comic/SubscribeButton"
 
 const useComicDetail = (comicID) =>
-    useQuery(["comic-detail", comicID], async () => {
-        const { data } = await axios.get(`/api/comics/${comicID}`)
-        return data
-    })
+    useQuery(
+        ["comic-detail", comicID],
+        async () => {
+            const { data } = await axios.get(`/api/comics/${comicID}`)
+            return data
+        },
+        { enabled: false }
+    )
 
 export default function Comic() {
+    const queryClient = useQueryClient()
     const router = useRouter()
     const { id } = router.query
 
     const { isLoading, isError, error, data: comic } = useComicDetail(parseInt(id))
     const [showFullCover, setShowFullCover] = useState(false)
 
-    if (!id) return <></>
-    else if (isLoading) return <div>Loading...</div>
+    useEffect(() => {
+        if (id) queryClient.refetchQueries(["comic-detail", parseInt(id)])
+    }, [id])
+
+    if (isLoading) return <div>Loading...</div>
     else if (isError) return <div>Error: {error.message}</div>
+    else if (!id || comic === undefined) return <></>
     else
         return (
             <>
@@ -82,7 +92,8 @@ export default function Comic() {
                                     isCollected={comic.isCollected}
                                     className="mr-6"
                                 />
-                                <PullComicButton comicID={comic.id} isPulled={comic.isPulled} />
+                                <PullButton comicID={comic.id} className="mr-6" />
+                                <SubscribeButton seriesID={comic.seriesID} />
                             </div>
 
                             {comic.description ? (
@@ -99,7 +110,7 @@ export default function Comic() {
 
                     <div className="flex flex-wrap mt-8 sm:flex-nowrap">
                         <Lists comicID={comic.id} />
-                        <CollectionDetails comicID={comic.id} isCollected={comic.isCollected} />
+                        {comic.isCollected && <CollectionDetails comicID={comic.id} />}
                     </div>
 
                     {showFullCover && (

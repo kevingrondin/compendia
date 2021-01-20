@@ -2,7 +2,6 @@ import PropTypes from "prop-types"
 
 import Button from "./Button"
 import AddIcon from "./icons/Add"
-import ArrowIcon from "./icons/Arrow"
 import CheckIcon from "./icons/Check"
 
 const ActionButton = ({
@@ -23,6 +22,7 @@ const ActionButton = ({
                 isSecondary={true}
                 onClick={() => onRemove.mutate()}
                 isOptionsButton={isOptionsButton}
+                options={options}
             >
                 <span className="flex items-center">
                     <span className="pr-2">{removeText}</span>
@@ -37,6 +37,7 @@ const ActionButton = ({
                 isSecondary={false}
                 onClick={() => onAdd.mutate()}
                 isOptionsButton={isOptionsButton}
+                options={options}
             >
                 <span className="flex items-center">
                     <span className="pr-2">{addText}</span>
