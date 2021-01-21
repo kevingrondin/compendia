@@ -1,25 +1,30 @@
 import { useMutation, useQueryClient, useQuery } from "react-query"
 import PropTypes from "prop-types"
 import axios from "axios"
-
 import ActionButton from "../utils/ActionButton"
 import SubscribeOptions from "./SubscribeOptions"
+import { createRef } from "react"
 
 const getPullListSeries = (seriesID) =>
-    useQuery(["pull-list-series", seriesID], async () => {
-        const { data } = await axios.get(`/api/collection/pull-list/series/${seriesID}`)
-        return data
-    })
+    useQuery(
+        ["pull-list-series", seriesID],
+        async () => {
+            const { data } = await axios.get(`/api/collection/pull-list/series/${seriesID}`)
+            return data
+        },
+        { staleTime: Infinity }
+    )
 
-export default function SubscribeButton({ seriesID, className }) {
+export default function SubscribeButton({ seriesID, comicID, className, marginClass }) {
     const queryClient = useQueryClient()
     const { isLoading, isError, error, data } = getPullListSeries(seriesID)
 
     const subscribeToSeries = useMutation(
         () => axios.post(`/api/collection/pull-list/series/${seriesID}`),
         {
-            onSuccess: () => {
-                queryClient.setQueryData(["pull-list-series", seriesID], { isSubscribed: true })
+            onSuccess: (seriesDetails) => {
+                queryClient.setQueryData(["pull-list-series", seriesID], { ...seriesDetails.data })
+                queryClient.refetchQueries(["pull-list-comics", comicID])
             },
         }
     )
@@ -29,6 +34,7 @@ export default function SubscribeButton({ seriesID, className }) {
         {
             onSuccess: () => {
                 queryClient.setQueryData(["pull-list-series", seriesID], { isSubscribed: false })
+                queryClient.refetchQueries(["pull-list-comics", comicID])
             },
         }
     )
@@ -46,11 +52,14 @@ export default function SubscribeButton({ seriesID, className }) {
                 isOptionsButton={true}
                 options={<SubscribeOptions seriesID={seriesID} />}
                 className={className}
+                marginClass={marginClass}
             />
         )
 }
 
 SubscribeButton.propTypes = {
     seriesID: PropTypes.number.isRequired,
+    comicID: PropTypes.number.isRequired,
     className: PropTypes.string,
+    marginClass: PropTypes.string,
 }

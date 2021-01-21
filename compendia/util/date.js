@@ -10,3 +10,8 @@ export function formatDateStringForView(date) {
         return format(date, "MM/dd/yyyy")
     } else return ""
 }
+
+export function getDateFromPGString(dateAsString) {
+    const date = new Date(dateAsString)
+    return new Date(date.getTime() - date.getTimezoneOffset() * -60000)
+}

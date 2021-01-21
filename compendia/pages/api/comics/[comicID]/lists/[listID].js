@@ -34,6 +34,7 @@ export default async function handler(req, res) {
         console.log(error)
         res.status(500).json({ message: `Could not update ${list.name} list` })
     } finally {
-        client.release()
+        await client.end()
+        await client.release()
     }
 }

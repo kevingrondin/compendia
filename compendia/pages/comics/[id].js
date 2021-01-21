@@ -1,10 +1,8 @@
 import { useEffect, useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/router"
-
 import axios from "axios"
 import { useQuery, useQueryClient } from "react-query"
-
 import Page from "../../components/Page"
 import FullScreenModal from "../../components/utils/FullScreenModal"
 import CollectionDetails from "../../components/comic/CollectionDetails"
@@ -15,6 +13,8 @@ import ComicDetails from "../../components/comic/ComicDetails"
 import ArrowIcon from "../../components/utils/icons/Arrow"
 import Lists from "../../components/comic/Lists"
 import SubscribeButton from "../../components/comic/SubscribeButton"
+import useComicDay from "../../hooks/useComicDay"
+import { getDateFromPGString } from "../../util/date"
 
 const useComicDetail = (comicID) =>
     useQuery(
@@ -23,7 +23,7 @@ const useComicDetail = (comicID) =>
             const { data } = await axios.get(`/api/comics/${comicID}`)
             return data
         },
-        { enabled: false }
+        { enabled: false, staleTime: Infinity }
     )
 
 export default function Comic() {
@@ -41,7 +41,7 @@ export default function Comic() {
     if (isLoading) return <div>Loading...</div>
     else if (isError) return <div>Error: {error.message}</div>
     else if (!id || comic === undefined) return <></>
-    else
+    else {
         return (
             <>
                 <Page title={`${comic.seriesName} ${comic.title} - ${comic.publisherName}`}>
@@ -86,14 +86,26 @@ export default function Comic() {
 
                             <ComicDetails comic={comic} />
 
-                            <div className="flex justify-center md:justify-start">
+                            <div className="flex flex-wrap justify-center md:justify-start">
                                 <CollectButton
                                     comicID={comic.id}
                                     isCollected={comic.isCollected}
-                                    className="mr-6"
+                                    marginClass="mb-6 mx-3"
                                 />
-                                <PullButton comicID={comic.id} className="mr-6" />
-                                <SubscribeButton seriesID={comic.seriesID} />
+                                {
+                                    // Show pull button only if the comic was released this week
+                                    // or will be released in the future
+                                    getDateFromPGString(comic.releaseDate) >=
+                                        useComicDay("current", new Date()) && (
+                                        <PullButton comicID={comic.id} marginClass="mb-6 mx-3" />
+                                    )
+                                }
+
+                                <SubscribeButton
+                                    seriesID={comic.seriesID}
+                                    comicID={comic.id}
+                                    marginClass="sm:mb-6 mx-3"
+                                />
                             </div>
 
                             {comic.description ? (
@@ -129,4 +141,5 @@ export default function Comic() {
                 </Page>
             </>
         )
+    }
 }

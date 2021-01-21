@@ -60,7 +60,7 @@ const ArrowIcon = ({
 
 ArrowIcon.propTypes = {
     direction: PropTypes.oneOf(["left", "right", "up", "down"]).isRequired,
-    onClick: PropTypes.func.isRequired,
+    onClick: PropTypes.func,
     colorClass: PropTypes.string,
     height: PropTypes.string,
     width: PropTypes.string,

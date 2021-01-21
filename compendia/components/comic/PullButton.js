@@ -5,12 +5,16 @@ import axios from "axios"
 import ActionButton from "../utils/ActionButton"
 
 const getPullListComic = (comicID) =>
-    useQuery(["pull-list-comic", comicID], async () => {
-        const { data } = await axios.get(`/api/collection/pull-list/comics/${comicID}`)
-        return data
-    })
+    useQuery(
+        ["pull-list-comics", comicID],
+        async () => {
+            const { data } = await axios.get(`/api/collection/pull-list/comics/${comicID}`)
+            return data
+        },
+        { staleTime: Infinity }
+    )
 
-export default function PullButton({ comicID, className }) {
+export default function PullButton({ comicID, className, marginClass }) {
     const queryClient = useQueryClient()
     const { isLoading, isError, error, data } = getPullListComic(comicID)
 
@@ -18,7 +22,7 @@ export default function PullButton({ comicID, className }) {
         () => axios.post(`/api/collection/pull-list/comics/${comicID}`),
         {
             onSuccess: () => {
-                queryClient.setQueryData(["pull-list-comic", comicID], { isComicPulled: true })
+                queryClient.setQueryData(["pull-list-comics", comicID], { isComicPulled: true })
             },
         }
     )
@@ -27,7 +31,7 @@ export default function PullButton({ comicID, className }) {
         () => axios.delete(`/api/collection/pull-list/comics/${comicID}`),
         {
             onSuccess: () => {
-                queryClient.setQueryData(["pull-list-comic", comicID], { isComicPulled: false })
+                queryClient.setQueryData(["pull-list-comics", comicID], { isComicPulled: false })
             },
         }
     )
@@ -43,6 +47,7 @@ export default function PullButton({ comicID, className }) {
                 onAdd={addComicToPullList}
                 onRemove={removeComicFromPullList}
                 className={className}
+                marginClass={marginClass}
             />
         )
 }
@@ -50,4 +55,5 @@ export default function PullButton({ comicID, className }) {
 PullButton.propTypes = {
     comicID: PropTypes.number.isRequired,
     className: PropTypes.string,
+    marginClass: PropTypes.string,
 }

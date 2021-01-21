@@ -13,12 +13,14 @@ const ActionButton = ({
     isOptionsButton = false,
     options,
     className,
+    marginClass,
 }) => (
     <>
         {isActive ? (
             <Button
                 className={className}
                 roundedClass="rounded-lg"
+                marginClass={marginClass}
                 isSecondary={true}
                 onClick={() => onRemove.mutate()}
                 isOptionsButton={isOptionsButton}
@@ -34,6 +36,7 @@ const ActionButton = ({
             <Button
                 className={className}
                 roundedClass="rounded-lg"
+                marginClass={marginClass}
                 isSecondary={false}
                 onClick={() => onAdd.mutate()}
                 isOptionsButton={isOptionsButton}
@@ -57,6 +60,7 @@ ActionButton.propTypes = {
     isOptionsButton: PropTypes.bool,
     options: PropTypes.element,
     className: PropTypes.string,
+    marginClass: PropTypes.string,
 }
 
 export default ActionButton

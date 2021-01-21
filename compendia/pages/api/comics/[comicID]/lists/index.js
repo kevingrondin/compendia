@@ -29,6 +29,7 @@ export default async function handler(req, res) {
         console.log(error)
         res.status(500).json({ message: "Could not retrieve comic lists" })
     } finally {
-        client.release()
+        await client.end()
+        await client.release()
     }
 }

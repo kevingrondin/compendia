@@ -52,7 +52,8 @@ export default async function login(req, res) {
         } catch (error) {
             console.log(error)
         } finally {
-            client.release()
+            await client.end()
+            await client.release()
         }
 
         // Create and save cookie to remember user

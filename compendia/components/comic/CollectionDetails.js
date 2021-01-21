@@ -30,10 +30,14 @@ CollectionDetail.propTypes = {
 }
 
 function useCollectedComicDetail(id) {
-    return useQuery(["collected-comic-detail", id], async () => {
-        const { data } = await axios.get(`/api/collection/comics/${id}`)
-        return data
-    })
+    return useQuery(
+        ["collected-comic-detail", id],
+        async () => {
+            const { data } = await axios.get(`/api/collection/comics/${id}`)
+            return data
+        },
+        { staleTime: Infinity }
+    )
 }
 
 export default function CollectionDetails({ comicID }) {
