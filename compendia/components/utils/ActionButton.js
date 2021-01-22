@@ -12,6 +12,8 @@ const ActionButton = ({
     onRemove,
     isOptionsButton = false,
     options,
+    showOptions,
+    setShowOptions,
     className,
     marginClass,
 }) => (
@@ -25,6 +27,8 @@ const ActionButton = ({
                 onClick={() => onRemove.mutate()}
                 isOptionsButton={isOptionsButton}
                 options={options}
+                showOptions={showOptions}
+                setShowOptions={setShowOptions}
             >
                 <span className="flex items-center">
                     <span className="pr-2">{removeText}</span>
@@ -39,8 +43,6 @@ const ActionButton = ({
                 marginClass={marginClass}
                 isSecondary={false}
                 onClick={() => onAdd.mutate()}
-                isOptionsButton={isOptionsButton}
-                options={options}
             >
                 <span className="flex items-center">
                     <span className="pr-2">{addText}</span>
@@ -59,6 +61,8 @@ ActionButton.propTypes = {
     onRemove: PropTypes.object.isRequired,
     isOptionsButton: PropTypes.bool,
     options: PropTypes.element,
+    showOptions: PropTypes.bool,
+    setShowOptions: PropTypes.func,
     className: PropTypes.string,
     marginClass: PropTypes.string,
 }

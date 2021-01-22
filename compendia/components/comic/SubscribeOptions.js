@@ -4,9 +4,9 @@ import axios from "axios"
 import { useEffect, useState } from "react"
 import Button from "../utils/Button"
 
-const SubscribeOptionsItem = ({ label, value, disabled, onChange }) => {
+const SubscribeOptionsItem = ({ label, value, disabled, onChange, className }) => {
     return (
-        <label className={`flex items-center m-2 whitespace-nowrap`}>
+        <label className={`flex items-center m-2 whitespace-nowrap ${className}`}>
             <input
                 type="checkbox"
                 className={`form-checkbox h-5 w-5 mr-1 text-blue-primary-200 ${
@@ -26,6 +26,7 @@ SubscribeOptionsItem.propTypes = {
     value: PropTypes.bool.isRequired,
     disabled: PropTypes.bool,
     onChange: PropTypes.func.isRequired,
+    className: PropTypes.string,
 }
 
 const getPullListSeries = (seriesID) =>
@@ -38,14 +39,18 @@ const getPullListSeries = (seriesID) =>
         { staleTime: Infinity }
     )
 
-export default function SubscribeOptions({ seriesID }) {
+export default function SubscribeOptions({ seriesID, isOptionsVisible }) {
     const queryClient = useQueryClient()
     const { isLoading, isError, error, data } = getPullListSeries(seriesID)
     const [showUpdateButton, setShowUpdateButton] = useState(false)
-    const [includeStandard, setIncludeStandard] = useState(data.includeStandard)
-    const [includeVariants, setIncludeVariants] = useState(data.includeVariants)
-    const [includeTPB, setIncludeTPB] = useState(data.includeTPB)
-    const [includeCollections, setIncludeCollections] = useState(data.includeCollections)
+
+    const [includeSingleIssues, setIncludeSingleIssues] = useState(data.includeSingleIssues)
+    const [includePrintings, setIncludePrintings] = useState(data.includePrintings)
+    const [includeVariantCovers, setIncludeVariantCovers] = useState(data.includeVariantCovers)
+    const [includeTPBs, setIncludeTPBs] = useState(data.includeTPBs)
+    const [includeHardcovers, setIncludeHardcovers] = useState(data.includeHardcovers)
+    const [includeOmnibuses, setIncludeOmnibuses] = useState(data.includeOmnibuses)
+    const [includeCompendia, setIncludeCompendia] = useState(data.includeCompendia)
     const [includeAll, setIncludeAll] = useState(data.includeAll)
 
     const updatePullListDetails = useMutation(
@@ -58,15 +63,18 @@ export default function SubscribeOptions({ seriesID }) {
     )
 
     useEffect(() => {
-        return () => {
-            setIncludeStandard(data.includeStandard)
-            setIncludeVariants(data.includeVariants)
-            setIncludeTPB(data.includeTPB)
-            setIncludeCollections(data.includeCollections)
+        if (isOptionsVisible === false) {
+            setIncludeSingleIssues(data.includeSingleIssues)
+            setIncludePrintings(data.includePrintings)
+            setIncludeVariantCovers(data.includeVariantCovers)
+            setIncludeTPBs(data.includeTPBs)
+            setIncludeHardcovers(data.includeHardcovers)
+            setIncludeOmnibuses(data.includeOmnibuses)
+            setIncludeCompendia(data.includeCompendia)
             setIncludeAll(data.includeAll)
             setShowUpdateButton(false)
         }
-    }, [])
+    }, [isOptionsVisible])
 
     if (isLoading) return <div>Loading...</div>
     else if (isError) return <div>Error: {error.message}</div>
@@ -74,57 +82,108 @@ export default function SubscribeOptions({ seriesID }) {
     else
         return (
             <div className="flex flex-col">
+                <h3 className="font-semibold text-gray-50 m-2 mb-1 mt-3 border-b-2 border-gray-300">
+                    Formats to Include
+                </h3>
                 <SubscribeOptionsItem
-                    label="Include Standard Issues"
-                    value={includeStandard}
+                    label="Single Issue Comics"
+                    value={includeSingleIssues}
                     disabled={includeAll}
                     onChange={(e) => {
-                        setIncludeStandard(e.target.checked)
+                        const isChecked = e.target.checked
+
+                        if (isChecked) {
+                            setIncludeSingleIssues(true)
+                        } else {
+                            setIncludeSingleIssues(false)
+                            setIncludePrintings(false)
+                            setIncludeVariantCovers(false)
+                        }
+
+                        setShowUpdateButton(true)
+                    }}
+                />
+
+                {includeSingleIssues && (
+                    <>
+                        <SubscribeOptionsItem
+                            className="ml-10"
+                            label="Additional Printings"
+                            value={includePrintings}
+                            disabled={includeAll || !includeSingleIssues}
+                            onChange={(e) => {
+                                setIncludePrintings(e.target.checked)
+                                setShowUpdateButton(true)
+                            }}
+                        />
+
+                        <SubscribeOptionsItem
+                            className="ml-10"
+                            label="Variants Covers"
+                            value={includeVariantCovers}
+                            disabled={includeAll || !includeSingleIssues}
+                            onChange={(e) => {
+                                setIncludeVariantCovers(e.target.checked)
+                                setShowUpdateButton(true)
+                            }}
+                        />
+                    </>
+                )}
+
+                <SubscribeOptionsItem
+                    label="Trade Paperbacks"
+                    value={includeTPBs}
+                    disabled={includeAll}
+                    onChange={(e) => {
+                        setIncludeTPBs(e.target.checked)
                         setShowUpdateButton(true)
                     }}
                 />
 
                 <SubscribeOptionsItem
-                    label="Include Variants"
-                    value={includeVariants}
+                    label="Hardcovers"
+                    value={includeHardcovers}
                     disabled={includeAll}
                     onChange={(e) => {
-                        setIncludeVariants(e.target.checked)
+                        setIncludeHardcovers(e.target.checked)
                         setShowUpdateButton(true)
                     }}
                 />
 
                 <SubscribeOptionsItem
-                    label="Include Trade Paperbacks"
-                    value={includeTPB}
+                    label="Omnibuses"
+                    value={includeOmnibuses}
                     disabled={includeAll}
                     onChange={(e) => {
-                        setIncludeTPB(e.target.checked)
+                        setIncludeOmnibuses(e.target.checked)
                         setShowUpdateButton(true)
                     }}
                 />
 
                 <SubscribeOptionsItem
-                    label="Include Collections"
-                    value={includeCollections}
+                    label="Compendia"
+                    value={includeCompendia}
                     disabled={includeAll}
                     onChange={(e) => {
-                        setIncludeCollections(e.target.checked)
+                        setIncludeCompendia(e.target.checked)
                         setShowUpdateButton(true)
                     }}
                 />
 
                 <SubscribeOptionsItem
-                    label={"Include All"}
+                    label={"All"}
                     value={includeAll}
                     onChange={(e) => {
                         const isChecked = e.target.checked
 
                         if (isChecked) {
-                            setIncludeStandard(true)
-                            setIncludeVariants(true)
-                            setIncludeTPB(true)
-                            setIncludeCollections(true)
+                            setIncludeSingleIssues(true)
+                            setIncludePrintings(true)
+                            setIncludeVariantCovers(true)
+                            setIncludeTPBs(true)
+                            setIncludeHardcovers(true)
+                            setIncludeOmnibuses(true)
+                            setIncludeCompendia(true)
                             setIncludeAll(true)
                         } else setIncludeAll(false)
 
@@ -139,10 +198,13 @@ export default function SubscribeOptions({ seriesID }) {
                         onClick={() => {
                             const updatedDetails = { ...data }
 
-                            updatedDetails.includeStandard = includeStandard
-                            updatedDetails.includeVariants = includeVariants
-                            updatedDetails.includeTPB = includeTPB
-                            updatedDetails.includeCollections = includeCollections
+                            updatedDetails.includeSingleIssues = includeSingleIssues
+                            updatedDetails.includePritings = includeVariantCovers
+                            updatedDetails.includeVariantCovers = includeVariantCovers
+                            updatedDetails.includeTPBs = includeTPBs
+                            updatedDetails.includeHardcovers = includeHardcovers
+                            updatedDetails.includeOmnibuses = includeOmnibuses
+                            updatedDetails.includeCompendia = includeCompendia
                             updatedDetails.includeAll = includeAll
 
                             updatePullListDetails.mutate(updatedDetails)
@@ -158,4 +220,5 @@ export default function SubscribeOptions({ seriesID }) {
 
 SubscribeOptions.propTypes = {
     seriesID: PropTypes.number.isRequired,
+    isOptionsVisible: PropTypes.bool.isRequired,
 }

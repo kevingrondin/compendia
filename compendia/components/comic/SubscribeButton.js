@@ -1,9 +1,9 @@
+import { useState } from "react"
 import { useMutation, useQueryClient, useQuery } from "react-query"
 import PropTypes from "prop-types"
 import axios from "axios"
 import ActionButton from "../utils/ActionButton"
 import SubscribeOptions from "./SubscribeOptions"
-import { createRef } from "react"
 
 const getPullListSeries = (seriesID) =>
     useQuery(
@@ -18,6 +18,7 @@ const getPullListSeries = (seriesID) =>
 export default function SubscribeButton({ seriesID, comicID, className, marginClass }) {
     const queryClient = useQueryClient()
     const { isLoading, isError, error, data } = getPullListSeries(seriesID)
+    const [showOptions, setShowOptions] = useState(false)
 
     const subscribeToSeries = useMutation(
         () => axios.post(`/api/collection/pull-list/series/${seriesID}`),
@@ -50,7 +51,9 @@ export default function SubscribeButton({ seriesID, comicID, className, marginCl
                 onAdd={subscribeToSeries}
                 onRemove={unsubscribeFromSeries}
                 isOptionsButton={true}
-                options={<SubscribeOptions seriesID={seriesID} />}
+                options={<SubscribeOptions seriesID={seriesID} isOptionsVisible={showOptions} />}
+                setShowOptions={(val) => setShowOptions(val)}
+                showOptions={showOptions}
                 className={className}
                 marginClass={marginClass}
             />

@@ -20,8 +20,10 @@ const Button = ({
     isDisabled = false,
     isOptionsButton = false,
     options,
+    showOptions,
+    setShowOptions,
 }) => {
-    const [showOptions, setShowOptions] = useState(false)
+    //const [showOptions, setShowOptions] = useState(false)
     const optionsRef = createRef()
 
     const handleClickOutside = (event) => {
@@ -91,6 +93,8 @@ Button.propTypes = {
     isDisabled: PropTypes.bool,
     isOptionsButton: PropTypes.bool,
     options: PropTypes.element,
+    showOptions: PropTypes.bool,
+    setShowOptions: PropTypes.func,
 }
 
 export default Button
