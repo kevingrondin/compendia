@@ -74,7 +74,59 @@ export default function SubscribeOptions({ seriesID, isOptionsVisible }) {
             setIncludeAll(data.includeAll)
             setShowUpdateButton(false)
         }
-    }, [isOptionsVisible])
+    }, [isOptionsVisible, data])
+
+    function isNotLastCheckedOption() {
+        let numChecked = 0
+
+        includeSingleIssues && numChecked++
+        includeTPBs && numChecked++
+        includeHardcovers && numChecked++
+        includeOmnibuses && numChecked++
+        includeCompendia && numChecked++
+
+        return numChecked > 1
+    }
+
+    function handleOptionCheck(e, optionName, setter) {
+        const isChecked = e.target.checked
+
+        if (optionName === "includeAll") {
+            if (isChecked) {
+                setIncludeSingleIssues(true)
+                setIncludePrintings(true)
+                setIncludeVariantCovers(true)
+                setIncludeTPBs(true)
+                setIncludeHardcovers(true)
+                setIncludeOmnibuses(true)
+                setIncludeCompendia(true)
+                setIncludeAll(true)
+            } else setIncludeAll(false)
+
+            setShowUpdateButton(true)
+        } else if (optionName === "includeSingleIssues") {
+            if (isChecked) {
+                setIncludeSingleIssues(true)
+                setShowUpdateButton(true)
+            } else if (isNotLastCheckedOption()) {
+                setIncludeSingleIssues(false)
+                setIncludePrintings(false)
+                setIncludeVariantCovers(false)
+                setShowUpdateButton(true)
+            }
+        } else if (optionName === "includePrintings" || optionName === "includeVariantCovers") {
+            setter(isChecked)
+            setShowUpdateButton(true)
+        } else {
+            if (isChecked) {
+                setter(true)
+                setShowUpdateButton(true)
+            } else if (isNotLastCheckedOption()) {
+                setter(false)
+                setShowUpdateButton(true)
+            }
+        }
+    }
 
     if (isLoading) return <div>Loading...</div>
     else if (isError) return <div>Error: {error.message}</div>
@@ -89,19 +141,9 @@ export default function SubscribeOptions({ seriesID, isOptionsVisible }) {
                     label="Single Issue Comics"
                     value={includeSingleIssues}
                     disabled={includeAll}
-                    onChange={(e) => {
-                        const isChecked = e.target.checked
-
-                        if (isChecked) {
-                            setIncludeSingleIssues(true)
-                        } else {
-                            setIncludeSingleIssues(false)
-                            setIncludePrintings(false)
-                            setIncludeVariantCovers(false)
-                        }
-
-                        setShowUpdateButton(true)
-                    }}
+                    onChange={(e) =>
+                        handleOptionCheck(e, "includeSingleIssues", setIncludeSingleIssues)
+                    }
                 />
 
                 {includeSingleIssues && (
@@ -111,10 +153,9 @@ export default function SubscribeOptions({ seriesID, isOptionsVisible }) {
                             label="Additional Printings"
                             value={includePrintings}
                             disabled={includeAll || !includeSingleIssues}
-                            onChange={(e) => {
-                                setIncludePrintings(e.target.checked)
-                                setShowUpdateButton(true)
-                            }}
+                            onChange={(e) =>
+                                handleOptionCheck(e, "includePrintings", setIncludePrintings)
+                            }
                         />
 
                         <SubscribeOptionsItem
@@ -122,10 +163,13 @@ export default function SubscribeOptions({ seriesID, isOptionsVisible }) {
                             label="Variants Covers"
                             value={includeVariantCovers}
                             disabled={includeAll || !includeSingleIssues}
-                            onChange={(e) => {
-                                setIncludeVariantCovers(e.target.checked)
-                                setShowUpdateButton(true)
-                            }}
+                            onChange={(e) =>
+                                handleOptionCheck(
+                                    e,
+                                    "includeVariantCovers",
+                                    setIncludeVariantCovers
+                                )
+                            }
                         />
                     </>
                 )}
@@ -134,61 +178,36 @@ export default function SubscribeOptions({ seriesID, isOptionsVisible }) {
                     label="Trade Paperbacks"
                     value={includeTPBs}
                     disabled={includeAll}
-                    onChange={(e) => {
-                        setIncludeTPBs(e.target.checked)
-                        setShowUpdateButton(true)
-                    }}
+                    onChange={(e) => handleOptionCheck(e, "includeTPBs", setIncludeTPBs)}
                 />
 
                 <SubscribeOptionsItem
                     label="Hardcovers"
                     value={includeHardcovers}
                     disabled={includeAll}
-                    onChange={(e) => {
-                        setIncludeHardcovers(e.target.checked)
-                        setShowUpdateButton(true)
-                    }}
+                    onChange={(e) =>
+                        handleOptionCheck(e, "includeHardcovers", setIncludeHardcovers)
+                    }
                 />
 
                 <SubscribeOptionsItem
                     label="Omnibuses"
                     value={includeOmnibuses}
                     disabled={includeAll}
-                    onChange={(e) => {
-                        setIncludeOmnibuses(e.target.checked)
-                        setShowUpdateButton(true)
-                    }}
+                    onChange={(e) => handleOptionCheck(e, "includeOmnibuses", setIncludeOmnibuses)}
                 />
 
                 <SubscribeOptionsItem
                     label="Compendia"
                     value={includeCompendia}
                     disabled={includeAll}
-                    onChange={(e) => {
-                        setIncludeCompendia(e.target.checked)
-                        setShowUpdateButton(true)
-                    }}
+                    onChange={(e) => handleOptionCheck(e, "includeCompendia", setIncludeCompendia)}
                 />
 
                 <SubscribeOptionsItem
                     label={"All"}
                     value={includeAll}
-                    onChange={(e) => {
-                        const isChecked = e.target.checked
-
-                        if (isChecked) {
-                            setIncludeSingleIssues(true)
-                            setIncludePrintings(true)
-                            setIncludeVariantCovers(true)
-                            setIncludeTPBs(true)
-                            setIncludeHardcovers(true)
-                            setIncludeOmnibuses(true)
-                            setIncludeCompendia(true)
-                            setIncludeAll(true)
-                        } else setIncludeAll(false)
-
-                        setShowUpdateButton(true)
-                    }}
+                    onChange={(e) => handleOptionCheck(e, "includeAll", setIncludeAll)}
                 />
 
                 {showUpdateButton && (
@@ -199,7 +218,7 @@ export default function SubscribeOptions({ seriesID, isOptionsVisible }) {
                             const updatedDetails = { ...data }
 
                             updatedDetails.includeSingleIssues = includeSingleIssues
-                            updatedDetails.includePritings = includeVariantCovers
+                            updatedDetails.includePrintings = includePrintings
                             updatedDetails.includeVariantCovers = includeVariantCovers
                             updatedDetails.includeTPBs = includeTPBs
                             updatedDetails.includeHardcovers = includeHardcovers

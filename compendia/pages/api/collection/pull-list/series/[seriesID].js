@@ -31,7 +31,7 @@ export default async function handler(req, res) {
                 })
             } else res.status(200).json({ isSubscribed: false })
         } else if (req.method === "PUT") {
-            // TODO turn this into a transaction
+            await client.query("BEGIN")
 
             const seriesInsert = `UPDATE pull_list_series
                 SET include_single_issues = $3,
@@ -69,29 +69,30 @@ export default async function handler(req, res) {
                 await client.query(deleteComics, deleteComicsParams)
 
                 const formats = []
-                if (req.body.includeSingleIssues) formats.push("Comic")
-                if (req.body.includeTPBs) formats.push("TPB")
-                if (req.body.includeHardcovers) formats.push("Hardcover")
-                if (req.body.includeOmnibuses) formats.push("Omnibus")
-                if (req.body.includeCompendia) formats.push("Compendium")
+                if (req.body.includeSingleIssues) formats.push("'Comic'")
+                if (req.body.includeTPBs) formats.push("'TPB'")
+                if (req.body.includeHardcovers) formats.push("'Hardcover'")
+                if (req.body.includeOmnibuses) formats.push("'Omnibus'")
+                if (req.body.includeCompendia) formats.push("'Compendium'")
 
                 const insertComics = `INSERT INTO pull_list_comics (comic_id, collection_id)
                     SELECT col.collection_id, c.comic_id FROM collections as col
                     CROSS JOIN comics as c FULL JOIN series as s USING(series_id)
                     WHERE col.user_id = $1 AND c.series_id = $2 AND
                         c.format IN (${formats.join(", ")})
-                        ${!req.body.includePrintings && "AND c.printing = 1"}
+                        ${!req.body.includePrintings ? "AND c.printing = 1" : ""}
                         ${
-                            req.body.includeSingleIssues &&
-                            !req.body.includeVariantCovers &&
-                            "AND c.version_of = NULL"
+                            req.body.includeSingleIssues && !req.body.includeVariantCovers
+                                ? "AND c.version_of = NULL"
+                                : ""
                         }
                         AND c.release_date >= CURRENT_DATE`
-
                 const insertComicsParams = [user.id, seriesID]
                 await client.query(insertComics, insertComicsParams)
 
-                const seriesDetails = result.rows[0]
+                const seriesDetails = seriesResult.rows[0]
+
+                await client.query("COMMIT")
 
                 res.status(200).json({
                     isSubscribed: req.body.isSubscribed,
@@ -106,7 +107,7 @@ export default async function handler(req, res) {
                 })
             } else throw new Error("Could not update series in your pull list")
         } else if (req.method === "POST") {
-            //TODO make this into a DB transaction
+            await client.query("BEGIN")
 
             const insertSeries = `INSERT INTO pull_list_series(collection_id, series_id)
                 SELECT collection_id, $1 FROM collections WHERE user_id = $2
@@ -123,6 +124,9 @@ export default async function handler(req, res) {
                 await client.query(insertComics, comicsParams)
 
                 const series = seriesResult.rows[0]
+
+                await client.query("COMMIT")
+
                 res.status(201).json({
                     isSubscribed: true,
                     includeSingleIssues: series.include_single_issues,
@@ -136,7 +140,7 @@ export default async function handler(req, res) {
                 })
             } else throw new Error("Could not subscribe to series")
         } else if (req.method === "DELETE") {
-            //TODO make this into a DB transaction
+            await client.query("BEGIN")
 
             const deleteSeries = `DELETE FROM pull_list_series as pls
                 USING collections as c
@@ -153,10 +157,14 @@ export default async function handler(req, res) {
                 const comicsParams = [user.id, seriesID]
                 await client.query(deleteComics, comicsParams)
 
+                await client.query("COMMIT")
+
                 res.status(204).json({ isSubscribed: false })
             } else throw new Error("Could not unsubscribe from series")
         }
     } catch (error) {
+        if (req.method === "PUT" || req.method === "POST" || req.method === "DELETE")
+            await client.query("ROLLBACK")
         console.log(error)
         res.status(500).json({ message: error.message })
     } finally {
