@@ -2,7 +2,7 @@ import Link from "next/link"
 
 import PropTypes from "prop-types"
 
-const ComicCover = ({ comicID, title, cover }) => (
+const ComicCover = ({ comicID, title, cover, footer }) => (
     <article className="cursor-pointer">
         <Link href={`/comics/${comicID}`} passHref>
             <img
@@ -11,6 +11,7 @@ const ComicCover = ({ comicID, title, cover }) => (
                 alt={`Comic cover for ${title}`}
             />
         </Link>
+        {footer && <div className="w-52">{footer}</div>}
     </article>
 )
 
@@ -18,6 +19,7 @@ ComicCover.propTypes = {
     comicID: PropTypes.number.isRequired,
     title: PropTypes.string.isRequired,
     cover: PropTypes.string.isRequired,
+    footer: PropTypes.element,
 }
 
 export default ComicCover

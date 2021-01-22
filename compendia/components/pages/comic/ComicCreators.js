@@ -2,7 +2,7 @@ import Link from "next/link"
 
 import PropTypes from "prop-types"
 
-import ArrowIcon from "../utils/icons/Arrow"
+import ArrowIcon from "../../icons/Arrow"
 
 const ComicCreators = ({ creators }) => (
     <>

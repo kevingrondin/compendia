@@ -2,7 +2,7 @@ import { useState, createRef, useEffect } from "react"
 
 import PropTypes from "prop-types"
 
-import ArrowIcon from "./icons/Arrow"
+import ArrowIcon from "../icons/Arrow"
 
 const primaryColors =
     "bg-blue-primary-100 hover:bg-blue-primary-200 border-blue-primary-300 hover:border-blue-primary-400"

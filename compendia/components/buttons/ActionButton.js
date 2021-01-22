@@ -1,8 +1,8 @@
 import PropTypes from "prop-types"
 
-import Button from "./Button"
-import AddIcon from "./icons/Add"
-import CheckIcon from "./icons/Check"
+import Button from "../buttons/Button"
+import AddIcon from "../icons/Add"
+import CheckIcon from "../icons/Check"
 
 const ActionButton = ({
     addText,

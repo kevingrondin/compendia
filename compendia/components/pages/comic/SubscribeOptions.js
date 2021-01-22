@@ -2,7 +2,7 @@ import PropTypes from "prop-types"
 import { useMutation, useQuery, useQueryClient } from "react-query"
 import axios from "axios"
 import { useEffect, useState } from "react"
-import Button from "../utils/Button"
+import Button from "../../buttons/Button"
 
 const SubscribeOptionsItem = ({ label, value, disabled, onChange, className }) => {
     return (

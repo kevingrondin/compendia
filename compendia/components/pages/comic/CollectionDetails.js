@@ -4,10 +4,10 @@ import PropTypes from "prop-types"
 import { format } from "date-fns"
 import axios from "axios"
 
-import { formatDateStringForView } from "../../util/date"
+import { formatDateStringForView } from "../../../util/date"
 
-import Button from "../utils/Button"
-import EditIcon from "../utils/icons/Edit"
+import Button from "../../buttons/Button"
+import EditIcon from "../../icons/Edit"
 
 const CollectionDetail = ({ isEditMode, field, label, children }) => (
     <label className="flex flex-col pr-10 pb-5">

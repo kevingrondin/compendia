@@ -3,16 +3,16 @@ import Link from "next/link"
 import { useRouter } from "next/router"
 import axios from "axios"
 import { useQuery, useQueryClient } from "react-query"
-import Page from "../../components/Page"
+import Page from "../../components/pages/Page"
 import FullScreenModal from "../../components/utils/FullScreenModal"
-import CollectionDetails from "../../components/comic/CollectionDetails"
-import CollectButton from "../../components/comic/CollectButton"
-import PullButton from "../../components/comic/PullButton"
-import ComicCreators from "../../components/comic/ComicCreators"
-import ComicDetails from "../../components/comic/ComicDetails"
-import ArrowIcon from "../../components/utils/icons/Arrow"
-import Lists from "../../components/comic/Lists"
-import SubscribeButton from "../../components/comic/SubscribeButton"
+import CollectionDetails from "../../components/pages/comic/CollectionDetails"
+import CollectButton from "../../components/pages/comic/CollectButton"
+import PullButton from "../../components/pages/comic/PullButton"
+import ComicCreators from "../../components/pages/comic/ComicCreators"
+import ComicDetails from "../../components/pages/comic/ComicDetails"
+import ArrowIcon from "../../components/icons/Arrow"
+import Lists from "../../components/pages/comic/Lists"
+import SubscribeButton from "../../components/pages/comic/SubscribeButton"
 import useComicDay from "../../hooks/useComicDay"
 import { getDateFromPGString } from "../../util/date"
 
@@ -26,7 +26,7 @@ const useComicDetail = (comicID) =>
         { enabled: false, staleTime: Infinity }
     )
 
-export default function Comic() {
+export default function ComicDetail() {
     const queryClient = useQueryClient()
     const router = useRouter()
     const { id } = router.query
@@ -44,7 +44,7 @@ export default function Comic() {
     else {
         return (
             <>
-                <Page title={`${comic.seriesName} ${comic.title} - ${comic.publisherName}`}>
+                <Page title={`${comic.title} - ${comic.publisherName}`}>
                     <div className="flex flex-wrap justify-center mb-10">
                         <img
                             src={comic.cover}
@@ -54,7 +54,7 @@ export default function Comic() {
                         />
 
                         <article className="mt-8 md:ml-6 sm:mt-6">
-                            <h2 className="font-bold text-3xl text-center md:text-left">{`${comic.seriesName} ${comic.title}`}</h2>
+                            <h2 className="font-bold text-3xl text-center md:text-left">{`${comic.title}`}</h2>
 
                             <div className="flex flex-col items-center pt-1 md:items-start">
                                 <p className="italic text-xl mr-2 mb-1">

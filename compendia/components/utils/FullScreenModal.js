@@ -1,7 +1,7 @@
 import PropTypes from "prop-types"
 
-import CloseIcon from "../utils/icons/Close"
-import ClientOnlyPortal from "../utils/ClientOnlyPortal"
+import CloseIcon from "../icons/Close"
+import ClientOnlyPortal from "./ClientOnlyPortal"
 
 const FullScreenModal = ({ onClick, children }) => (
     <ClientOnlyPortal selector="#modal">

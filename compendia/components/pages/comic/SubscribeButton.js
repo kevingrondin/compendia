@@ -2,7 +2,7 @@ import { useState } from "react"
 import { useMutation, useQueryClient, useQuery } from "react-query"
 import PropTypes from "prop-types"
 import axios from "axios"
-import ActionButton from "../utils/ActionButton"
+import ActionButton from "../../buttons/ActionButton"
 import SubscribeOptions from "./SubscribeOptions"
 
 const getPullListSeries = (seriesID) =>

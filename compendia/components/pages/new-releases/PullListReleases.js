@@ -3,7 +3,7 @@ import PropTypes from "prop-types"
 import { format } from "date-fns"
 import axios from "axios"
 
-import ComicCover from "../ComicCover"
+import ComicCover from "../comic/ComicCover"
 
 function usePullList(comicDay) {
     return useQuery(

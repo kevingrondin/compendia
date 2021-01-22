@@ -2,12 +2,12 @@ import { useState } from "react"
 
 import useComicDay from "../hooks/useComicDay"
 
-import Page from "../components/Page"
-import ReleasesTypeTabs from "../components/new-releases/ReleasesTypeTabs"
-import AllReleases from "../components/new-releases/AllReleases"
-import PullListReleases from "../components/new-releases/PullListReleases"
-import ReleasesHeading from "../components/new-releases/ReleasesHeading"
-import ReleaseDaySelector from "../components/new-releases/ReleaseDaySelector"
+import Page from "../components/pages/Page"
+import ReleasesTypeTabs from "../components/pages/new-releases/ReleasesTypeTabs"
+import AllReleases from "../components/pages/new-releases/AllReleases"
+import PullListReleases from "../components/pages/new-releases/PullListReleases"
+import ReleasesHeading from "../components/pages/new-releases/ReleasesHeading"
+import ReleaseDaySelector from "../components/pages/new-releases/ReleaseDaySelector"
 
 export default function Releases() {
     const [activeTab, setActiveTab] = useState("pull list")

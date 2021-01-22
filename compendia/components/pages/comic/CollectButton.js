@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from "react-query"
 import PropTypes from "prop-types"
 import axios from "axios"
 
-import ActionButton from "../utils/ActionButton"
+import ActionButton from "../../buttons/ActionButton"
 
 export default function CollectButton({ comicID, isCollected, className, marginClass }) {
     const queryClient = useQueryClient()

@@ -2,9 +2,9 @@ import { useEffect } from "react"
 import { useRouter } from "next/router"
 import Link from "next/link"
 
-import { useUser } from "../hooks/magic"
+import { useUser } from "../../hooks/magic"
 
-import SettingsIcon from "./utils/icons/Settings"
+import SettingsIcon from "../icons/Settings"
 
 export default function Header() {
     const router = useRouter()

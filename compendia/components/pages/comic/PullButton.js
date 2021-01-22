@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "react-query"
 import PropTypes from "prop-types"
 import axios from "axios"
 
-import ActionButton from "../utils/ActionButton"
+import ActionButton from "../../buttons/ActionButton"
 
 const getPullListComic = (comicID) =>
     useQuery(

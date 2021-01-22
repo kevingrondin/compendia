@@ -1,7 +1,7 @@
 import PropTypes from "prop-types"
 
-import ReleasesIcon from "../utils/icons/Releases"
-import PullListIcon from "../utils/icons/PullList"
+import ReleasesIcon from "../../icons/Releases"
+import PullListIcon from "../../icons/PullList"
 
 const ReleasesTypeTabs = ({ activeTab, onTabClick }) => (
     <div className="bg-gray-200 text-xl text-gray-500 leading-none rounded-full inline-flex">
