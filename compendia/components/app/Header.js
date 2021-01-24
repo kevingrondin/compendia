@@ -15,7 +15,7 @@ export default function Header() {
     })
 
     return (
-        <header className="flex justify-between items-center w-full p-2 bg-gradient-to-r from-blue-primary-200 to bg-blue-primary-50 shadow-sm">
+        <header className="flex justify-between items-center w-full p-2 bg-gradient-to-r from-blue-primary-200 to bg-blue-primary-50 shadow-sm border-b-2 border-blue-primary-300">
             <img src="/CompendiaLogo.svg" alt="Compendia Logo" className="w-12" />
             {user && (
                 <Link href="/settings" passHref>

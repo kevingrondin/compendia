@@ -50,11 +50,11 @@ export default function CreatorDetail() {
                                         cover={comic.cover}
                                         title={comic.title}
                                         footer={
-                                            <ul className="flex flex-wrap">
+                                            <ul className="flex flex-wrap justify-center">
                                                 {comic.creatorTypes.map((type, index) => (
                                                     <li
                                                         key={`${creatorID}-${comic.id}-${type}`}
-                                                        className="flex"
+                                                        className="flex mt-2"
                                                     >
                                                         <Category size="SM">{type}</Category>
                                                         {index !==

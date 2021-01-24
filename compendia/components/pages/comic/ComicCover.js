@@ -11,7 +11,7 @@ const ComicCover = ({ comicID, title, cover, footer }) => (
                 alt={`Comic cover for ${title}`}
             />
         </Link>
-        {footer && <div className="w-52">{footer}</div>}
+        {footer && <div className="w-full">{footer}</div>}
     </article>
 )
 
