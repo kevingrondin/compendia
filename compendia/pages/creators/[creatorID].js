@@ -7,6 +7,9 @@ import Page from "../../components/pages/Page"
 import ComicCover from "../../components/pages/comic/ComicCover"
 import PageHeading from "../../components/pages/PageHeading"
 import Category from "../../components/pages/Category"
+import FilterIcon from "../../components/icons/Filter"
+import Button from "../../components/buttons/Button"
+import { SVGOptionsButton } from "../../components/buttons/OptionsButton"
 
 const useCreatorDetail = (creatorID) =>
     useQuery(
@@ -41,6 +44,11 @@ export default function CreatorDetail() {
                             {creator.name}
                         </div>
                     </PageHeading>
+                    <div className="flex justify-end mb-8 -mt-3">
+                        <SVGOptionsButton options={<p>YAY!</p>}>
+                            <FilterIcon />
+                        </SVGOptionsButton>
+                    </div>
                     <div className="flex flex-wrap">
                         <ul>
                             {creator.comics.map((comic) => (

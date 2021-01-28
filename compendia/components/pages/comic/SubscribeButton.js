@@ -2,7 +2,7 @@ import { useState } from "react"
 import { useMutation, useQueryClient, useQuery } from "react-query"
 import PropTypes from "prop-types"
 import axios from "axios"
-import ActionButton from "../../buttons/ActionButton"
+import { OptionsButton } from "../../buttons/OptionsButton"
 import SubscribeOptions from "./SubscribeOptions"
 
 const getPullListSeries = (seriesID) =>
@@ -44,13 +44,12 @@ export default function SubscribeButton({ seriesID, comicID, className, marginCl
     else if (isError) return <div>Error: {error.message}</div>
     else
         return (
-            <ActionButton
-                addText="Subscribe"
-                removeText="Subscribed"
+            <OptionsButton
+                primaryText="Subscribe"
+                secondaryText="Subscribed"
                 isActive={data.isSubscribed}
-                onAdd={subscribeToSeries}
-                onRemove={unsubscribeFromSeries}
-                isOptionsButton={true}
+                onPrimaryClick={subscribeToSeries}
+                onSecondaryClick={unsubscribeFromSeries}
                 options={<SubscribeOptions seriesID={seriesID} isOptionsVisible={showOptions} />}
                 setShowOptions={(val) => setShowOptions(val)}
                 showOptions={showOptions}

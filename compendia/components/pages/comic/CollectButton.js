@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from "react-query"
 import PropTypes from "prop-types"
 import axios from "axios"
 
-import ActionButton from "../../buttons/ActionButton"
+import Button from "../../buttons/Button"
 
 export default function CollectButton({ comicID, isCollected, className, marginClass }) {
     const queryClient = useQueryClient()
@@ -24,18 +24,17 @@ export default function CollectButton({ comicID, isCollected, className, marginC
                 const updatedComic = { ...currComic }
                 updatedComic.isCollected = false
                 queryClient.setQueryData(["comic-detail", comicID], updatedComic)
-                queryClient.refetchQueries(["collected-comic-detail", comicID])
             },
         }
     )
 
     return (
-        <ActionButton
-            addText="Collect"
-            removeText="Collected"
+        <Button
+            primaryText="Collect"
+            secondaryText="Collected"
             isActive={isCollected}
-            onAdd={addToCollection}
-            onRemove={removeFromCollection}
+            onPrimaryClick={addToCollection}
+            onSecondaryClick={removeFromCollection}
             className={className}
             marginClass={marginClass}
         />

@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "react-query"
 import PropTypes from "prop-types"
 import axios from "axios"
 
-import ActionButton from "../../buttons/ActionButton"
+import Button from "../../buttons/Button"
 
 const getPullListComic = (comicID) =>
     useQuery(
@@ -40,12 +40,12 @@ export default function PullButton({ comicID, className, marginClass }) {
     else if (isError) return <div>Error: {error.message}</div>
     else
         return (
-            <ActionButton
-                addText="Pull"
-                removeText="Pulled"
+            <Button
+                primaryText="Pull"
+                secondaryText="Pulled"
                 isActive={data.isComicPulled}
-                onAdd={addComicToPullList}
-                onRemove={removeComicFromPullList}
+                onPrimaryClick={addComicToPullList}
+                onSecondaryClick={removeComicFromPullList}
                 className={className}
                 marginClass={marginClass}
             />

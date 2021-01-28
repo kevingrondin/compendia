@@ -19,9 +19,7 @@ export default async function handler(req, res) {
             if (getResult.rows.length > 0) {
                 const result = getResult.rows[0]
                 res.status(200).json({
-                    dateCollected: result.date_collected
-                        ? format(result.date_collected, "yyyy-MM-dd")
-                        : result.date_collected,
+                    dateCollected: format(result.date_collected, "yyyy-MM-dd"),
                     purchasePrice: result.purchase_price,
                     boughtAt: result.bought_at,
                     condition: result.condition,
@@ -32,14 +30,29 @@ export default async function handler(req, res) {
         } else if (req.method === "POST") {
             const insertQuery = `INSERT INTO collected_comics(collection_id, comic_id)
                 SELECT collection_id, $1 FROM collections WHERE user_id = $2
-                RETURNING collected_comic_id`
+                RETURNING date_collected, purchase_price, bought_at, condition, quantity, notes`
             const insertParams = [id, user.id]
             const insertResult = await client.query(insertQuery, insertParams)
 
-            if (insertResult.rows.length > 0) res.status(201).end()
-            else throw new Error("Could not add comic to your collection")
+            if (insertResult.rows.length > 0) {
+                const result = insertResult.rows[0]
+
+                res.status(201).json({
+                    dateCollected: format(result.date_collected, "yyyy-MM-dd"),
+                    purchasePrice: result.purchase_price,
+                    boughtAt: result.bought_at,
+                    condition: result.condition,
+                    quantity: result.quantity,
+                    notes: result.notes,
+                })
+            } else throw new Error("Could not add comic to your collection")
         } else if (req.method === "PUT") {
-            const { dateCollected, purchasePrice, boughtAt, condition, quantity, notes } = req.body
+            const { dateCollected, purchasePrice, boughtAt, condition, notes } = req.body
+
+            if (isNaN(req.body.quantity))
+                res.status(400).json({ message: "Quantity must be a number" })
+
+            const quantity = parseInt(req.body.quantity)
 
             const updateQuery = `UPDATE collected_comics as cc SET date_collected = $1, purchase_price = $2, bought_at = $3, condition = $4, quantity = $5, notes = $6
                 FROM collections as c WHERE c.user_id = $7 AND c.collection_id = cc.collection_id AND cc.comic_id = $8
