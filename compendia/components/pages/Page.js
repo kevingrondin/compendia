@@ -11,7 +11,7 @@ const Page = ({ title, children }) => (
             <link rel="icon" href="/favicon.ico" />
         </Head>
         <Header />
-        <div className="p-8 overflow-x-hidden">{children}</div>
+        <div className="p-8 overflow-x-hidden flex flex-col flex-auto h-full">{children}</div>
     </>
 )
 

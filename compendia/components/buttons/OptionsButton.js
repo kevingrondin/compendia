@@ -22,13 +22,20 @@ const useOptionsRef = (setShowOptions) => {
     return optionsRef
 }
 
-const Options = ({ showOptions, setShowOptions, options, roundedClass }) => {
+const Options = ({
+    showOptions,
+    setShowOptions,
+    options,
+    roundedClass,
+    xPosition = "-translate-x-2/3",
+}) => {
     const optionsRef = useOptionsRef(setShowOptions)
 
     return (
         <div
             ref={optionsRef}
-            className={`bg-gray-500 ml-4 text-white absolute left-3/4 transform -translate-x-2/3 top-11 
+            className={`bg-gray-500 ml-4 text-white absolute left-3/4 transform top-11
+                ${xPosition}
                 ${!showOptions && "hidden "}
                 ${roundedClass} ${showOptions && " rounded-tl-none"}`}
         >
@@ -41,6 +48,7 @@ Options.propTypes = {
     options: PropTypes.element,
     showOptions: PropTypes.bool,
     setShowOptions: PropTypes.func,
+    xPosition: PropTypes.string,
 }
 
 const OptionsToggle = ({ roundedClass, isDisabled, options, showOptions, setShowOptions }) => {
@@ -168,19 +176,22 @@ export const SVGOptionsButton = ({ children, options, showOptions, setShowOption
     const showOptionsSetter = setShowOptions ? setShowOptions : setShow
 
     return (
-        <>
-            <button
-                className={`cursor-pointer`}
-                onClick={() => showOptionsSetter(!showOptionsGetter)}
-            >
-                {children}
-            </button>
-            <Options
-                options={options}
-                showOptions={showOptionsGetter}
-                setShowOptions={showOptionsSetter}
-            />
-        </>
+        <div className={`flex flex-col relative`}>
+            <div className="flex">
+                <button
+                    className={`cursor-pointer`}
+                    onClick={() => showOptionsSetter(!showOptionsGetter)}
+                >
+                    {children}
+                </button>
+                <Options
+                    options={options}
+                    showOptions={showOptionsGetter}
+                    setShowOptions={showOptionsSetter}
+                    xPosition="-translate-x-full"
+                />
+            </div>
+        </div>
     )
 }
 SVGOptionsButton.propTypes = {
