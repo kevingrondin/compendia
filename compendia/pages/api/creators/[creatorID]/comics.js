@@ -26,7 +26,7 @@ export default async function handler(req, res) {
         const comicsResult = await client.query(comicsQuery, comicsParams)
 
         console.log("GOOOO", comicsQuery, creatorTypes)
-        console.log(comicsResult)
+        console.log("Comics Result:", comicsResult)
 
         res.status(200).json({
             comics: comicsResult.rows.map((comic) => {

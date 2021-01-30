@@ -17,6 +17,7 @@ export default function CreatorDetail() {
     const { creatorID } = router.query
 
     const [filterTypes, setFilterTypes] = useState(["W", "A", "CA"])
+    const [showFilterOptions, setShowFilterOptions] = useState(false)
 
     const {
         isLoading: creatorIsLoading,
@@ -34,7 +35,7 @@ export default function CreatorDetail() {
 
     const comics = comicsData && comicsData.comics ? comicsData.comics : []
 
-    console.log(comicsData)
+    console.log("Comics Data:", comicsData)
 
     useEffect(() => {
         if (creatorID) {
@@ -44,8 +45,8 @@ export default function CreatorDetail() {
     }, [creatorID])
 
     useEffect(() => {
-        queryClient.refetchQueries(["creator-comics", parseInt(creatorID), filterTypes])
         console.log("Hello", filterTypes)
+        queryClient.refetchQueries(["creator-comics", parseInt(creatorID), filterTypes.join("/")])
     }, [filterTypes])
 
     if (creatorIsLoading || comicsIsLoading) return <div>Loading...</div>
@@ -73,8 +74,11 @@ export default function CreatorDetail() {
                                 creatorID={creatorID}
                                 filterTypes={filterTypes}
                                 setFilterTypes={setFilterTypes}
+                                setShowFilterOptions={setShowFilterOptions}
                             />
                         }
+                        showOptions={showFilterOptions}
+                        setShowOptions={setShowFilterOptions}
                     >
                         <FilterIcon />
                     </SVGOptionsButton>

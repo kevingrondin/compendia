@@ -1,7 +1,5 @@
 import PropTypes from "prop-types"
-import { useEffect, useState } from "react"
-import { useQueryClient } from "react-query"
-import { useCreatorComics } from "../../../hooks/queries/creator"
+import { useState, useEffect } from "react"
 import Button from "../../buttons/Button"
 
 const FilterOptionsItem = ({ label, value, onChange, className }) => {
@@ -25,53 +23,32 @@ FilterOptionsItem.propTypes = {
     className: PropTypes.string,
 }
 
-export default function FilterOptions({ creatorID, filterTypes, setFilterTypes }) {
-    const queryClient = useQueryClient()
-
+export default function FilterOptions({ filterTypes, setFilterTypes, setShowFilterOptions }) {
     const [showApplyButton, setShowApplyButton] = useState(false)
     const [includeWriter, setIncludeWriter] = useState(true)
     const [includeArtist, setIncludeArtist] = useState(true)
     const [includeCoverArtist, setIncludeCoverArtist] = useState(true)
 
-    // useEffect(() => {
-    //     const filterHasWriter = filterTypes.includes("W")
-
-    //     const updatedTypes = filterTypes
-
-    //     if (includeWriter && !filterHasWriter) updatedTypes.push("W")
-    //     else if (!includeWriter && filterHasWriter) updatedTypes.pop("W")
-
-    //     setFilterTypes(updatedTypes)
-    // }, [includeWriter])
-
-    // useEffect(() => {
-    //     const filterHasArtist = filterTypes.includes("A")
-
-    //     const updatedTypes = filterTypes
-
-    //     if (includeArtist && !filterHasArtist) updatedTypes.push("A")
-    //     else if (!includeArtist && filterHasArtist) updatedTypes.pop("A")
-
-    //     console.log(updatedTypes)
-
-    //     setFilterTypes(updatedTypes)
-    // }, [includeArtist])
-
-    // useEffect(() => {
-    //     const filterHasCoverArtist = filterTypes.includes("CA")
-
-    //     const updatedTypes = filterTypes
-
-    //     if (includeCoverArtist && !filterHasCoverArtist) updatedTypes.push("CA")
-    //     else if (!includeCoverArtist && filterHasCoverArtist) updatedTypes.pop("CA")
-
-    //     setFilterTypes(updatedTypes)
-    // }, [includeCoverArtist])
-
     function handleOptionChecked(isChecked, setter) {
         setter(isChecked)
         setShowApplyButton(true)
     }
+
+    function handleApplyFilterOptions() {
+        const types = []
+        if (includeWriter) types.push("W")
+        if (includeArtist) types.push("A")
+        if (includeCoverArtist) types.push("CA")
+        setFilterTypes(types)
+        setShowApplyButton(false)
+        setShowFilterOptions(false)
+    }
+
+    useEffect(() => {
+        setIncludeWriter(filterTypes.includes("W"))
+        setIncludeArtist(filterTypes.includes("A"))
+        setIncludeCoverArtist(filterTypes.includes("CA"))
+    }, [filterTypes])
 
     return (
         <div className="flex flex-col">
@@ -100,14 +77,7 @@ export default function FilterOptions({ creatorID, filterTypes, setFilterTypes }
                 <Button
                     roundedClass="rounded-lg"
                     className="m-3 ml-auto self-end"
-                    onClick={() => {
-                        const types = []
-                        if (includeWriter) types.push("W")
-                        if (includeArtist) types.push("A")
-                        if (includeCoverArtist) types.push("CA")
-                        setFilterTypes(types)
-                        setShowApplyButton(false)
-                    }}
+                    onClick={handleApplyFilterOptions}
                 >
                     Apply
                 </Button>
@@ -117,7 +87,7 @@ export default function FilterOptions({ creatorID, filterTypes, setFilterTypes }
 }
 
 FilterOptions.propTypes = {
-    creatorID: PropTypes.string.isRequired,
     filterTypes: PropTypes.array.isRequired,
     setFilterTypes: PropTypes.func.isRequired,
+    setShowFilterOptions: PropTypes.func.isRequired,
 }
