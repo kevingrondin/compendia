@@ -1,21 +1,12 @@
 import PropTypes from "prop-types"
 import axios from "axios"
-import { useMutation, useQuery, useQueryClient } from "react-query"
+import { useMutation, useQueryClient } from "react-query"
 import { Button } from "@components/common/buttons/Button"
-
-const getPullListComic = (comicID) =>
-    useQuery(
-        ["pull-list-comics", comicID],
-        async () => {
-            const { data } = await axios.get(`/api/collection/pull-list/comics/${comicID}`)
-            return data
-        },
-        { staleTime: Infinity }
-    )
+import { usePullListComic } from "@hooks/queries/pull-list"
 
 export function PullButton({ comicID, className, marginClass }) {
     const queryClient = useQueryClient()
-    const { isLoading, isError, error, data } = getPullListComic(comicID)
+    const { isLoading, isError, error, data } = usePullListComic(comicID)
 
     const addComicToPullList = useMutation(
         () => axios.post(`/api/collection/pull-list/comics/${comicID}`),

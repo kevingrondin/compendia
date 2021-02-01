@@ -1,22 +1,7 @@
 import PropTypes from "prop-types"
-import { useQuery } from "react-query"
-import { format } from "date-fns"
-import axios from "axios"
 import { ComicCover } from "@components/pages/comic/ComicCover"
 import { Category } from "@components/common/Category"
-
-function useAllReleases(comicDay) {
-    return useQuery(
-        `all-releases-${format(comicDay, "yyyy-MM-dd")}`,
-        async () => {
-            const { data } = await axios.get(
-                `/api/releases?comicDay=${format(comicDay, "yyyy-MM-dd")}`
-            )
-            return data
-        },
-        { staleTime: 600000 }
-    )
-}
+import { useAllReleases } from "@hooks/queries/releases"
 
 export function AllReleases({ comicDay }) {
     const { isLoading, isError, error, data: releasesByPublisher } = useAllReleases(comicDay)

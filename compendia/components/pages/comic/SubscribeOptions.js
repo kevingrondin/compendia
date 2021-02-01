@@ -3,6 +3,7 @@ import axios from "axios"
 import { useMutation, useQuery, useQueryClient } from "react-query"
 import { useEffect, useState } from "react"
 import { Button } from "@components/common/buttons/Button"
+import { usePullListSeries } from "@hooks/queries/pull-list"
 
 const SubscribeOptionsItem = ({ label, value, disabled, onChange, className }) => {
     return (
@@ -27,16 +28,6 @@ SubscribeOptionsItem.propTypes = {
     onChange: PropTypes.func.isRequired,
     className: PropTypes.string,
 }
-
-const getPullListSeries = (seriesID) =>
-    useQuery(
-        ["pull-list-series", seriesID],
-        async () => {
-            const { data } = await axios.get(`/api/collection/pull-list/series/${seriesID}`)
-            return data
-        },
-        { staleTime: Infinity }
-    )
 
 //TODO refactor this to be simpler and more readable (loop through options)
 export function SubscribeOptions({ seriesID, isOptionsVisible }) {

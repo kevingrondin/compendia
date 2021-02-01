@@ -4,20 +4,11 @@ import { useState } from "react"
 import { useMutation, useQueryClient, useQuery } from "react-query"
 import { OptionsButton } from "@components/common/buttons/OptionsButton"
 import { SubscribeOptions } from "@components/pages/comic/SubscribeOptions"
-
-const getPullListSeries = (seriesID) =>
-    useQuery(
-        ["pull-list-series", seriesID],
-        async () => {
-            const { data } = await axios.get(`/api/collection/pull-list/series/${seriesID}`)
-            return data
-        },
-        { staleTime: Infinity }
-    )
+import { usePullListSeries } from "@hooks/queries/pull-list"
 
 export function SubscribeButton({ seriesID, comicID, className, marginClass }) {
     const queryClient = useQueryClient()
-    const { isLoading, isError, error, data } = getPullListSeries(seriesID)
+    const { isLoading, isError, error, data } = usePullListSeries(seriesID)
     const [showOptions, setShowOptions] = useState(false)
 
     const subscribeToSeries = useMutation(

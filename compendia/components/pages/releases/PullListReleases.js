@@ -1,21 +1,6 @@
-import axios from "axios"
 import PropTypes from "prop-types"
-import { useQuery } from "react-query"
-import { format } from "date-fns"
 import { ComicCover } from "@components/pages/comic/ComicCover"
-
-function usePullList(comicDay) {
-    return useQuery(
-        ["pull-list", format(comicDay, "MM-dd-yyyy")],
-        async () => {
-            const { data } = await axios.get(
-                `/api/collection/pull-list?comicDay=${format(comicDay, "MM-dd-yyyy")}`
-            )
-            return data
-        },
-        { staleTime: 600000 }
-    )
-}
+import { usePullList } from "@hooks/queries/pull-list"
 
 export function PullListReleases({ comicDay }) {
     const { isLoading, isError, error, data: comics } = usePullList(comicDay)
@@ -24,11 +9,17 @@ export function PullListReleases({ comicDay }) {
     else if (isError) return <div>Error: {error.message}</div>
     else if (comics && comics.length > 0)
         return (
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 justify-items-center gap-y-6 sm:gap-8 ">
+            <ul className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 justify-items-center gap-y-6 sm:gap-8 ">
                 {comics.map((comic) => (
-                    <ComicCover comicID={comic.id} title={`${comic.seriesName} ${comic.title}`} />
+                    <li key={comic.id}>
+                        <ComicCover
+                            comicID={comic.id}
+                            title={`${comic.title}`}
+                            cover={comic.cover}
+                        />
+                    </li>
                 ))}
-            </div>
+            </ul>
         )
     else return <p>Your Pull List is empty this week...</p>
 }

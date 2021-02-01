@@ -1,8 +1,7 @@
 import Link from "next/link"
-import axios from "axios"
 import { useEffect, useState } from "react"
 import { useRouter } from "next/router"
-import { useQuery, useQueryClient } from "react-query"
+import { useQueryClient } from "react-query"
 import { Page } from "@components/common/Page"
 import { FullScreenModal } from "@components/common/FullScreenModal"
 import { ArrowIcon } from "@icons/Arrow"
@@ -15,16 +14,7 @@ import { SubscribeButton } from "@components/pages/comic/SubscribeButton"
 import { ComicCreators } from "@components/pages/comic/ComicCreators"
 import { ComicDetails } from "@components/pages/comic/ComicDetails"
 import { Lists } from "@components/pages/comic/Lists"
-
-const useComicDetail = (comicID) =>
-    useQuery(
-        ["comic-detail", comicID],
-        async () => {
-            const { data } = await axios.get(`/api/comics/${comicID}`)
-            return data
-        },
-        { enabled: false, staleTime: Infinity }
-    )
+import { useComic } from "@hooks/queries/comic"
 
 //TODO refactor to be simpler and more readable
 export default function ComicDetail() {
@@ -32,7 +22,7 @@ export default function ComicDetail() {
     const router = useRouter()
     const { id } = router.query
 
-    const { isLoading, isError, error, data: comic } = useComicDetail(parseInt(id))
+    const { isLoading, isError, error, data: comic } = useComic(parseInt(id))
     const [showFullCover, setShowFullCover] = useState(false)
 
     useEffect(() => {

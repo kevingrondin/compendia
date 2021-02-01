@@ -1,16 +1,7 @@
 import PropTypes from "prop-types"
 import axios from "axios"
-import { useQuery, useQueryClient, useMutation } from "react-query"
-
-const useComicLists = (comicID) =>
-    useQuery(
-        [`user-comic-lists`, comicID],
-        async () => {
-            const { data } = await axios.get(`/api/comics/${comicID}/lists`)
-            return data
-        },
-        { staleTime: Infinity }
-    )
+import { useQueryClient, useMutation } from "react-query"
+import { useComicLists } from "@hooks/queries/comic"
 
 export function Lists({ comicID }) {
     const queryClient = useQueryClient()
