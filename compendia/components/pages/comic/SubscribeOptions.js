@@ -1,9 +1,8 @@
 import PropTypes from "prop-types"
-import axios from "axios"
-import { useMutation, useQuery, useQueryClient } from "react-query"
 import { useEffect, useState } from "react"
 import { Button } from "@components/common/buttons/Button"
 import { usePullListSeries } from "@hooks/queries/pull-list"
+import { useUpdatePullListDetails } from "@hooks/mutations/pull-list"
 
 const SubscribeOptionsItem = ({ label, value, disabled, onChange, className }) => {
     return (
@@ -31,10 +30,10 @@ SubscribeOptionsItem.propTypes = {
 
 //TODO refactor this to be simpler and more readable (loop through options)
 export function SubscribeOptions({ seriesID, isOptionsVisible }) {
-    const queryClient = useQueryClient()
-    const { isLoading, isError, error, data } = getPullListSeries(seriesID)
-    const [showUpdateButton, setShowUpdateButton] = useState(false)
+    const { isLoading, isError, error, data } = usePullListSeries(seriesID)
+    const pullListMutation = useUpdatePullListDetails(seriesID)
 
+    const [showUpdateButton, setShowUpdateButton] = useState(false)
     const [includeSingleIssues, setIncludeSingleIssues] = useState(data.includeSingleIssues)
     const [includePrintings, setIncludePrintings] = useState(data.includePrintings)
     const [includeVariantCovers, setIncludeVariantCovers] = useState(data.includeVariantCovers)
@@ -43,15 +42,6 @@ export function SubscribeOptions({ seriesID, isOptionsVisible }) {
     const [includeOmnibuses, setIncludeOmnibuses] = useState(data.includeOmnibuses)
     const [includeCompendia, setIncludeCompendia] = useState(data.includeCompendia)
     const [includeAll, setIncludeAll] = useState(data.includeAll)
-
-    const updatePullListDetails = useMutation(
-        (details) => axios.put(`/api/collection/pull-list/series/${seriesID}`, details),
-        {
-            onSuccess: (updatedDetails) => {
-                queryClient.setQueryData(["pull-list-series", seriesID], updatedDetails.data)
-            },
-        }
-    )
 
     useEffect(() => {
         if (isOptionsVisible === false) {
@@ -217,7 +207,7 @@ export function SubscribeOptions({ seriesID, isOptionsVisible }) {
                             updatedDetails.includeCompendia = includeCompendia
                             updatedDetails.includeAll = includeAll
 
-                            updatePullListDetails.mutate(updatedDetails)
+                            pullListMutation.mutate(updatedDetails)
                             setShowUpdateButton(false)
                         }}
                     >

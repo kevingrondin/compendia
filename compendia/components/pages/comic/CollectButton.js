@@ -1,39 +1,15 @@
 import PropTypes from "prop-types"
-import axios from "axios"
-import { useMutation, useQueryClient } from "react-query"
 import { Button } from "@components/common/buttons/Button"
+import { useAddCollectedComic, useRemoveCollectedComic } from "@hooks/mutations/collection"
 
 export function CollectButton({ comicID, isCollected, className, marginClass }) {
-    const queryClient = useQueryClient()
-
-    const addToCollection = useMutation(() => axios.post(`/api/collection/comics/${comicID}`), {
-        onSuccess: () => {
-            const currComic = queryClient.getQueryData(["comic-detail", comicID])
-            const updatedComic = { ...currComic }
-            updatedComic.isCollected = true
-            queryClient.setQueryData(["comic-detail", comicID], updatedComic)
-        },
-    })
-
-    const removeFromCollection = useMutation(
-        () => axios.delete(`/api/collection/comics/${comicID}`),
-        {
-            onSuccess: () => {
-                const currComic = queryClient.getQueryData(["comic-detail", comicID])
-                const updatedComic = { ...currComic }
-                updatedComic.isCollected = false
-                queryClient.setQueryData(["comic-detail", comicID], updatedComic)
-            },
-        }
-    )
-
     return (
         <Button
             primaryText="Collect"
             secondaryText="Collected"
             isActive={isCollected}
-            onPrimaryClick={addToCollection}
-            onSecondaryClick={removeFromCollection}
+            onPrimaryClick={useAddCollectedComic(comicID)}
+            onSecondaryClick={useRemoveCollectedComic(comicID)}
             className={className}
             marginClass={marginClass}
         />

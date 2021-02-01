@@ -1,12 +1,12 @@
 import PropTypes from "prop-types"
-import axios from "axios"
 import { useState, useEffect } from "react"
-import { useMutation, useQueryClient } from "react-query"
+import { useQueryClient } from "react-query"
 import { format } from "date-fns"
 import { formatDateStringForView } from "@util/date"
 import { Button } from "@components/common/buttons/Button"
 import { EditIcon } from "@icons/Edit"
 import { useCollectedComic } from "@hooks/queries/collection"
+import { useUpdateCollectionFields } from "@hooks/mutations/collection"
 
 const CollectionDetail = ({ isEditMode, field, label, children }) => (
     <label className="flex flex-col pr-10 pb-5">
@@ -29,9 +29,6 @@ CollectionDetail.propTypes = {
 
 //TODO refactor this to be simpler and easier to read
 export function CollectionDetails({ comicID }) {
-    const queryClient = useQueryClient()
-    const { isLoading, isError, data } = useCollectedComic(comicID)
-
     const [isEditMode, setIsEditMode] = useState(false)
     const [showUpdateButton, setShowUpdateButton] = useState(false)
     const [editDateCollected, setEditDateCollected] = useState()
@@ -40,6 +37,10 @@ export function CollectionDetails({ comicID }) {
     const [editCondition, setEditCondition] = useState()
     const [editQuantity, setEditQuantity] = useState()
     const [editNotes, setEditNotes] = useState()
+
+    const queryClient = useQueryClient()
+    const { isLoading, isError, data } = useCollectedComic(comicID)
+    const collectionDetailsMutation = useUpdateCollectionFields(comicID, setIsEditMode)
 
     useEffect(() => {
         queryClient.refetchQueries(["collected-comic-detail", comicID])
@@ -82,16 +83,6 @@ export function CollectionDetails({ comicID }) {
         setEditQuantity(data.quantity)
         setEditNotes(data.notes)
     }
-
-    const updateCollectionFields = useMutation(
-        (data) => axios.put(`/api/collection/comics/${comicID}`, data),
-        {
-            onSuccess: (res) => {
-                setIsEditMode(false)
-                queryClient.setQueryData(["collected-comic-detail", comicID], { ...res.data })
-            },
-        }
-    )
 
     return (
         <div>
@@ -219,7 +210,7 @@ export function CollectionDetails({ comicID }) {
                                     const dateParts =
                                         editDateCollected && editDateCollected.split("-")
 
-                                    updateCollectionFields.mutate({
+                                    collectionDetailsMutation.mutate({
                                         dateCollected: editDateCollected
                                             ? format(
                                                   new Date(
