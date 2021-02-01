@@ -1,4 +1,4 @@
-const db = require("../../../../database").instance
+const db = require("../../../../util/database").instance
 
 export default async function handler(req, res) {
     res.setHeader("Content-Type", "application/json")

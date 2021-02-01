@@ -1,6 +1,6 @@
 import PropTypes from "prop-types"
 import { useState, useEffect } from "react"
-import Button from "../../buttons/Button"
+import { Button } from "@components/common/buttons/Button"
 
 const FilterOptionsItem = ({ label, value, onChange, className }) => {
     return (
@@ -15,7 +15,6 @@ const FilterOptionsItem = ({ label, value, onChange, className }) => {
         </label>
     )
 }
-
 FilterOptionsItem.propTypes = {
     label: PropTypes.string.isRequired,
     value: PropTypes.bool.isRequired,
@@ -23,11 +22,29 @@ FilterOptionsItem.propTypes = {
     className: PropTypes.string,
 }
 
-export default function FilterOptions({ filterTypes, setFilterTypes, setShowFilterOptions }) {
+export function FilterOptions({ filterTypes, setFilterTypes, setShowFilterOptions }) {
     const [showApplyButton, setShowApplyButton] = useState(false)
     const [includeWriter, setIncludeWriter] = useState(true)
     const [includeArtist, setIncludeArtist] = useState(true)
     const [includeCoverArtist, setIncludeCoverArtist] = useState(true)
+
+    const filterOptions = [
+        {
+            label: "Writer",
+            value: includeWriter,
+            onChange: (e) => handleOptionChecked(e.target.checked, setIncludeWriter),
+        },
+        {
+            label: "Artist",
+            value: includeArtist,
+            onChange: (e) => handleOptionChecked(e.target.checked, setIncludeArtist),
+        },
+        {
+            label: "Cover Artist",
+            value: includeCoverArtist,
+            onChange: (e) => handleOptionChecked(e.target.checked, setIncludeCoverArtist),
+        },
+    ]
 
     function handleOptionChecked(isChecked, setter) {
         setter(isChecked)
@@ -55,23 +72,18 @@ export default function FilterOptions({ filterTypes, setFilterTypes, setShowFilt
             <h3 className="font-semibold text-gray-50 m-2 mb-1 mt-3 border-b-2 border-gray-300">
                 Include
             </h3>
-            <FilterOptionsItem
-                label="Writer"
-                value={includeWriter}
-                onChange={(e) => handleOptionChecked(e.target.checked, setIncludeWriter)}
-            />
 
-            <FilterOptionsItem
-                label="Artist"
-                value={includeArtist}
-                onChange={(e) => handleOptionChecked(e.target.checked, setIncludeArtist)}
-            />
-
-            <FilterOptionsItem
-                label="Cover Artist"
-                value={includeCoverArtist}
-                onChange={(e) => handleOptionChecked(e.target.checked, setIncludeCoverArtist)}
-            />
+            <ul>
+                {filterOptions.map((option) => (
+                    <li key={option.label}>
+                        <FilterOptionsItem
+                            label={option.label}
+                            value={option.value}
+                            onChange={option.onChange}
+                        />
+                    </li>
+                ))}
+            </ul>
 
             {showApplyButton && (
                 <Button
@@ -85,7 +97,6 @@ export default function FilterOptions({ filterTypes, setFilterTypes, setShowFilt
         </div>
     )
 }
-
 FilterOptions.propTypes = {
     filterTypes: PropTypes.array.isRequired,
     setFilterTypes: PropTypes.func.isRequired,

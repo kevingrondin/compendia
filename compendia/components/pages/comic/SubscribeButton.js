@@ -1,9 +1,9 @@
-import { useState } from "react"
-import { useMutation, useQueryClient, useQuery } from "react-query"
 import PropTypes from "prop-types"
 import axios from "axios"
-import { OptionsButton } from "../../buttons/OptionsButton"
-import SubscribeOptions from "./SubscribeOptions"
+import { useState } from "react"
+import { useMutation, useQueryClient, useQuery } from "react-query"
+import { OptionsButton } from "@components/common/buttons/OptionsButton"
+import { SubscribeOptions } from "@components/pages/comic/SubscribeOptions"
 
 const getPullListSeries = (seriesID) =>
     useQuery(
@@ -15,7 +15,7 @@ const getPullListSeries = (seriesID) =>
         { staleTime: Infinity }
     )
 
-export default function SubscribeButton({ seriesID, comicID, className, marginClass }) {
+export function SubscribeButton({ seriesID, comicID, className, marginClass }) {
     const queryClient = useQueryClient()
     const { isLoading, isError, error, data } = getPullListSeries(seriesID)
     const [showOptions, setShowOptions] = useState(false)
@@ -58,7 +58,6 @@ export default function SubscribeButton({ seriesID, comicID, className, marginCl
             />
         )
 }
-
 SubscribeButton.propTypes = {
     seriesID: PropTypes.number.isRequired,
     comicID: PropTypes.number.isRequired,

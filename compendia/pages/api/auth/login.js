@@ -1,7 +1,7 @@
-const db = require("../../../database").instance
-import { magic } from "../../../util/magic"
+const db = require("../../../util/database").instance
+import { magic } from "@util/magic"
 import jwt from "jsonwebtoken"
-import { setTokenCookie } from "../../../util/cookie"
+import { setTokenCookie } from "@util/cookie"
 
 // Create new user in db using issuer ID and email from Magic metadata
 const createNewUser = async (metadata, client) => {

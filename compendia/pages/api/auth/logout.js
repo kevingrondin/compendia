@@ -1,5 +1,5 @@
-import { magic } from "../../../util/magic"
-import { removeTokenCookie } from "../../../util/cookie"
+import { magic } from "@util/magic"
+import { removeTokenCookie } from "@util/cookie"
 import jwt from "jsonwebtoken"
 
 export default async function logout(req, res) {

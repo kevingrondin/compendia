@@ -1,7 +1,7 @@
 import { addDays, subDays, isSameWeek } from "date-fns"
 
 // Depending on the action passed in, returns the next, previous, or current comic book day (tuesday) from the date passed in
-export default function useComicDay(action, date) {
+export function useComicDay(action, date) {
     const TUESDAY = 2
     let newDate = new Date(date.getFullYear(), date.getMonth(), date.getDate())
 

@@ -1,20 +1,20 @@
-import { useEffect, useState } from "react"
 import Link from "next/link"
-import { useRouter } from "next/router"
 import axios from "axios"
+import { useEffect, useState } from "react"
+import { useRouter } from "next/router"
 import { useQuery, useQueryClient } from "react-query"
-import Page from "../../components/pages/Page"
-import FullScreenModal from "../../components/utils/FullScreenModal"
-import CollectionDetails from "../../components/pages/comic/CollectionDetails"
-import CollectButton from "../../components/pages/comic/CollectButton"
-import PullButton from "../../components/pages/comic/PullButton"
-import ComicCreators from "../../components/pages/comic/ComicCreators"
-import ComicDetails from "../../components/pages/comic/ComicDetails"
-import ArrowIcon from "../../components/icons/Arrow"
-import Lists from "../../components/pages/comic/Lists"
-import SubscribeButton from "../../components/pages/comic/SubscribeButton"
-import useComicDay from "../../hooks/useComicDay"
-import { getDateFromPGString } from "../../util/date"
+import { Page } from "@components/common/Page"
+import { FullScreenModal } from "@components/common/FullScreenModal"
+import { ArrowIcon } from "@icons/Arrow"
+import { useComicDay } from "@hooks/useComicDay"
+import { getDateFromPGString } from "@util/date"
+import { CollectionDetails } from "@components/pages/comic/CollectionDetails"
+import { CollectButton } from "@components/pages/comic/CollectButton"
+import { PullButton } from "@components/pages/comic/PullButton"
+import { SubscribeButton } from "@components/pages/comic/SubscribeButton"
+import { ComicCreators } from "@components/pages/comic/ComicCreators"
+import { ComicDetails } from "@components/pages/comic/ComicDetails"
+import { Lists } from "@components/pages/comic/Lists"
 
 const useComicDetail = (comicID) =>
     useQuery(
@@ -26,6 +26,7 @@ const useComicDetail = (comicID) =>
         { enabled: false, staleTime: Infinity }
     )
 
+//TODO refactor to be simpler and more readable
 export default function ComicDetail() {
     const queryClient = useQueryClient()
     const router = useRouter()

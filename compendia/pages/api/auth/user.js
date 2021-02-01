@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken"
-import { setTokenCookie } from "../../../util/cookie"
+import { setTokenCookie } from "@util/cookie"
 
 export default async function user(req, res) {
     try {

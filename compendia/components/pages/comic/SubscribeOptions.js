@@ -1,8 +1,8 @@
 import PropTypes from "prop-types"
-import { useMutation, useQuery, useQueryClient } from "react-query"
 import axios from "axios"
+import { useMutation, useQuery, useQueryClient } from "react-query"
 import { useEffect, useState } from "react"
-import Button from "../../buttons/Button"
+import { Button } from "@components/common/buttons/Button"
 
 const SubscribeOptionsItem = ({ label, value, disabled, onChange, className }) => {
     return (
@@ -20,7 +20,6 @@ const SubscribeOptionsItem = ({ label, value, disabled, onChange, className }) =
         </label>
     )
 }
-
 SubscribeOptionsItem.propTypes = {
     label: PropTypes.string.isRequired,
     value: PropTypes.bool.isRequired,
@@ -39,7 +38,8 @@ const getPullListSeries = (seriesID) =>
         { staleTime: Infinity }
     )
 
-export default function SubscribeOptions({ seriesID, isOptionsVisible }) {
+//TODO refactor this to be simpler and more readable (loop through options)
+export function SubscribeOptions({ seriesID, isOptionsVisible }) {
     const queryClient = useQueryClient()
     const { isLoading, isError, error, data } = getPullListSeries(seriesID)
     const [showUpdateButton, setShowUpdateButton] = useState(false)
@@ -236,7 +236,6 @@ export default function SubscribeOptions({ seriesID, isOptionsVisible }) {
             </div>
         )
 }
-
 SubscribeOptions.propTypes = {
     seriesID: PropTypes.number.isRequired,
     isOptionsVisible: PropTypes.bool.isRequired,

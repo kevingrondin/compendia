@@ -1,8 +1,7 @@
-import { useMutation, useQuery, useQueryClient } from "react-query"
 import PropTypes from "prop-types"
 import axios from "axios"
-
-import Button from "../../buttons/Button"
+import { useMutation, useQuery, useQueryClient } from "react-query"
+import { Button } from "@components/common/buttons/Button"
 
 const getPullListComic = (comicID) =>
     useQuery(
@@ -14,7 +13,7 @@ const getPullListComic = (comicID) =>
         { staleTime: Infinity }
     )
 
-export default function PullButton({ comicID, className, marginClass }) {
+export function PullButton({ comicID, className, marginClass }) {
     const queryClient = useQueryClient()
     const { isLoading, isError, error, data } = getPullListComic(comicID)
 
@@ -51,7 +50,6 @@ export default function PullButton({ comicID, className, marginClass }) {
             />
         )
 }
-
 PullButton.propTypes = {
     comicID: PropTypes.number.isRequired,
     className: PropTypes.string,

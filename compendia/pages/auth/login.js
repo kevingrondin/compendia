@@ -1,13 +1,11 @@
-import { useState, useEffect } from "react"
 import Head from "next/head"
 import Router from "next/router"
-
+import { useState, useEffect } from "react"
 import { OAuthExtension } from "@magic-ext/oauth"
 import { Magic } from "magic-sdk"
-import { useUser } from "../../hooks/magic"
-
-import { validateEmail } from "../../util/validateEmail"
-import Button from "../../components/utils/Button"
+import { useUser } from "@hooks/magic"
+import { validateEmail } from "@util/validateEmail"
+import { Button } from "@components/common/buttons/button"
 
 export default function Login() {
     useUser({ redirectTo: "/", redirectIfFound: true })
@@ -24,6 +22,8 @@ export default function Login() {
             )
         magic?.preload()
     }, [magic])
+
+    // TODO move these functions outside of the component and pass in whatever they need
 
     async function handleLoginWithEmail(email) {
         try {

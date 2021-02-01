@@ -1,5 +1,5 @@
-const db = require("../../../../../database").instance
-import { getUserOrRedirect } from "../../../../../util/cookie"
+const db = require("../../../../../util/database").instance
+import { getUserOrRedirect } from "@util/cookie"
 
 export default async function handler(req, res) {
     res.setHeader("Content-Type", "application/json")

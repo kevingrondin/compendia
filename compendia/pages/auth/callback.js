@@ -1,6 +1,5 @@
-import { useState, useEffect } from "react"
 import Router, { useRouter } from "next/router"
-
+import { useState, useEffect } from "react"
 import { Magic } from "magic-sdk"
 import { OAuthExtension } from "@magic-ext/oauth"
 
@@ -19,6 +18,8 @@ export default function Callback() {
             )
         magic && finishEmailRedirectLogin()
     }, [magic, router.query])
+
+    // TODO move these functions outside and pass in what it needs
 
     const finishEmailRedirectLogin = async () => {
         if (router.query.magic_credential) {

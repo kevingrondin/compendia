@@ -1,4 +1,4 @@
-const db = require("../../../../database").instance
+const db = require("../../../../util/database").instance
 
 export default async function handler(req, res) {
     res.setHeader("Content-Type", "application/json")
@@ -24,9 +24,6 @@ export default async function handler(req, res) {
                     FETCH FIRST 30 ROWS ONLY`
         const comicsParams = creatorTypes !== "" ? [creatorID, types] : [creatorID]
         const comicsResult = await client.query(comicsQuery, comicsParams)
-
-        console.log("GOOOO", comicsQuery, creatorTypes)
-        console.log("Comics Result:", comicsResult)
 
         res.status(200).json({
             comics: comicsResult.rows.map((comic) => {

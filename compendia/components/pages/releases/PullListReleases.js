@@ -1,9 +1,8 @@
-import { useQuery } from "react-query"
-import PropTypes from "prop-types"
-import { format } from "date-fns"
 import axios from "axios"
-
-import ComicCover from "../comic/ComicCover"
+import PropTypes from "prop-types"
+import { useQuery } from "react-query"
+import { format } from "date-fns"
+import { ComicCover } from "@components/pages/comic/ComicCover"
 
 function usePullList(comicDay) {
     return useQuery(
@@ -18,7 +17,7 @@ function usePullList(comicDay) {
     )
 }
 
-export default function PullListReleases({ comicDay }) {
+export function PullListReleases({ comicDay }) {
     const { isLoading, isError, error, data: comics } = usePullList(comicDay)
 
     if (isLoading) return <div>Loading...</div>
@@ -33,7 +32,6 @@ export default function PullListReleases({ comicDay }) {
         )
     else return <p>Your Pull List is empty this week...</p>
 }
-
 PullListReleases.propTypes = {
     comicDay: PropTypes.instanceOf(Date).isRequired,
 }

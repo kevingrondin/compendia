@@ -1,4 +1,4 @@
-const db = require("../../database").instance
+const db = require("../../util/database").instance
 
 // Reduce comic records into an array of publishers each with their list of comic releases
 function groupByPublisher(comics) {

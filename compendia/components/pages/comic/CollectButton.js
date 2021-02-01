@@ -1,10 +1,9 @@
-import { useMutation, useQueryClient } from "react-query"
 import PropTypes from "prop-types"
 import axios from "axios"
+import { useMutation, useQueryClient } from "react-query"
+import { Button } from "@components/common/buttons/Button"
 
-import Button from "../../buttons/Button"
-
-export default function CollectButton({ comicID, isCollected, className, marginClass }) {
+export function CollectButton({ comicID, isCollected, className, marginClass }) {
     const queryClient = useQueryClient()
 
     const addToCollection = useMutation(() => axios.post(`/api/collection/comics/${comicID}`), {
@@ -40,7 +39,6 @@ export default function CollectButton({ comicID, isCollected, className, marginC
         />
     )
 }
-
 CollectButton.propTypes = {
     comicID: PropTypes.number.isRequired,
     isCollected: PropTypes.bool.isRequired,

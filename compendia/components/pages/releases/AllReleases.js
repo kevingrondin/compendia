@@ -2,9 +2,8 @@ import PropTypes from "prop-types"
 import { useQuery } from "react-query"
 import { format } from "date-fns"
 import axios from "axios"
-
-import ComicCover from "../comic/ComicCover"
-import Category from "../Category"
+import { ComicCover } from "@components/pages/comic/ComicCover"
+import { Category } from "@components/common/Category"
 
 function useAllReleases(comicDay) {
     return useQuery(
@@ -19,7 +18,7 @@ function useAllReleases(comicDay) {
     )
 }
 
-export default function AllReleases({ comicDay }) {
+export function AllReleases({ comicDay }) {
     const { isLoading, isError, error, data: releasesByPublisher } = useAllReleases(comicDay)
 
     if (isLoading) return <div>Loading...</div>

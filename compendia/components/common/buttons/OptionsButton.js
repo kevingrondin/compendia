@@ -1,7 +1,7 @@
-import { createRef, useEffect, useState } from "react"
 import PropTypes from "prop-types"
-import ArrowIcon from "../icons/Arrow"
-import CheckIcon from "../icons/Check"
+import { createRef, useEffect, useState } from "react"
+import { ArrowIcon } from "@icons/Arrow"
+import { CheckIcon } from "@icons/Check"
 
 const primaryColors = `bg-blue-primary-100 hover:bg-blue-primary-200 border-blue-primary-300 hover:border-blue-primary-400`
 const secondaryColors = `bg-gray-400 hover:bg-gray-500 border-gray-500 hover:border-gray-600`
@@ -86,23 +86,20 @@ OptionsToggle.propTypes = {
     setShowOptions: PropTypes.func,
 }
 
-export const OptionsButton = ({
+export function OptionsButton({
     className,
     marginClass,
     roundedClass = "rounded-lg",
-    children,
     primaryText,
     secondaryText,
-    onClick,
     onPrimaryClick,
     onSecondaryClick,
     isDisabled,
-    isSecondary,
     isActive,
     options,
     showOptions,
     setShowOptions,
-}) => {
+}) {
     const [show, setShow] = useState(false)
     const showOptionsGetter = showOptions ? showOptions : show
     const showOptionsSetter = setShowOptions ? setShowOptions : setShow
@@ -142,8 +139,7 @@ export const OptionsButton = ({
                         onClick={() => onPrimaryClick.mutate()}
                         disabled={isDisabled}
                         className={`text-center text-white text-lg py-2 px-4 max-h-14 cursor-pointer shadow-sm border-b-4 hover:border-b-2 hover:border-t-2
-                            ${roundedClass} ${primaryColors}
-                            ${isFullWidth && "w-full"} ${className}`}
+                            ${roundedClass} ${primaryColors} ${className}`}
                     >
                         {primaryText}
                     </button>
@@ -156,21 +152,18 @@ OptionsButton.propTypes = {
     className: PropTypes.string,
     marginClass: PropTypes.string,
     roundedClass: PropTypes.string,
-    children: PropTypes.element,
     primaryText: PropTypes.string,
     secondaryText: PropTypes.string,
-    onClick: PropTypes.func,
     onPrimaryClick: PropTypes.object,
     onSecondaryClick: PropTypes.object,
     isDisabled: PropTypes.bool,
-    isSecondary: PropTypes.bool,
     isActive: PropTypes.bool,
     options: PropTypes.element.isRequired,
     showOptions: PropTypes.bool,
     setShowOptions: PropTypes.func,
 }
 
-export const SVGOptionsButton = ({ children, options, showOptions, setShowOptions }) => {
+export function SVGOptionsButton({ children, options, showOptions, setShowOptions }) {
     const [show, setShow] = useState(false)
     const showOptionsGetter = showOptions ? showOptions : show
     const showOptionsSetter = setShowOptions ? setShowOptions : setShow

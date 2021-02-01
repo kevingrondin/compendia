@@ -1,13 +1,11 @@
+import PropTypes from "prop-types"
+import axios from "axios"
 import { useState, useEffect } from "react"
 import { useMutation, useQueryClient, useQuery } from "react-query"
-import PropTypes from "prop-types"
 import { format } from "date-fns"
-import axios from "axios"
-
-import { formatDateStringForView } from "../../../util/date"
-
-import Button from "../../buttons/Button"
-import EditIcon from "../../icons/Edit"
+import { formatDateStringForView } from "@util/date"
+import { Button } from "@components/common/buttons/Button"
+import { EditIcon } from "@icons/Edit"
 
 const CollectionDetail = ({ isEditMode, field, label, children }) => (
     <label className="flex flex-col pr-10 pb-5">
@@ -21,7 +19,6 @@ const CollectionDetail = ({ isEditMode, field, label, children }) => (
         )}
     </label>
 )
-
 CollectionDetail.propTypes = {
     isEditMode: PropTypes.bool.isRequired,
     field: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
@@ -40,7 +37,8 @@ function useCollectedComicDetail(id) {
     )
 }
 
-export default function CollectionDetails({ comicID }) {
+//TODO refactor this to be simpler and easier to read
+export function CollectionDetails({ comicID }) {
     const queryClient = useQueryClient()
     const { isLoading, isError, data } = useCollectedComicDetail(comicID)
 

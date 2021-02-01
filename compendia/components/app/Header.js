@@ -1,12 +1,10 @@
+import Link from "next/link"
 import { useEffect } from "react"
 import { useRouter } from "next/router"
-import Link from "next/link"
+import { useUser } from "@hooks/magic"
+import { SettingsIcon } from "@icons/Settings"
 
-import { useUser } from "../../hooks/magic"
-
-import SettingsIcon from "../icons/Settings"
-
-export default function Header() {
+export function Header() {
     const router = useRouter()
     const user = useUser()
 

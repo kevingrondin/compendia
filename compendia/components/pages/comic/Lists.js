@@ -1,6 +1,6 @@
-import { useQuery, useQueryClient, useMutation } from "react-query"
 import PropTypes from "prop-types"
 import axios from "axios"
+import { useQuery, useQueryClient, useMutation } from "react-query"
 
 const useComicLists = (comicID) =>
     useQuery(
@@ -12,7 +12,7 @@ const useComicLists = (comicID) =>
         { staleTime: Infinity }
     )
 
-export default function Lists({ comicID }) {
+export function Lists({ comicID }) {
     const queryClient = useQueryClient()
     const { status, error, data: lists } = useComicLists(comicID)
 
@@ -62,7 +62,6 @@ export default function Lists({ comicID }) {
         </div>
     )
 }
-
 Lists.propTypes = {
     comicID: PropTypes.number.isRequired,
 }
