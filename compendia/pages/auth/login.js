@@ -5,7 +5,7 @@ import { OAuthExtension } from "@magic-ext/oauth"
 import { Magic } from "magic-sdk"
 import { useUser } from "@hooks/magic"
 import { validateEmail } from "@util/validateEmail"
-import { Button } from "@components/common/buttons/button"
+import { Button } from "@components/common/buttons/Button"
 
 export default function Login() {
     useUser({ redirectTo: "/", redirectIfFound: true })

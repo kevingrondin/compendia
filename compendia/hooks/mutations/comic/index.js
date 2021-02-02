@@ -11,7 +11,6 @@ export function useToggleComicInList(comicID, lists) {
             }),
         {
             onSuccess: (res) => {
-                console.log(res)
                 const index = lists.findIndex((list) => list.id === parseInt(res.data.id))
                 lists[index].isComicInList = res.data.action === "add" ? true : false
                 queryClient.setQueryData(["user-comic-lists", comicID], lists)

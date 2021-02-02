@@ -18,13 +18,12 @@ export function Lists({ comicID }) {
                                 <label className="inline-flex items-center mt-3">
                                     <input
                                         type="checkbox"
-                                        onChange={() => {
-                                            console.log(list.id, list.isComicInList)
+                                        onChange={() =>
                                             comicListMutation.mutate({
                                                 listID: list.id,
                                                 isComicInList: list.isComicInList,
                                             })
-                                        }}
+                                        }
                                         className="form-checkbox h-5 w-5 text-blue-primary-200"
                                         checked={list.isComicInList}
                                     />

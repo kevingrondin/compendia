@@ -20,18 +20,20 @@ import { useComic } from "@hooks/queries/comic"
 export default function ComicDetail() {
     const queryClient = useQueryClient()
     const router = useRouter()
-    const { id } = router.query
+    const { comicID } = router.query
 
-    const { isLoading, isError, error, data: comic } = useComic(parseInt(id))
+    const { isLoading, isError, error, data: comic } = useComic(parseInt(comicID))
     const [showFullCover, setShowFullCover] = useState(false)
 
     useEffect(() => {
-        if (id) queryClient.refetchQueries(["comic-detail", parseInt(id)])
-    }, [id])
+        if (comicID) queryClient.refetchQueries(["comic-detail", parseInt(comicID)])
+    }, [comicID])
+
+    console.log(comic && comic.otherVersions)
 
     if (isLoading) return <div>Loading...</div>
     else if (isError) return <div>Error: {error.message}</div>
-    else if (!id || comic === undefined) return <></>
+    else if (!comicID || comic === undefined) return <></>
     else {
         return (
             <>
@@ -54,11 +56,11 @@ export default function ComicDetail() {
                                     }`}
                                 </p>
 
-                                {comic.versions > 0 && (
+                                {comic.otherVersions > 0 && (
                                     <Link href={`/comics/${comic.id}/versions`} passHref>
                                         <a className="flex items-center w-min whitespace-nowrap text-gray-800 font-bold text-md">
-                                            <span>{`${comic.versions} Other Version${
-                                                comic.versions > 1 ? "s" : ""
+                                            <span>{`${comic.otherVersions} Other Version${
+                                                comic.otherVersions > 1 ? "s" : ""
                                             }`}</span>
 
                                             <ArrowIcon

@@ -22,3 +22,14 @@ export function useComic(comicID) {
         { enabled: false, staleTime: Infinity }
     )
 }
+
+export function useComicVersions(comicID) {
+    return useQuery(
+        ["comic-versions", comicID],
+        async () => {
+            const { data } = await axios.get(`/api/comics/${comicID}/versions`)
+            return data
+        },
+        { staleTime: Infinity }
+    )
+}

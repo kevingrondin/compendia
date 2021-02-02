@@ -10,7 +10,6 @@ export default async function handler(req, res) {
     const client = await db.connect()
     try {
         if (req.method === "PUT") {
-            console.log(isComicInList, listID, comicID)
             if (isComicInList) {
                 const listComicDelete = `DELETE FROM comic_list_comics WHERE comic_id = $1 AND comic_list_id = $2`
                 const listComicDeleteParams = [comicID, listID]
