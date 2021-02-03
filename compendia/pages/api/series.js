@@ -23,9 +23,8 @@ async function getSeriesEntries(client, seriesID) {
 }
 
 export default async function handler(req, res) {
-    res.setHeader("Content-Type", "application/json")
     const { seriesID } = req.query
-    getUserOrRedirect(req, res)
+    res.setHeader("Content-Type", "application/json")
 
     if (!seriesID)
         res.status(404).json({ message: `Could not find a series with ID of ${seriesID}` })

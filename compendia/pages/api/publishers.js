@@ -47,9 +47,9 @@ async function getPublisherComicsList(client, publisherID) {
 }
 
 export default async function handler(req, res) {
-    res.setHeader("Content-Type", "application/json")
     const { publisherID } = req.query
     getUserOrRedirect(req, res)
+    res.setHeader("Content-Type", "application/json")
 
     if (!publisherID)
         res.status(404).json({ message: `Could not find a publisher with ID of ${publisherID}` })

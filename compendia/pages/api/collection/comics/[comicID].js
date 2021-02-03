@@ -29,7 +29,16 @@ async function updateCollectedComicDetails(client, res, details) {
     const query = `UPDATE collected_comics as cc SET date_collected = $1, purchase_price = $2, bought_at = $3, condition = $4, quantity = $5, notes = $6
         FROM collections as c WHERE c.user_id = $7 AND c.collection_id = cc.collection_id AND cc.comic_id = $8
         RETURNING date_collected, purchase_price, bought_at, condition, quantity, notes`
-    const params = [...details]
+    const params = [
+        details.dateCollected,
+        details.purchasePrice,
+        details.boughtAt,
+        details.condition,
+        details.quantity,
+        details.notes,
+        details.userID,
+        details.comicID,
+    ]
     const result = await client.query(query, params)
 
     if (result.rows.length !== 1)
@@ -52,32 +61,32 @@ async function removeComicFromCollection(client, res, comicID, userID) {
 
 export default async function handler(req, res) {
     const { comicID } = req.query
-    res.setHeader("Content-Type", "application/json")
     const user = getUserOrRedirect(req, res)
+    res.setHeader("Content-Type", "application/json")
 
     const client = await db.connect()
     try {
         if (req.method === "GET") {
-            const result = await getCollectedComicDetails(client, res, comicID, user.id)
+            const comicDetails = await getCollectedComicDetails(client, res, comicID, user.id)
 
             res.status(200).json({
-                dateCollected: format(result.date_collected, "yyyy-MM-dd"),
-                purchasePrice: result.purchase_price,
-                boughtAt: result.bought_at,
-                condition: result.condition,
-                quantity: result.quantity,
-                notes: result.notes,
+                dateCollected: format(comicDetails.date_collected, "yyyy-MM-dd"),
+                purchasePrice: comicDetails.purchase_price,
+                boughtAt: comicDetails.bought_at,
+                condition: comicDetails.condition,
+                quantity: comicDetails.quantity,
+                notes: comicDetails.notes,
             })
         } else if (req.method === "POST") {
-            const result = await addComicToCollection(client, res, comicID, user.id)
+            const comicDetails = await addComicToCollection(client, res, comicID, user.id)
 
             res.status(201).json({
-                dateCollected: format(result.date_collected, "yyyy-MM-dd"),
-                purchasePrice: result.purchase_price,
-                boughtAt: result.bought_at,
-                condition: result.condition,
-                quantity: result.quantity,
-                notes: result.notes,
+                dateCollected: format(comicDetails.date_collected, "yyyy-MM-dd"),
+                purchasePrice: comicDetails.purchase_price,
+                boughtAt: comicDetails.bought_at,
+                condition: comicDetails.condition,
+                quantity: comicDetails.quantity,
+                notes: comicDetails.notes,
             })
         } else if (req.method === "PUT") {
             const { dateCollected, purchasePrice, boughtAt, condition, notes } = req.body
@@ -97,15 +106,15 @@ export default async function handler(req, res) {
                 comicID,
             }
 
-            const result = await updateCollectedComicDetails(client, res, details)
+            const comicDetails = await updateCollectedComicDetails(client, res, details)
 
             res.status(200).json({
-                dateCollected: format(result.date_collected, "yyyy-MM-dd"),
-                purchasePrice: result.purchase_price,
-                boughtAt: result.bought_at,
-                condition: result.condition,
-                quantity: result.quantity,
-                notes: result.notes,
+                dateCollected: format(comicDetails.date_collected, "yyyy-MM-dd"),
+                purchasePrice: comicDetails.purchase_price,
+                boughtAt: comicDetails.bought_at,
+                condition: comicDetails.condition,
+                quantity: comicDetails.quantity,
+                notes: comicDetails.notes,
             })
         } else if (req.method === "DELETE") {
             await removeComicFromCollection(client, res, comicID, user.id)

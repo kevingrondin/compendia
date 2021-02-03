@@ -27,11 +27,11 @@ async function getComicVersions(client, comicID, versionOf) {
 
 export default async function handler(req, res) {
     const { comicID } = req.query
-    const client = await db.connect()
     res.setHeader("Content-Type", "application/json")
 
     if (!comicID) res.status(404).json({ message: `Could not find a comic with ID of ${comicID}` })
 
+    const client = await db.connect()
     try {
         const comic = await getComicDetails(client, res, comicID)
         const comicVersionsList = await getComicVersions(client, comicID, comic.version_of)

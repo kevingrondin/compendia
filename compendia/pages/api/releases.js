@@ -1,5 +1,16 @@
 const db = require("../../util/database").instance
 
+async function getReleases(client, comicDay) {
+    const query = `SELECT comic_id, title, cover, p.publisher_id, p.name as publisher_name
+        FROM comics as c FULL JOIN series as s ON c.series_id = s.series_id
+        FULL JOIN publishers as p ON s.publisher_id = p.publisher_id
+        WHERE c.release_date = $1`
+    const params = [comicDay]
+    const result = await client.query(query, params)
+
+    return result.rows
+}
+
 // Reduce comic records into an array of publishers each with their list of comic releases
 function groupByPublisher(comics) {
     return comics.reduce(function (acc, obj) {
@@ -22,14 +33,9 @@ export default async function handler(req, res) {
 
     const client = await db.connect()
     try {
-        const query = `SELECT comic_id, title, cover, p.publisher_id, p.name as publisher_name
-                FROM comics as c FULL JOIN series as s ON c.series_id = s.series_id
-                FULL JOIN publishers as p ON s.publisher_id = p.publisher_id
-                WHERE c.release_date = $1`
-        const queryParams = [comicDay]
-        const result = await client.query(query, queryParams)
+        const releases = await getReleases(client, comicDay)
+        const releasesByPublisher = groupByPublisher(releases)
 
-        const releasesByPublisher = groupByPublisher(result.rows)
         res.status(200).json(releasesByPublisher)
     } catch (error) {
         console.log(error)
