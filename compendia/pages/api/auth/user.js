@@ -3,10 +3,10 @@ import { setTokenCookie } from "@util/cookie"
 
 export default async function user(req, res) {
     try {
-        if (!req.cookies.token) return res.json({ user: null })
-        let token = req.cookies.token
-        let user = jwt.verify(token, process.env.JWT_SECRET)
-        let newToken = jwt.sign(
+        if (!req.cookies.token) return res.status(200).json({ user: null })
+        const token = req.cookies.token
+        const user = jwt.verify(token, process.env.JWT_SECRET)
+        const newToken = jwt.sign(
             {
                 id: user.id,
                 publicAddress: user.publicAddress,

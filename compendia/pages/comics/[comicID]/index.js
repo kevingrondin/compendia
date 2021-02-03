@@ -29,8 +29,6 @@ export default function ComicDetail() {
         if (comicID) queryClient.refetchQueries(["comic-detail", parseInt(comicID)])
     }, [comicID])
 
-    console.log(comic && comic.otherVersions)
-
     if (isLoading) return <div>Loading...</div>
     else if (isError) return <div>Error: {error.message}</div>
     else if (!comicID || comic === undefined) return <></>

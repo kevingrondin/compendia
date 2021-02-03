@@ -18,8 +18,6 @@ export default function ComicVersions() {
         if (comicID) queryClient.refetchQueries(["comic-versions", parseInt(comicID)])
     }, [comicID])
 
-    console.log(data)
-
     if (isLoading) return <div>Loading...</div>
     else if (isError) return <div>Error: {`${error && error.message}`}</div>
     else if (!comicID || versions === undefined) return <></>
