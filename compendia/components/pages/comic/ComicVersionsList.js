@@ -1,5 +1,6 @@
 import PropTypes from "prop-types"
 import { ComicCover } from "@components/pages/comic/ComicCover"
+import { Category } from "@components/common/Category"
 
 export function ComicVersionsList({ comics }) {
     return (
@@ -13,6 +14,13 @@ export function ComicVersionsList({ comics }) {
                                     comicID={comic.id}
                                     cover={comic.cover}
                                     title={comic.title}
+                                    footer={
+                                        <div className="flex justify-center mt-2">
+                                            <Category size="SM">
+                                                {comic.variantType ? comic.variantType : "Other"}
+                                            </Category>
+                                        </div>
+                                    }
                                 />
                             </li>
                         ))}

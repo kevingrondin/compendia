@@ -1,23 +1,138 @@
 import PropTypes from "prop-types"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useReducer } from "react"
 import { Button } from "@components/common/buttons/Button"
+import { OptionsToggle } from "@components/common/buttons/OptionsButton"
 import { usePullListSeries } from "@hooks/queries/pull-list"
 import { useUpdatePullListDetails } from "@hooks/mutations/pull-list"
 
-const SubscribeOptionsItem = ({ label, value, disabled, onChange, className }) => {
+const variants = [
+    {
+        key: "includeSubPrintings",
+        label: "Subsequent Printings",
+    },
+    {
+        key: "includeReprints",
+        label: "Reprints",
+    },
+    {
+        key: "includeCoverVariants",
+        label: "Cover Variants",
+    },
+    {
+        key: "includeConVariants",
+        label: "Convention Variants",
+    },
+    {
+        key: "includeIncVariants",
+        label: "Incentive Covers",
+    },
+    {
+        key: "includeRetailExcl",
+        label: "Retailer Exclusives",
+    },
+    {
+        key: "includeDRSVariants",
+        label: "Diamond Retailer Summit Variants",
+    },
+    {
+        key: "includeStoreVariants",
+        label: "Store Variants",
+    },
+    {
+        key: "includeRRPVariants",
+        label: "Retailer Roundtable Program Variants",
+    },
+]
+
+const formats = [
+    {
+        key: "includeSingleIssues",
+        label: "Single Issues",
+    },
+    {
+        key: "includeTPBs",
+        label: "Trade Paperbacks",
+    },
+    {
+        key: "includeHardcovers",
+        label: "Hardcovers",
+    },
+    {
+        key: "includeOmnibuses",
+        label: "Omnibuses",
+    },
+    {
+        key: "includeCompendia",
+        label: "Compendia",
+    },
+    {
+        key: "includeAll",
+        label: "All",
+    },
+]
+
+function isNotLastCheckedOption(options) {
+    let numChecked = 0
+    options.includeSingleIssues && numChecked++
+    options.includeTPBs && numChecked++
+    options.includeHardcovers && numChecked++
+    options.includeOmnibuses && numChecked++
+    options.includeCompendia && numChecked++
+    return numChecked > 1
+}
+
+function subscribeOptionsReducer(options, action) {
+    const optionsUpdate = { ...options }
+
+    if (action.type === "include") {
+        optionsUpdate[action.key] = true
+    } else if (action.type === "exclude" && action.key === "includeSingleIssues") {
+        if (isNotLastCheckedOption(options)) {
+            optionsUpdate.includeSingleIssues = false
+            variants.forEach((format) => (optionsUpdate[format.key] = false))
+        }
+    } else if (action.type === "exclude") {
+        if (formats.some((format) => (format.key = action.key)) && isNotLastCheckedOption(options))
+            optionsUpdate[action.key] = false
+    } else if (action.type === "includeAll") {
+        Object.keys(optionsUpdate).forEach((key) => (optionsUpdate[key] = true))
+    } else if (action.type === "reset") {
+        Object.keys(optionsUpdate).forEach((key) => (optionsUpdate[key] = action.data[key]))
+    }
+
+    return optionsUpdate
+}
+
+function SubscribeOptionsItem({ label, value, disabled, onChange, subOptions, className }) {
+    const [showSubOptions, setShowSubOptions] = useState(false)
+
     return (
-        <label className={`flex items-center m-2 whitespace-nowrap ${className}`}>
-            <input
-                type="checkbox"
-                className={`form-checkbox h-5 w-5 mr-1 text-blue-primary-200 ${
-                    disabled ? "opacity-30" : "cursor-pointer"
-                }`}
-                checked={value}
-                disabled={disabled}
-                onChange={onChange}
-            />
-            {label}
-        </label>
+        <div className="flex">
+            <label className={`flex items-center m-2 whitespace-nowrap ${className}`}>
+                <input
+                    type="checkbox"
+                    className={`form-checkbox h-5 w-5 mr-1 text-blue-primary-200 ${
+                        disabled ? "opacity-30" : "cursor-pointer"
+                    }`}
+                    checked={value}
+                    disabled={disabled}
+                    onChange={onChange}
+                />
+                {label}
+            </label>
+            {subOptions ? (
+                <OptionsToggle
+                    className="border-none shadow-none bg-gray-500"
+                    options={subOptions}
+                    showOptions={showSubOptions}
+                    setShowOptions={() => setShowSubOptions(!showSubOptions)}
+                    bypassOutsideClick={true}
+                    xPosition=""
+                    yPosition=""
+                    position=""
+                />
+            ) : null}
+        </div>
     )
 }
 SubscribeOptionsItem.propTypes = {
@@ -25,89 +140,100 @@ SubscribeOptionsItem.propTypes = {
     value: PropTypes.bool.isRequired,
     disabled: PropTypes.bool,
     onChange: PropTypes.func.isRequired,
+    subOptions: PropTypes.element,
     className: PropTypes.string,
 }
 
-//TODO refactor this to be simpler and more readable (loop through options)
+function VariantList({ options, dispatch }) {
+    return (
+        <ul>
+            {variants.map((variantType) => (
+                <li key={variantType.key}>
+                    <SubscribeOptionsItem
+                        className="ml-10"
+                        label={variantType.label}
+                        value={options[variantType.key]}
+                        disabled={options.includeAll || !options.includeSingleIssues}
+                        onChange={(e) =>
+                            dispatch({
+                                type: e.target.checked ? "include" : "exclude",
+                                key: variantType.key,
+                            })
+                        }
+                    />
+                </li>
+            ))}
+        </ul>
+    )
+}
+VariantList.propTypes = {
+    options: PropTypes.object,
+    dispatch: PropTypes.func,
+}
+
+function FormatList({ options, dispatch }) {
+    return (
+        <ul>
+            {formats.map((format) => (
+                <li key={format.key}>
+                    <SubscribeOptionsItem
+                        label={format.label}
+                        value={options[format.key]}
+                        disabled={options.includeAll}
+                        subOptions={
+                            format.key === "includeSingleIssues" ? (
+                                <VariantList options={options} dispatch={dispatch} />
+                            ) : null
+                        }
+                        onChange={(e) =>
+                            dispatch({
+                                type: e.target.checked ? "include" : "exclude",
+                                key: format.key,
+                            })
+                        }
+                    />
+                </li>
+            ))}
+        </ul>
+    )
+}
+FormatList.propTypes = {
+    options: PropTypes.object,
+    dispatch: PropTypes.func,
+}
+
 export function SubscribeOptions({ seriesID, isOptionsVisible }) {
     const { isLoading, isError, error, data } = usePullListSeries(seriesID)
     const pullListMutation = useUpdatePullListDetails(seriesID)
-
     const [showUpdateButton, setShowUpdateButton] = useState(false)
-    const [includeSingleIssues, setIncludeSingleIssues] = useState(data.includeSingleIssues)
-    const [includePrintings, setIncludePrintings] = useState(data.includePrintings)
-    const [includeVariantCovers, setIncludeVariantCovers] = useState(data.includeVariantCovers)
-    const [includeTPBs, setIncludeTPBs] = useState(data.includeTPBs)
-    const [includeHardcovers, setIncludeHardcovers] = useState(data.includeHardcovers)
-    const [includeOmnibuses, setIncludeOmnibuses] = useState(data.includeOmnibuses)
-    const [includeCompendia, setIncludeCompendia] = useState(data.includeCompendia)
-    const [includeAll, setIncludeAll] = useState(data.includeAll)
+    const [subscribeOptions, dispatch] = useReducer(subscribeOptionsReducer, {
+        includeSingleIssues: data.includeSingleIssues,
+        includeTPBs: data.includeTPBs,
+        includeHardcovers: data.includeHardcovers,
+        includeOmnibuses: data.includeOmnibuses,
+        includeCompendia: data.includeCompendia,
+        includeAll: data.includeAll,
+        includeSubPrintings: data.includeSubPrintings,
+        includeReprints: data.includeReprints,
+        includeCoverVariants: data.includeCoverVariants,
+        includeConVariants: data.includeConVariants,
+        includeIncVariants: data.includeIncVariants,
+        includeRetailExcl: data.includeRetailExcl,
+        includeDRSVariants: data.includeDRSVariants,
+        includeStoreVariants: data.includeStoreVariants,
+        includeRRPVariants: data.includeRRPVariants,
+    })
 
     useEffect(() => {
         if (isOptionsVisible === false) {
-            setIncludeSingleIssues(data.includeSingleIssues)
-            setIncludePrintings(data.includePrintings)
-            setIncludeVariantCovers(data.includeVariantCovers)
-            setIncludeTPBs(data.includeTPBs)
-            setIncludeHardcovers(data.includeHardcovers)
-            setIncludeOmnibuses(data.includeOmnibuses)
-            setIncludeCompendia(data.includeCompendia)
-            setIncludeAll(data.includeAll)
+            dispatch({ type: "reset", data: data })
             setShowUpdateButton(false)
         }
     }, [isOptionsVisible, data])
 
-    function isNotLastCheckedOption() {
-        let numChecked = 0
-
-        includeSingleIssues && numChecked++
-        includeTPBs && numChecked++
-        includeHardcovers && numChecked++
-        includeOmnibuses && numChecked++
-        includeCompendia && numChecked++
-
-        return numChecked > 1
-    }
-
-    function handleOptionCheck(e, optionName, setter) {
-        const isChecked = e.target.checked
-
-        if (optionName === "includeAll") {
-            if (isChecked) {
-                setIncludeSingleIssues(true)
-                setIncludePrintings(true)
-                setIncludeVariantCovers(true)
-                setIncludeTPBs(true)
-                setIncludeHardcovers(true)
-                setIncludeOmnibuses(true)
-                setIncludeCompendia(true)
-                setIncludeAll(true)
-            } else setIncludeAll(false)
-
-            setShowUpdateButton(true)
-        } else if (optionName === "includeSingleIssues") {
-            if (isChecked) {
-                setIncludeSingleIssues(true)
-                setShowUpdateButton(true)
-            } else if (isNotLastCheckedOption()) {
-                setIncludeSingleIssues(false)
-                setIncludePrintings(false)
-                setIncludeVariantCovers(false)
-                setShowUpdateButton(true)
-            }
-        } else if (optionName === "includePrintings" || optionName === "includeVariantCovers") {
-            setter(isChecked)
-            setShowUpdateButton(true)
-        } else {
-            if (isChecked) {
-                setter(true)
-                setShowUpdateButton(true)
-            } else if (isNotLastCheckedOption()) {
-                setter(false)
-                setShowUpdateButton(true)
-            }
-        }
-    }
+    useEffect(() => {
+        setShowUpdateButton(true)
+    }, [subscribeOptions])
 
     if (isLoading) return <div>Loading...</div>
     else if (isError) return <div>Error: {error.message}</div>
@@ -118,96 +244,15 @@ export function SubscribeOptions({ seriesID, isOptionsVisible }) {
                 <h3 className="font-semibold text-gray-50 m-2 mb-1 mt-3 border-b-2 border-gray-300">
                     Formats to Include
                 </h3>
-                <SubscribeOptionsItem
-                    label="Single Issue Comics"
-                    value={includeSingleIssues}
-                    disabled={includeAll}
-                    onChange={(e) =>
-                        handleOptionCheck(e, "includeSingleIssues", setIncludeSingleIssues)
-                    }
-                />
 
-                {includeSingleIssues && (
-                    <>
-                        <SubscribeOptionsItem
-                            className="ml-10"
-                            label="Additional Printings"
-                            value={includePrintings}
-                            disabled={includeAll || !includeSingleIssues}
-                            onChange={(e) =>
-                                handleOptionCheck(e, "includePrintings", setIncludePrintings)
-                            }
-                        />
-
-                        <SubscribeOptionsItem
-                            className="ml-10"
-                            label="Variants Covers"
-                            value={includeVariantCovers}
-                            disabled={includeAll || !includeSingleIssues}
-                            onChange={(e) =>
-                                handleOptionCheck(
-                                    e,
-                                    "includeVariantCovers",
-                                    setIncludeVariantCovers
-                                )
-                            }
-                        />
-                    </>
-                )}
-
-                <SubscribeOptionsItem
-                    label="Trade Paperbacks"
-                    value={includeTPBs}
-                    disabled={includeAll}
-                    onChange={(e) => handleOptionCheck(e, "includeTPBs", setIncludeTPBs)}
-                />
-
-                <SubscribeOptionsItem
-                    label="Hardcovers"
-                    value={includeHardcovers}
-                    disabled={includeAll}
-                    onChange={(e) =>
-                        handleOptionCheck(e, "includeHardcovers", setIncludeHardcovers)
-                    }
-                />
-
-                <SubscribeOptionsItem
-                    label="Omnibuses"
-                    value={includeOmnibuses}
-                    disabled={includeAll}
-                    onChange={(e) => handleOptionCheck(e, "includeOmnibuses", setIncludeOmnibuses)}
-                />
-
-                <SubscribeOptionsItem
-                    label="Compendia"
-                    value={includeCompendia}
-                    disabled={includeAll}
-                    onChange={(e) => handleOptionCheck(e, "includeCompendia", setIncludeCompendia)}
-                />
-
-                <SubscribeOptionsItem
-                    label={"All"}
-                    value={includeAll}
-                    onChange={(e) => handleOptionCheck(e, "includeAll", setIncludeAll)}
-                />
+                <FormatList options={subscribeOptions} dispatch={dispatch} />
 
                 {showUpdateButton && (
                     <Button
                         roundedClass="rounded-lg"
                         className="m-3 ml-auto self-end"
                         onClick={() => {
-                            const updatedDetails = { ...data }
-
-                            updatedDetails.includeSingleIssues = includeSingleIssues
-                            updatedDetails.includePrintings = includePrintings
-                            updatedDetails.includeVariantCovers = includeVariantCovers
-                            updatedDetails.includeTPBs = includeTPBs
-                            updatedDetails.includeHardcovers = includeHardcovers
-                            updatedDetails.includeOmnibuses = includeOmnibuses
-                            updatedDetails.includeCompendia = includeCompendia
-                            updatedDetails.includeAll = includeAll
-
-                            pullListMutation.mutate(updatedDetails)
+                            pullListMutation.mutate(subscribeOptions)
                             setShowUpdateButton(false)
                         }}
                     >

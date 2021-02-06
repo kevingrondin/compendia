@@ -6,7 +6,7 @@ import { CheckIcon } from "@icons/Check"
 const primaryColors = `bg-blue-primary-100 hover:bg-blue-primary-200 border-blue-primary-300 hover:border-blue-primary-400`
 const secondaryColors = `bg-gray-400 hover:bg-gray-500 border-gray-500 hover:border-gray-600`
 
-const useOptionsRef = (setShowOptions) => {
+const useOptionsRef = (setShowOptions, bypassOutsideClick) => {
     const optionsRef = createRef()
 
     const handleClickOutside = (event) => {
@@ -14,9 +14,11 @@ const useOptionsRef = (setShowOptions) => {
     }
 
     useEffect(() => {
-        window.addEventListener("click", handleClickOutside)
+        if (!bypassOutsideClick) {
+            window.addEventListener("click", handleClickOutside)
 
-        return () => window.removeEventListener("click", handleClickOutside)
+            return () => window.removeEventListener("click", handleClickOutside)
+        }
     }, [handleClickOutside])
 
     return optionsRef
@@ -26,18 +28,21 @@ const Options = ({
     showOptions,
     setShowOptions,
     options,
-    roundedClass,
-    xPosition = "-translate-x-2/3",
+    bypassOutsideClick,
+    roundedClass = "",
+    xPosition = "left-3/4 transform -translate-x-2/3",
+    yPosition = "top-11",
+    position = "absolute",
 }) => {
-    const optionsRef = useOptionsRef(setShowOptions)
+    const optionsRef = useOptionsRef(setShowOptions, bypassOutsideClick)
 
     return (
         <div
             ref={optionsRef}
-            className={`bg-gray-500 ml-4 text-white absolute left-3/4 transform top-11
-                ${xPosition}
-                ${!showOptions && "hidden "}
-                ${roundedClass} ${showOptions && " rounded-tl-none"}`}
+            className={`bg-gray-500 ml-4 text-white ${roundedClass}
+                ${position} ${xPosition} ${yPosition}
+                ${!showOptions ? "hidden " : ""}
+                ${showOptions ? "rounded-tl-none" : ""}`}
         >
             {options}
         </div>
@@ -45,18 +50,32 @@ const Options = ({
 }
 Options.propTypes = {
     roundedClass: PropTypes.string,
+    xPosition: PropTypes.string,
+    yPosition: PropTypes.string,
+    position: PropTypes.string,
     options: PropTypes.element,
     showOptions: PropTypes.bool,
     setShowOptions: PropTypes.func,
-    xPosition: PropTypes.string,
+    bypassOutsideClick: PropTypes.bool,
 }
 
-const OptionsToggle = ({ roundedClass, isDisabled, options, showOptions, setShowOptions }) => {
+export const OptionsToggle = ({
+    className,
+    roundedClass,
+    xPosition,
+    yPosition,
+    position,
+    isDisabled,
+    options,
+    showOptions,
+    setShowOptions,
+    bypassOutsideClick,
+}) => {
     return (
         <div className="flex flex-col">
             <button
                 className={`flex relative w-8 py-2 h-full cursor-pointer shadow-sm border-l-2 border-b-4 hover:border-b-2 hover:border-t-2
-                    ${roundedClass} rounded-l-none ${secondaryColors}`}
+                    ${roundedClass} rounded-l-none ${secondaryColors} ${className}`}
                 onClick={() => {
                     setShowOptions(!showOptions)
                 }}
@@ -74,16 +93,25 @@ const OptionsToggle = ({ roundedClass, isDisabled, options, showOptions, setShow
                 options={options}
                 showOptions={showOptions}
                 setShowOptions={setShowOptions}
+                bypassOutsideClick={bypassOutsideClick}
+                xPosition={xPosition}
+                yPosition={yPosition}
+                position={position}
             />
         </div>
     )
 }
 OptionsToggle.propTypes = {
+    className: PropTypes.string,
     roundedClass: PropTypes.string,
+    xPosition: PropTypes.string,
+    yPosition: PropTypes.string,
+    position: PropTypes.string,
     isDisabled: PropTypes.bool,
     options: PropTypes.element,
     showOptions: PropTypes.bool,
     setShowOptions: PropTypes.func,
+    bypassOutsideClick: PropTypes.bool,
 }
 
 export function OptionsButton({

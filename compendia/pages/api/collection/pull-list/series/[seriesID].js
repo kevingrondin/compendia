@@ -2,9 +2,10 @@ const db = require("../../../../../util/database").instance
 import { getUserOrRedirect } from "@util/cookie"
 
 async function getPullListSeries(client, seriesID, userID) {
-    const query = `SELECT include_single_issues, include_printings, include_variant_covers,
-        include_tpbs, include_hardcovers, include_omnibuses, include_compendia, include_all
-        FROM pull_list_series FULL JOIN collections USING(collection_id)
+    const query = `SELECT include_single_issues, include_subsequent_printings, include_reprints, include_cover_variants,
+        include_tpbs, include_hardcovers, include_omnibuses, include_compendia, include_all, include_convention_variants,
+        include_incentive_variants, include_retailer_exclusives, include_diamond_retailer_summit_variants, include_store_variants,
+        include_retailer_roundtable_program_variants FROM pull_list_series FULL JOIN collections USING(collection_id)
         WHERE user_id = $1 AND series_id = $2`
     const params = [userID, seriesID]
     const result = await client.query(query, params)
@@ -17,23 +18,36 @@ async function getPullListSeries(client, seriesID, userID) {
 async function updateSeriesDetails(client, res, reqBody, seriesID, userID) {
     const query = `UPDATE pull_list_series
         SET include_single_issues = $3,
-            include_printings = $4,
-            include_variant_covers = $5,
-            include_tpbs = $6,
-            include_hardcovers = $7,
-            include_omnibuses = $8,
-            include_compendia = $9,
-            include_all = $10
+            include_subsequent_printings = $4,
+            include_reprints = $5,
+            include_cover_variants = $6,
+            include_convention_variants = $7,
+	        include_incentive_variants = $8,
+	        include_retailer_exclusives = $9,
+	        include_diamond_retailer_summit_variants = $10,
+	        include_store_variants = $11,
+	        include_retailer_roundtable_program_variants = $12,
+            include_tpbs = $13,
+            include_hardcovers = $14,
+            include_omnibuses = $15,
+            include_compendia = $16,
+            include_all = $17
         FROM collections as c
         WHERE c.user_id = $1 AND series_id = $2
-        RETURNING pull_list_series_id, include_single_issues, include_printings, include_variant_covers,
-        include_tpbs, include_hardcovers, include_omnibuses, include_compendia, include_all`
+        RETURNING *`
     const params = [
         userID,
         seriesID,
         reqBody.includeSingleIssues,
-        reqBody.includePrintings,
-        reqBody.includeVariantCovers,
+        reqBody.includeSubPrintings,
+        reqBody.includeReprints,
+        reqBody.includeCoverVariants,
+        reqBody.includeConVariants,
+        reqBody.includeIncVariants,
+        reqBody.includeRetailExcl,
+        reqBody.includeDRSVariants,
+        reqBody.includeStoreVariants,
+        reqBody.includeRRPVariants,
         reqBody.includeTPBs,
         reqBody.includeHardcovers,
         reqBody.includeOmnibuses,
@@ -89,8 +103,7 @@ async function addComicsBySeriesAndFormats(client, reqBody, seriesID, userID) {
 async function subscribeToSeries(client, res, seriesID, userID) {
     const query = `INSERT INTO pull_list_series(collection_id, series_id)
         SELECT collection_id, $1 FROM collections WHERE user_id = $2
-        RETURNING pull_list_series_id, include_single_issues, include_printings, include_variant_covers,
-        include_tpbs, include_hardcovers, include_omnibuses, include_compendia, include_all`
+        RETURNING *`
     const params = [seriesID, userID]
     const result = await client.query(query, params)
 
@@ -139,8 +152,17 @@ export default async function handler(req, res) {
                 res.status(200).json({
                     isSubscribed: seriesDetails.isSubscribed,
                     includeSingleIssues: seriesDetails.details.include_single_issues,
-                    includePrintings: seriesDetails.details.include_printings,
-                    includeVariantCovers: seriesDetails.details.include_variant_covers,
+                    includeSubPrintings: seriesDetails.details.include_subsequent_printings,
+                    includeReprints: seriesDetails.details.include_reprints,
+                    includeCoverVariants: seriesDetails.details.include_cover_variants,
+                    includeConVariants: seriesDetails.details.include_convention_variants,
+                    includeIncVariants: seriesDetails.details.include_incentive_variants,
+                    includeRetailExcl: seriesDetails.details.include_retailer_exclusives,
+                    includeDRSVariants:
+                        seriesDetails.details.include_diamond_retailer_summit_variants,
+                    includeStoreVariants: seriesDetails.details.include_store_variants,
+                    includeRRPVariants:
+                        seriesDetails.details.include_retailer_roundtable_program_variants,
                     includeTPBs: seriesDetails.details.include_tpbs,
                     includeHardcovers: seriesDetails.details.include_hardcovers,
                     includeOmnibuses: seriesDetails.details.include_omnibuses,
@@ -158,17 +180,23 @@ export default async function handler(req, res) {
                 seriesID,
                 user.id
             )
-
             if (updatedDetails.pull_list_series_id) {
                 await clearComicsBySeries(client, seriesID, user.id)
                 await addComicsBySeriesAndFormats(client, req.body, seriesID, user.id)
                 await client.query("COMMIT")
 
                 res.status(200).json({
-                    isSubscribed: req.body.isSubscribed,
+                    isSubscribed: true,
                     includeSingleIssues: updatedDetails.include_single_issues,
-                    includePrintings: updatedDetails.include_printings,
-                    includeVariantCovers: updatedDetails.include_variant_covers,
+                    includeSubPrintings: updatedDetails.include_subsequent_printings,
+                    includeReprints: updatedDetails.include_reprints,
+                    includeCoverVariants: updatedDetails.include_cover_variants,
+                    includeConVariants: updatedDetails.include_convention_variants,
+                    includeIncVariants: updatedDetails.include_incentive_variants,
+                    includeRetailExcl: updatedDetails.include_retailer_exclusives,
+                    includeDRSVariants: updatedDetails.include_diamond_retailer_summit_variants,
+                    includeStoreVariants: updatedDetails.include_store_variants,
+                    includeRRPVariants: updatedDetails.include_retailer_roundtable_program_variants,
                     includeTPBs: updatedDetails.include_tpbs,
                     includeHardcovers: updatedDetails.include_hardcovers,
                     includeOmnibuses: updatedDetails.include_omnibuses,
@@ -191,8 +219,15 @@ export default async function handler(req, res) {
                 res.status(201).json({
                     isSubscribed: true,
                     includeSingleIssues: seriesDetails.include_single_issues,
-                    includePrintings: seriesDetails.include_printings,
-                    includeVariantCovers: seriesDetails.include_variant_covers,
+                    includeSubPrintings: seriesDetails.include_subsequent_printings,
+                    includeReprints: seriesDetails.include_reprints,
+                    includeCoverVariants: seriesDetails.include_cover_variants,
+                    includeConVariants: seriesDetails.include_convention_variants,
+                    includeIncVariants: seriesDetails.include_incentive_variants,
+                    includeRetailExcl: seriesDetails.include_retailer_exclusives,
+                    includeDRSVariants: seriesDetails.include_diamond_retailer_summit_variants,
+                    includeStoreVariants: seriesDetails.include_store_variants,
+                    includeRRPVariants: seriesDetails.include_retailer_roundtable_program_variants,
                     includeTPBs: seriesDetails.include_tpbs,
                     includeHardcovers: seriesDetails.include_hardcovers,
                     includeOmnibuses: seriesDetails.include_omnibuses,

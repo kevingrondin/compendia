@@ -12,7 +12,8 @@ async function getComicDetails(client, res, comicID) {
 async function getComicVersions(client, comicID, versionOf) {
     const isParentComic = versionOf === null
     const params = isParentComic ? [comicID] : [comicID, comic.version_of]
-    const query = `SELECT comic_id, title, cover FROM comics as c
+    const query = `SELECT comic_id, title, cover, variant_type_desc as variant_type FROM comics as c
+        FULL JOIN variant_type_lookup ON variant_type = variant_type_code
         WHERE ${
             isParentComic
                 ? "version_of = $1"
@@ -44,6 +45,7 @@ export default async function handler(req, res) {
                     id: parseInt(comic.comic_id),
                     title: comic.title,
                     cover: comic.cover,
+                    variantType: comic.variant_type,
                 }
             }),
         })

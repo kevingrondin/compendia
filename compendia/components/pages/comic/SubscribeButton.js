@@ -5,7 +5,7 @@ import { SubscribeOptions } from "@components/pages/comic/SubscribeOptions"
 import { usePullListSeries } from "@hooks/queries/pull-list"
 import { useSubscribeToSeries, useUnsubscribeFromSeries } from "@hooks/mutations/pull-list"
 
-export function SubscribeButton({ seriesID, comicID, className, marginClass }) {
+export function SubscribeButton({ seriesID, comicID, marginClass }) {
     const { isLoading, isError, error, data } = usePullListSeries(seriesID)
     const [showOptions, setShowOptions] = useState(false)
     const subscribeMutation = useSubscribeToSeries(seriesID, comicID)
@@ -24,7 +24,6 @@ export function SubscribeButton({ seriesID, comicID, className, marginClass }) {
                 options={<SubscribeOptions seriesID={seriesID} isOptionsVisible={showOptions} />}
                 setShowOptions={(val) => setShowOptions(val)}
                 showOptions={showOptions}
-                className={className}
                 marginClass={marginClass}
             />
         )
@@ -32,6 +31,5 @@ export function SubscribeButton({ seriesID, comicID, className, marginClass }) {
 SubscribeButton.propTypes = {
     seriesID: PropTypes.number.isRequired,
     comicID: PropTypes.number.isRequired,
-    className: PropTypes.string,
     marginClass: PropTypes.string,
 }
