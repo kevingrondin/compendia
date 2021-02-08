@@ -1,4 +1,5 @@
 import PropTypes from "prop-types"
+import useDeepCompareEffect from "use-deep-compare-effect"
 import { useEffect, useState, useReducer } from "react"
 import { Button } from "@components/common/buttons/Button"
 import { ArrowIcon } from "@icons/Arrow"
@@ -72,42 +73,65 @@ const formats = [
     },
 ]
 
-function isNotLastCheckedOption(options) {
-    let numChecked = 0
-    options.includeSingleIssues && numChecked++
-    options.includeTPBs && numChecked++
-    options.includeHardcovers && numChecked++
-    options.includeOmnibuses && numChecked++
-    options.includeCompendia && numChecked++
+function getInitialOptions(data) {
+    return [...formats, ...variants].reduce((options, { key }) => {
+        options[key] = data[key]
+        return options
+    }, {})
+}
+
+function isNotLastFormatChecked(options) {
+    const numChecked = formats.reduce((count, { key }) => {
+        if (options[key] && key !== "includeAll") count += 1
+        return count
+    }, 0)
     return numChecked > 1
 }
 
-function subscribeOptionsReducer(options, action) {
-    const optionsUpdate = { ...options }
-
-    if (action.type === "include") {
-        optionsUpdate[action.key] = true
-    } else if (action.type === "exclude" && action.key === "includeSingleIssues") {
-        if (isNotLastCheckedOption(options)) {
-            optionsUpdate.includeSingleIssues = false
-            variants.forEach((format) => (optionsUpdate[format.key] = false))
-        }
-    } else if (action.type === "exclude") {
-        console.log("Yee")
-        if (formats.some((format) => (format.key = action.key)) && isNotLastCheckedOption(options))
-            optionsUpdate[action.key] = false
-    } else if (action.type === "includeAll") {
-        Object.keys(optionsUpdate).forEach((key) => (optionsUpdate[key] = true))
-    } else if (action.type === "reset") {
-        Object.keys(optionsUpdate).forEach((key) => (optionsUpdate[key] = action.data[key]))
+function subscribeOptionsReducer(state, { type, key, data }) {
+    if (type === "include" && key === "includeAll") {
+        return Object.keys(state).reduce((obj, k) => {
+            obj[k] = true
+            return obj
+        }, {})
+    } else if (type === "include") {
+        return { ...state, [key]: true }
+    } else if (type === "exclude" && key === "includeSingleIssues") {
+        if (isNotLastFormatChecked(state)) {
+            return Object.keys(variants).reduce(
+                (obj, k) => {
+                    obj[k] = false
+                    return obj
+                },
+                { ...state, includeSingleIssues: false }
+            )
+        } else return { ...state }
+    } else if (type === "exclude") {
+        if (
+            (isNotLastFormatChecked(state) && formats.some((f) => f.key === key)) ||
+            variants.some((v) => v.key === key)
+        )
+            return { ...state, [key]: false }
+        else return { ...state }
+    } else if (type === "reset") {
+        return getInitialOptions(data)
     }
-
-    console.log("A: ", optionsUpdate)
-    return optionsUpdate
 }
 
-function SubscribeOptionsItem({ label, value, disabled, onChange, subOptions, className }) {
+function SubscribeOptionsItem({
+    label,
+    value,
+    disabled,
+    onChange,
+    subOptions,
+    className,
+    isOptionsVisible,
+}) {
     const [showSubOptions, setShowSubOptions] = useState(false)
+
+    useEffect(() => {
+        if (!isOptionsVisible) setShowSubOptions(false)
+    }, [isOptionsVisible])
 
     return (
         <div className="flex flex-col">
@@ -157,6 +181,7 @@ SubscribeOptionsItem.propTypes = {
     onChange: PropTypes.func.isRequired,
     subOptions: PropTypes.element,
     className: PropTypes.string,
+    isOptionsVisible: PropTypes.bool,
 }
 
 function VariantList({ options, dispatch }) {
@@ -186,9 +211,7 @@ VariantList.propTypes = {
     dispatch: PropTypes.func,
 }
 
-function FormatList({ options, dispatch }) {
-    console.log("B: ", formats)
-
+function FormatList({ options, dispatch, isOptionsVisible }) {
     return (
         <ul>
             {formats.map((format) => (
@@ -202,13 +225,12 @@ function FormatList({ options, dispatch }) {
                                 <VariantList options={options} dispatch={dispatch} />
                             ) : null
                         }
+                        isOptionsVisible={isOptionsVisible}
                         onChange={(e) =>
-                            format.key === "includeAll" && e.target.checked
-                                ? dispatch({ type: "includeAll" })
-                                : dispatch({
-                                      type: e.target.checked ? "include" : "exclude",
-                                      key: format.key,
-                                  })
+                            dispatch({
+                                type: e.target.checked ? "include" : "exclude",
+                                key: format.key,
+                            })
                         }
                     />
                 </li>
@@ -219,29 +241,17 @@ function FormatList({ options, dispatch }) {
 FormatList.propTypes = {
     options: PropTypes.object,
     dispatch: PropTypes.func,
+    isOptionsVisible: PropTypes.bool,
 }
 
 export function SubscribeOptions({ seriesID, isOptionsVisible }) {
     const { isLoading, isError, error, data } = usePullListSeries(seriesID)
     const pullListMutation = useUpdatePullListDetails(seriesID)
     const [showUpdateButton, setShowUpdateButton] = useState(false)
-    const [subscribeOptions, dispatch] = useReducer(subscribeOptionsReducer, {
-        includeSingleIssues: data.includeSingleIssues,
-        includeTPBs: data.includeTPBs,
-        includeHardcovers: data.includeHardcovers,
-        includeOmnibuses: data.includeOmnibuses,
-        includeCompendia: data.includeCompendia,
-        includeAll: data.includeAll,
-        includeSubPrintings: data.includeSubPrintings,
-        includeReprints: data.includeReprints,
-        includeCoverVariants: data.includeCoverVariants,
-        includeConVariants: data.includeConVariants,
-        includeIncVariants: data.includeIncVariants,
-        includeRetailExcl: data.includeRetailExcl,
-        includeDRSVariants: data.includeDRSVariants,
-        includeStoreVariants: data.includeStoreVariants,
-        includeRRPVariants: data.includeRRPVariants,
-    })
+    const [subscribeOptions, dispatch] = useReducer(
+        subscribeOptionsReducer,
+        getInitialOptions(data)
+    )
 
     useEffect(() => {
         if (isOptionsVisible === false) {
@@ -250,7 +260,7 @@ export function SubscribeOptions({ seriesID, isOptionsVisible }) {
         }
     }, [isOptionsVisible, data])
 
-    useEffect(() => {
+    useDeepCompareEffect(() => {
         setShowUpdateButton(true)
     }, [subscribeOptions])
 
@@ -264,7 +274,11 @@ export function SubscribeOptions({ seriesID, isOptionsVisible }) {
                     Formats to Include
                 </h3>
 
-                <FormatList options={subscribeOptions} dispatch={dispatch} />
+                <FormatList
+                    options={subscribeOptions}
+                    dispatch={dispatch}
+                    isOptionsVisible={isOptionsVisible}
+                />
 
                 {showUpdateButton && (
                     <Button
