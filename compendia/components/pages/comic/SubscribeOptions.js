@@ -1,3 +1,4 @@
+import _ from "lodash"
 import PropTypes from "prop-types"
 import useDeepCompareEffect from "use-deep-compare-effect"
 import { useEffect, useState, useReducer } from "react"
@@ -73,7 +74,7 @@ const formats = [
     },
 ]
 
-function getInitialOptions(data) {
+function getOptionsFromData(data) {
     return [...formats, ...variants].reduce((options, { key }) => {
         options[key] = data[key]
         return options
@@ -114,7 +115,7 @@ function subscribeOptionsReducer(state, { type, key, data }) {
             return { ...state, [key]: false }
         else return { ...state }
     } else if (type === "reset") {
-        return getInitialOptions(data)
+        return getOptionsFromData(data)
     }
 }
 
@@ -187,17 +188,17 @@ SubscribeOptionsItem.propTypes = {
 function VariantList({ options, dispatch }) {
     return (
         <ul>
-            {variants.map((variantType) => (
-                <li key={variantType.key}>
+            {variants.map(({ key, label }) => (
+                <li key={key}>
                     <SubscribeOptionsItem
                         className="ml-6"
-                        label={variantType.label}
-                        value={options[variantType.key]}
+                        label={label}
+                        value={options[key]}
                         disabled={options.includeAll || !options.includeSingleIssues}
                         onChange={(e) =>
                             dispatch({
                                 type: e.target.checked ? "include" : "exclude",
-                                key: variantType.key,
+                                key: key,
                             })
                         }
                     />
@@ -214,14 +215,14 @@ VariantList.propTypes = {
 function FormatList({ options, dispatch, isOptionsVisible }) {
     return (
         <ul>
-            {formats.map((format) => (
-                <li key={format.key}>
+            {formats.map(({ key, label }) => (
+                <li key={key}>
                     <SubscribeOptionsItem
-                        label={format.label}
-                        value={options[format.key]}
-                        disabled={format.key === "includeAll" ? false : options.includeAll}
+                        label={label}
+                        value={options[key]}
+                        disabled={key === "includeAll" ? false : options.includeAll}
                         subOptions={
-                            format.key === "includeSingleIssues" ? (
+                            key === "includeSingleIssues" ? (
                                 <VariantList options={options} dispatch={dispatch} />
                             ) : null
                         }
@@ -229,7 +230,7 @@ function FormatList({ options, dispatch, isOptionsVisible }) {
                         onChange={(e) =>
                             dispatch({
                                 type: e.target.checked ? "include" : "exclude",
-                                key: format.key,
+                                key: key,
                             })
                         }
                     />
@@ -250,18 +251,17 @@ export function SubscribeOptions({ seriesID, isOptionsVisible }) {
     const [showUpdateButton, setShowUpdateButton] = useState(false)
     const [subscribeOptions, dispatch] = useReducer(
         subscribeOptionsReducer,
-        getInitialOptions(data)
+        getOptionsFromData(data)
     )
 
     useEffect(() => {
-        if (isOptionsVisible === false) {
-            dispatch({ type: "reset", data: data })
-            setShowUpdateButton(false)
-        }
+        if (isOptionsVisible === false) dispatch({ type: "reset", data: data })
     }, [isOptionsVisible, data])
 
     useDeepCompareEffect(() => {
-        setShowUpdateButton(true)
+        _.isEqual(subscribeOptions, getOptionsFromData(data))
+            ? setShowUpdateButton(false)
+            : setShowUpdateButton(true)
     }, [subscribeOptions])
 
     if (isLoading) return <div>Loading...</div>
