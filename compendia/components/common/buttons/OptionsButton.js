@@ -24,7 +24,7 @@ const useOptionsRef = (setShowOptions, bypassOutsideClick) => {
     return optionsRef
 }
 
-const Options = ({
+export const Options = ({
     showOptions,
     setShowOptions,
     options,

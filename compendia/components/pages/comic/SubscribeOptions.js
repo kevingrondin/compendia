@@ -1,7 +1,8 @@
 import PropTypes from "prop-types"
 import { useEffect, useState, useReducer } from "react"
 import { Button } from "@components/common/buttons/Button"
-import { OptionsToggle } from "@components/common/buttons/OptionsButton"
+import { ArrowIcon } from "@icons/Arrow"
+import { Options } from "@components/common/buttons/OptionsButton"
 import { usePullListSeries } from "@hooks/queries/pull-list"
 import { useUpdatePullListDetails } from "@hooks/mutations/pull-list"
 
@@ -92,6 +93,7 @@ function subscribeOptionsReducer(options, action) {
             variants.forEach((format) => (optionsUpdate[format.key] = false))
         }
     } else if (action.type === "exclude") {
+        console.log("Yee")
         if (formats.some((format) => (format.key = action.key)) && isNotLastCheckedOption(options))
             optionsUpdate[action.key] = false
     } else if (action.type === "includeAll") {
@@ -100,6 +102,7 @@ function subscribeOptionsReducer(options, action) {
         Object.keys(optionsUpdate).forEach((key) => (optionsUpdate[key] = action.data[key]))
     }
 
+    console.log("A: ", optionsUpdate)
     return optionsUpdate
 }
 
@@ -107,8 +110,8 @@ function SubscribeOptionsItem({ label, value, disabled, onChange, subOptions, cl
     const [showSubOptions, setShowSubOptions] = useState(false)
 
     return (
-        <div className="flex">
-            <label className={`flex items-center m-2 whitespace-nowrap ${className}`}>
+        <div className="flex flex-col">
+            <label className={`flex items-center mb-4 ml-4 mr-4 whitespace-nowrap ${className}`}>
                 <input
                     type="checkbox"
                     className={`form-checkbox h-5 w-5 mr-1 text-blue-primary-200 ${
@@ -119,19 +122,31 @@ function SubscribeOptionsItem({ label, value, disabled, onChange, subOptions, cl
                     onChange={onChange}
                 />
                 {label}
+                {subOptions ? (
+                    <button
+                        className={`flex relative w-8 ml-2 cursor-pointer`}
+                        onClick={() => {
+                            setShowSubOptions(!showSubOptions)
+                        }}
+                    >
+                        <ArrowIcon
+                            direction={showSubOptions ? "up" : "down"}
+                            colorClass="text-white"
+                            width="100"
+                            viewBox="-10 -20 60 55"
+                        />
+                    </button>
+                ) : null}
             </label>
-            {subOptions ? (
-                <OptionsToggle
-                    className="border-none shadow-none bg-gray-500"
-                    options={subOptions}
-                    showOptions={showSubOptions}
-                    setShowOptions={() => setShowSubOptions(!showSubOptions)}
-                    bypassOutsideClick={true}
-                    xPosition=""
-                    yPosition=""
-                    position=""
-                />
-            ) : null}
+            <Options
+                options={subOptions}
+                showOptions={showSubOptions}
+                setShowOptions={setShowSubOptions}
+                bypassOutsideClick={true}
+                position=""
+                xPosition=""
+                yPosition=""
+            />
         </div>
     )
 }
@@ -150,7 +165,7 @@ function VariantList({ options, dispatch }) {
             {variants.map((variantType) => (
                 <li key={variantType.key}>
                     <SubscribeOptionsItem
-                        className="ml-10"
+                        className="ml-6"
                         label={variantType.label}
                         value={options[variantType.key]}
                         disabled={options.includeAll || !options.includeSingleIssues}
@@ -172,6 +187,8 @@ VariantList.propTypes = {
 }
 
 function FormatList({ options, dispatch }) {
+    console.log("B: ", formats)
+
     return (
         <ul>
             {formats.map((format) => (
@@ -179,17 +196,19 @@ function FormatList({ options, dispatch }) {
                     <SubscribeOptionsItem
                         label={format.label}
                         value={options[format.key]}
-                        disabled={options.includeAll}
+                        disabled={format.key === "includeAll" ? false : options.includeAll}
                         subOptions={
                             format.key === "includeSingleIssues" ? (
                                 <VariantList options={options} dispatch={dispatch} />
                             ) : null
                         }
                         onChange={(e) =>
-                            dispatch({
-                                type: e.target.checked ? "include" : "exclude",
-                                key: format.key,
-                            })
+                            format.key === "includeAll" && e.target.checked
+                                ? dispatch({ type: "includeAll" })
+                                : dispatch({
+                                      type: e.target.checked ? "include" : "exclude",
+                                      key: format.key,
+                                  })
                         }
                     />
                 </li>
