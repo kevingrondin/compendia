@@ -12,7 +12,7 @@ export function SeriesEntriesList({ entries }) {
                                 <ComicCover
                                     comicID={comic.id}
                                     cover={comic.cover}
-                                    title={comic.title}
+                                    title={`${comic.title} ${comic.itemNumber}`}
                                 />
                             </li>
                         ))}

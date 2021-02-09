@@ -14,7 +14,7 @@ export function PullListReleases({ comicDay }) {
                     <li key={comic.id}>
                         <ComicCover
                             comicID={comic.id}
-                            title={`${comic.title}`}
+                            title={`${comic.title} ${comic.itemNumber}`}
                             cover={comic.cover}
                         />
                     </li>

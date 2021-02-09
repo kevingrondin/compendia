@@ -1,4 +1,3 @@
-import { getUserOrRedirect } from "@util/cookie"
 const db = require("../../util/database").instance
 
 async function getSeriesDetails(client, res, seriesID) {
@@ -12,7 +11,7 @@ async function getSeriesDetails(client, res, seriesID) {
 }
 
 async function getSeriesEntries(client, seriesID) {
-    const query = `SELECT comic_id, title, cover
+    const query = `SELECT comic_id, title, item_number, cover
         FROM comics as c WHERE series_id = $1
         ORDER BY c.release_date DESC
         FETCH FIRST 30 ROWS ONLY`
@@ -42,6 +41,7 @@ export default async function handler(req, res) {
                 return {
                     id: parseInt(comic.comic_id),
                     title: comic.title,
+                    itemNumber: comic.item_number,
                     cover: comic.cover,
                 }
             }),

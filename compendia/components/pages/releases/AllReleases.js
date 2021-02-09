@@ -19,7 +19,7 @@ export function AllReleases({ comicDay }) {
                                 <li key={comic.id}>
                                     <ComicCover
                                         comicID={comic.id}
-                                        title={`${comic.seriesName} ${comic.title}`}
+                                        title={`${comic.title} ${comic.itemNumber}`}
                                         cover={comic.cover}
                                     />
                                 </li>

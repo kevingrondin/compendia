@@ -13,7 +13,7 @@ export function CreatorComicsList({ comics, creatorID }) {
                                 <ComicCover
                                     comicID={comic.id}
                                     cover={comic.cover}
-                                    title={comic.title}
+                                    title={`${comic.title} ${comic.itemNumber}`}
                                     footer={
                                         <ul className="flex flex-wrap justify-center">
                                             {comic.creatorTypes.map((type, index) => (

@@ -2,7 +2,7 @@ const db = require("../../../../../util/database").instance
 import { getUserOrRedirect } from "@util/cookie"
 
 async function getPullListComics(client, comicDay, userID) {
-    const query = `SELECT comic_id, title, cover FROM comics as c
+    const query = `SELECT comic_id, title, item_number, cover FROM comics as c
         WHERE c.release_date = $1 AND
         EXISTS (SELECT 1 FROM pull_list_comics as plc
         FULL JOIN collections as col USING(collection_id)
@@ -28,6 +28,7 @@ export default async function handler(req, res) {
                     return {
                         id: comic.comic_id,
                         title: comic.title,
+                        itemNumber: comic.item_number,
                         cover: comic.cover,
                     }
                 })

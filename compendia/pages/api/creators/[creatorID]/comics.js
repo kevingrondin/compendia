@@ -3,7 +3,7 @@ const db = require("../../../../util/database").instance
 async function getCreatorComics(client, creatorTypes, creatorID) {
     const hasCreatorTypes = creatorTypes && creatorTypes.length > 0 && creatorTypes[0] !== "All"
 
-    const query = `SELECT c.comic_id, c.cover, c.title, cc.creator_types
+    const query = `SELECT c.comic_id, c.cover, c.title, c.item_number, cc.creator_types
         FROM comics as c FULL JOIN comic_creators as cc USING(comic_id)
         WHERE cc.creator_id = $1 ${hasCreatorTypes ? "AND $2 && cc.creator_types" : ""}
         ORDER BY c.release_date DESC FETCH FIRST 30 ROWS ONLY`
@@ -30,6 +30,7 @@ export default async function handler(req, res) {
                     id: parseInt(comic.comic_id),
                     cover: comic.cover,
                     title: comic.title,
+                    itemNumber: comic.item_number,
                     creatorTypes: comic.creator_types,
                 }
             }),

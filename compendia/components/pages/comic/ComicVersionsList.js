@@ -13,7 +13,7 @@ export function ComicVersionsList({ comics }) {
                                 <ComicCover
                                     comicID={comic.id}
                                     cover={comic.cover}
-                                    title={comic.title}
+                                    title={`${comic.title} ${comic.itemNumber}`}
                                     footer={
                                         <div className="flex justify-center mt-2">
                                             <Category size="SM">

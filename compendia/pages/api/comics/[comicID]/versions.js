@@ -1,7 +1,7 @@
 const db = require("../../../../util/database").instance
 
 async function getComicDetails(client, res, comicID) {
-    const query = `SELECT title, version_of FROM comics WHERE comic_id = $1`
+    const query = `SELECT title, item_number, version_of FROM comics WHERE comic_id = $1`
     const params = [comicID]
     const result = await client.query(query, params)
 
@@ -12,7 +12,7 @@ async function getComicDetails(client, res, comicID) {
 async function getComicVersions(client, comicID, versionOf) {
     const isParentComic = versionOf === null
     const params = isParentComic ? [comicID] : [comicID, comic.version_of]
-    const query = `SELECT comic_id, title, cover, variant_type_desc as variant_type FROM comics as c
+    const query = `SELECT comic_id, title, item_number, cover, variant_type_desc as variant_type FROM comics as c
         FULL JOIN variant_type_lookup ON variant_type = variant_type_code
         WHERE ${
             isParentComic
@@ -40,10 +40,12 @@ export default async function handler(req, res) {
         res.status(200).json({
             id: parseInt(comicID),
             title: comic.title,
+            itemNumber: comic.item_number,
             versions: comicVersionsList.map((comic) => {
                 return {
                     id: parseInt(comic.comic_id),
                     title: comic.title,
+                    itemNumber: comic.item_number,
                     cover: comic.cover,
                     variantType: comic.variant_type,
                 }

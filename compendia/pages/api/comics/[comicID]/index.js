@@ -15,7 +15,7 @@ async function getComicDetail(client, res, comicID, collectionID) {
     // The case/when in the below query is to retrieve the versions of the comic for one of the two scenarios:
     // 1. The comic is a parent version (has no "version_of") so we get all the versions of it
     // 2. The comic is a child version (has a "version_of") so we get all of its sibling versions and add 1 for the parent
-    const query = `SELECT c.comic_id, title, cover, release_date, cover_price, description, age_rating, format, printing,
+    const query = `SELECT c.comic_id, title, item_number, cover, release_date, cover_price, description, age_rating, format, printing,
         p.publisher_id, p.name as publisher_name, s.series_id, s.name as series_name, i.imprint_id, i.name as imprint_name,
         EXISTS (SELECT 1 FROM collected_comics WHERE comic_id = $1 AND collection_id = $2 ) as is_collected,
         (CASE WHEN version_of IS NULL THEN (SELECT COUNT(*) FROM comics WHERE version_of = c.comic_id)
@@ -58,6 +58,7 @@ export default async function handler(req, res) {
         res.status(200).json({
             id: parseInt(comic.comic_id),
             title: comic.title,
+            itemNumber: comic.item_number,
             cover: comic.cover,
             releaseDate: format(comic.release_date, "yyyy-MM-dd"),
             coverPrice: comic.cover_price,

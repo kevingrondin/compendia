@@ -35,17 +35,17 @@ export default function ComicDetail() {
     else {
         return (
             <>
-                <Page title={`${comic.title} - ${comic.publisherName}`}>
+                <Page title={`${comic.title} ${comic.itemNumber} - ${comic.publisherName}`}>
                     <div className="flex flex-wrap justify-center mb-10">
                         <img
                             src={comic.cover}
-                            alt={`Cover art for ${comic.title}`}
+                            alt={`Cover art for ${comic.title} ${comic.itemNumber}`}
                             className="rounded h-72 lg:h-96 cursor-pointer"
                             onClick={() => setShowFullCover(!showFullCover)}
                         />
 
                         <article className="mt-8 md:ml-6 sm:mt-6">
-                            <h2 className="font-bold text-3xl text-center md:text-left">{`${comic.title}`}</h2>
+                            <h2 className="font-bold text-3xl text-center md:text-left">{`${comic.title} ${comic.itemNumber}`}</h2>
 
                             <div className="flex flex-col items-center pt-1 md:items-start">
                                 <p className="italic text-xl mr-2 mb-1">

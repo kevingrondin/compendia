@@ -1,7 +1,7 @@
 const db = require("../../util/database").instance
 
 async function getReleases(client, comicDay) {
-    const query = `SELECT comic_id, title, cover, p.publisher_id, p.name as publisher_name
+    const query = `SELECT comic_id, title, item_number, cover, p.publisher_id, p.name as publisher_name
         FROM comics as c FULL JOIN series as s ON c.series_id = s.series_id
         FULL JOIN publishers as p ON s.publisher_id = p.publisher_id
         WHERE c.release_date = $1`
@@ -13,15 +13,22 @@ async function getReleases(client, comicDay) {
 
 // Reduce comic records into an array of publishers each with their list of comic releases
 function groupByPublisher(comics) {
-    return comics.reduce(function (acc, obj) {
+    return comics.reduce((acc, obj) => {
         const pubIndex = acc.findIndex((pub) => pub.name === obj.publisher_name)
+        const comic = {
+            id: obj.comic_id,
+            title: obj.title,
+            itemNumber: obj.item_number,
+            cover: obj.cover,
+        }
+
         if (pubIndex < 0)
             acc.push({
                 id: obj.publisher_id,
                 name: obj.publisher_name,
-                releases: [{ id: obj.comic_id, title: obj.title, cover: obj.cover }],
+                releases: [comic],
             })
-        else acc[pubIndex].releases.push({ id: obj.comic_id, title: obj.title, cover: obj.cover })
+        else acc[pubIndex].releases.push(comic)
 
         return acc
     }, [])

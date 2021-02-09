@@ -10,9 +10,9 @@ export default function ComicVersions() {
     const queryClient = useQueryClient()
     const router = useRouter()
     const { comicID } = router.query
-    const { isLoading, isError, error, data } = useComicVersions(parseInt(comicID))
+    const { isLoading, isError, error, data: comic } = useComicVersions(parseInt(comicID))
 
-    const versions = data && data.versions ? data.versions : []
+    const versions = comic && comic.versions ? comic.versions : []
 
     useEffect(() => {
         if (comicID) queryClient.refetchQueries(["comic-versions", parseInt(comicID)])
@@ -23,11 +23,11 @@ export default function ComicVersions() {
     else if (!comicID || versions === undefined) return <></>
     else {
         return (
-            <Page title={`Versions of - ${data.title}`}>
+            <Page title={`Versions of - ${comic.title} ${comic.itemNumber}`}>
                 <PageHeading>
                     <div className="flex flex-col">
                         <span className="text-2xl">Other Versions of</span>
-                        {data.title}
+                        {`${comic.title} ${comic.itemNumber}`}
                     </div>
                 </PageHeading>
 
