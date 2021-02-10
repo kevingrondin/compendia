@@ -1,6 +1,5 @@
-import Link from "next/link"
 import { PropTypes } from "prop-types"
-import { ArrowIcon } from "@icons/Arrow"
+import { PageLink } from "@components/common/PageLink"
 
 export function ComicCreators({ creators }) {
     return (
@@ -11,22 +10,16 @@ export function ComicCreators({ creators }) {
                 <ul className="flex flex-wrap">
                     {creators.map((creator) => {
                         return (
-                            <li key={creator.id} className="text-lg font-semibold mb-3 mr-12">
-                                {creator.types.join(" / ") + ":"}
-                                <Link href={`/creators/${creator.id}`} passHref>
-                                    <a className="flex items-center w-min whitespace-nowrap font-normal">
-                                        <span>{creator.name}</span>
-                                        <ArrowIcon
-                                            colorClass="text-blue-primary-200"
-                                            className="pl-1"
-                                            height="35"
-                                            width="35"
-                                            viewBox="-8 -12 60 55"
-                                            onClick={() => {}}
-                                            direction="right"
-                                        />
-                                    </a>
-                                </Link>
+                            <li key={creator.id} className="text-lg mb-3 mr-12">
+                                <span className="font-semibold">
+                                    {creator.types.join(" / ") + ":"}
+                                </span>
+                                <PageLink
+                                    href={`/creators/${creator.id}`}
+                                    linkText={creator.name}
+                                    hasArrow={true}
+                                    className="pb-1 mt-2"
+                                />
                             </li>
                         )
                     })}

@@ -191,7 +191,15 @@ OptionsButton.propTypes = {
     setShowOptions: PropTypes.func,
 }
 
-export function SVGOptionsButton({ children, options, showOptions, setShowOptions }) {
+export function SVGOptionsButton({
+    children,
+    options,
+    showOptions,
+    setShowOptions,
+    optionsXPosition = "left-3/4 transform -translate-x-32",
+    optionsYPosition,
+    optionsPosition,
+}) {
     const [show, setShow] = useState(false)
     const showOptionsGetter = showOptions ? showOptions : show
     const showOptionsSetter = setShowOptions ? setShowOptions : setShow
@@ -209,7 +217,9 @@ export function SVGOptionsButton({ children, options, showOptions, setShowOption
                     options={options}
                     showOptions={showOptionsGetter}
                     setShowOptions={showOptionsSetter}
-                    xPosition="-translate-x-full"
+                    xPosition={optionsXPosition}
+                    yPosition={optionsYPosition}
+                    position={optionsPosition}
                 />
             </div>
         </div>
@@ -221,4 +231,7 @@ SVGOptionsButton.propTypes = {
     options: PropTypes.element.isRequired,
     showOptions: PropTypes.bool,
     setShowOptions: PropTypes.func,
+    optionsXPosition: PropTypes.string,
+    optionsYPosition: PropTypes.string,
+    optionsPosition: PropTypes.string,
 }

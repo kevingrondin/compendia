@@ -1,6 +1,7 @@
 import PropTypes from "prop-types"
 import { ComicCover } from "@components/pages/comic/ComicCover"
 import { usePullList } from "@hooks/queries/pull-list"
+import { CoverListGrid } from "@components/common/CoverListGrid"
 
 export function PullListReleases({ comicDay }) {
     const { isLoading, isError, error, data: comics } = usePullList(comicDay)
@@ -9,7 +10,7 @@ export function PullListReleases({ comicDay }) {
     else if (isError) return <div>Error: {error.message}</div>
     else if (comics && comics.length > 0)
         return (
-            <ul className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 justify-items-center gap-y-6 sm:gap-8 ">
+            <CoverListGrid>
                 {comics.map((comic) => (
                     <li key={comic.id}>
                         <ComicCover
@@ -19,7 +20,7 @@ export function PullListReleases({ comicDay }) {
                         />
                     </li>
                 ))}
-            </ul>
+            </CoverListGrid>
         )
     else return <p>Your Pull List is empty this week...</p>
 }

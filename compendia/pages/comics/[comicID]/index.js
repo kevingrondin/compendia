@@ -1,10 +1,9 @@
-import Link from "next/link"
 import { useEffect, useState } from "react"
 import { useRouter } from "next/router"
 import { useQueryClient } from "react-query"
 import { Page } from "@components/common/Page"
 import { FullScreenModal } from "@components/common/FullScreenModal"
-import { ArrowIcon } from "@icons/Arrow"
+import { PageLink } from "@components/common/PageLink"
 import { useComicDay } from "@hooks/useComicDay"
 import { getDateFromPGString } from "@util/date"
 import { CollectionDetails } from "@components/pages/comic/CollectionDetails"
@@ -45,34 +44,41 @@ export default function ComicDetail() {
                         />
 
                         <article className="mt-8 md:ml-6 sm:mt-6">
-                            <h2 className="font-bold text-3xl text-center md:text-left">{`${comic.title} ${comic.itemNumber}`}</h2>
+                            <h2 className="font-bold text-3xl text-center md:text-left">
+                                <PageLink
+                                    href={`/series/${comic.seriesID}`}
+                                    linkText={comic.title}
+                                    extraContent={comic.itemNumber}
+                                />
+                            </h2>
 
-                            <div className="flex flex-col items-center pt-1 md:items-start">
-                                <p className="italic text-xl mr-2 mb-1">
-                                    {`${comic.publisherName} ${
-                                        comic.imprintID ? " - " + comic.imprintName : ""
-                                    }`}
-                                </p>
+                            <div className="flex flex-col items-center pt-2 md:items-start">
+                                <div className="italic text-xl mr-2 mb-4 flex">
+                                    <span className="mr-2">{`by `}</span>
+                                    <PageLink
+                                        href={`/publishers/${comic.publisherID}`}
+                                        linkText={comic.publisherName}
+                                    />
+                                    {comic.imprintID
+                                        ? ` - ${(
+                                              <PageLink
+                                                  href={`/imprints/${comic.imprintID}`}
+                                                  linkText={comic.imprintName}
+                                              />
+                                          )}`
+                                        : ""}
+                                </div>
 
-                                {comic.otherVersions > 0 && (
-                                    <Link href={`/comics/${comic.id}/versions`} passHref>
-                                        <a className="flex items-center w-min whitespace-nowrap text-gray-800 font-bold text-md">
-                                            <span>{`${comic.otherVersions} Other Version${
-                                                comic.otherVersions > 1 ? "s" : ""
-                                            }`}</span>
-
-                                            <ArrowIcon
-                                                colorClass="text-blue-primary-200"
-                                                className="pl-1"
-                                                height="35"
-                                                width="35"
-                                                viewBox="-8 -12 60 55"
-                                                onClick={() => {}}
-                                                direction="right"
-                                            />
-                                        </a>
-                                    </Link>
-                                )}
+                                {comic.otherVersions > 0 ? (
+                                    <PageLink
+                                        href={`/comics/${comic.id}/versions`}
+                                        linkText={`${comic.otherVersions} Other Version${
+                                            comic.otherVersions > 1 ? "s" : ""
+                                        }`}
+                                        hasArrow={true}
+                                        className="pb-1 mt-2"
+                                    />
+                                ) : null}
                             </div>
 
                             <ComicDetails comic={comic} />
