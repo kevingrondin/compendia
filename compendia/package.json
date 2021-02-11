@@ -23,7 +23,7 @@
         "postcss": "^7",
         "react": "^16.13.1",
         "react-dom": "^16.13.1",
-        "react-query": "^3.5.11",
+        "react-query": "^3.5.14",
         "sass": "^1.26.10",
         "swr": "^0.3.11",
         "tailwindcss": "npm:@tailwindcss/postcss7-compat",

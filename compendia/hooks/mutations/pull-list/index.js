@@ -27,7 +27,7 @@ export function useSubscribeToSeries(seriesID, comicID) {
     return useMutation(() => axios.post(`/api/collection/pull-list/series/${seriesID}`), {
         onSuccess: (seriesDetails) => {
             queryClient.setQueryData(["pull-list-series", seriesID], { ...seriesDetails.data })
-            queryClient.refetchQueries(["pull-list-comics", comicID])
+            if (comicID) queryClient.refetchQueries(["pull-list-comics", comicID])
         },
     })
 }
@@ -38,7 +38,7 @@ export function useUnsubscribeFromSeries(seriesID, comicID) {
     return useMutation(() => axios.delete(`/api/collection/pull-list/series/${seriesID}`), {
         onSuccess: () => {
             queryClient.setQueryData(["pull-list-series", seriesID], { isSubscribed: false })
-            queryClient.refetchQueries(["pull-list-comics", comicID])
+            if (comicID) queryClient.refetchQueries(["pull-list-comics", comicID])
         },
     })
 }

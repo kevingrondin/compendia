@@ -17,9 +17,21 @@ async function getPublisherDetails(client, res, publisherID) {
 
 async function getPublisherSeriesList(client, publisherID) {
     const query = `SELECT series_id, name,
-        (SELECT cover FROM comics WHERE series_id = s.series_id ORDER BY release_date DESC LIMIT 1) as cover
+        (SELECT release_date FROM comics WHERE series_id = s.series_id ORDER BY release_date DESC LIMIT 1) as release_date
         FROM series as s WHERE publisher_id = $1
-        ORDER BY name DESC FETCH FIRST 10 ROWS ONLY`
+        ORDER BY release_date DESC FETCH FIRST 10 ROWS ONLY`
+    const params = [publisherID]
+    const result = await client.query(query, params)
+
+    return result.rows
+}
+
+async function getPublisherComicsList(client, publisherID) {
+    const query = `SELECT comic_id, title, cover
+        FROM comics as c FULL JOIN series as s USING(series_id)
+        FULL JOIN publishers USING(publisher_id) WHERE publisher_id = $1
+        ORDER BY c.release_date DESC
+        FETCH FIRST 15 ROWS ONLY`
     const params = [publisherID]
     const result = await client.query(query, params)
 
@@ -38,6 +50,7 @@ export default async function handler(req, res) {
     try {
         const publisher = await getPublisherDetails(client, res, publisherID)
         const seriesList = await getPublisherSeriesList(client, publisherID)
+        const comicsList = await getPublisherComicsList(client, publisherID)
 
         res.status(200).json({
             id: parseInt(publisherID),
@@ -47,9 +60,16 @@ export default async function handler(req, res) {
             comicsCount: publisher.comics_count,
             seriesList: seriesList.map((series) => {
                 return {
-                    id: parseInt(series.comic_id),
+                    id: parseInt(series.series_id),
                     name: series.name,
                     cover: series.cover,
+                }
+            }),
+            comicsList: comicsList.map((comic) => {
+                return {
+                    id: comic.comic_id,
+                    title: comic.title,
+                    cover: comic.cover,
                 }
             }),
         })

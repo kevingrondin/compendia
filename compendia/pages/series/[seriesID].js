@@ -5,6 +5,7 @@ import { Page } from "@components/common/Page"
 import { PageHeading } from "@components/common/PageHeading"
 import { SeriesEntriesList } from "@components/pages/series/SeriesEntriesList"
 import { useSeries } from "@hooks/queries/series"
+import { SubscribeButton } from "@components/pages/comic/SubscribeButton"
 
 export default function SeriesDetail() {
     const queryClient = useQueryClient()
@@ -23,8 +24,15 @@ export default function SeriesDetail() {
     else if (!seriesID || entries === undefined) return <></>
     else {
         return (
-            <Page title={`${series.name}`}>
-                <PageHeading>{series.name}</PageHeading>
+            <Page title={`${series.name} - Series`}>
+                <PageHeading>
+                    <div className="flex flex-col">
+                        <span className="text-2xl">Releases of</span>
+                        {series.name}
+                    </div>
+                </PageHeading>
+
+                <SubscribeButton seriesID={series.id} />
 
                 <SeriesEntriesList entries={entries} />
             </Page>

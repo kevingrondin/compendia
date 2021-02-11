@@ -3,7 +3,7 @@ import { useQuery } from "react-query"
 
 export function useComicLists(comicID) {
     return useQuery(
-        [`user-comic-lists`, comicID],
+        ["comic-lists", comicID],
         async () => {
             const { data } = await axios.get(`/api/comics/${comicID}/lists`)
             return data

@@ -13,7 +13,7 @@ export function usePullList(comicDay) {
 
 export function usePullListComic(comicID) {
     return useQuery(
-        ["pull-list-comics", comicID],
+        ["pull-list-comic", comicID],
         async () => {
             const { data } = await axios.get(`/api/collection/pull-list/comics/${comicID}`)
             return data

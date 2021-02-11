@@ -37,7 +37,9 @@ export default function PublisherDetail() {
                 <Category size="LG">Recent Comics</Category>
                 <PublisherComicsList comicsList={comicsList} />
 
-                <Category size="LG">Recently Updated Series</Category>
+                <Category size="LG" className="mt-8">
+                    Recently Updated Series
+                </Category>
                 <PublisherSeriesList seriesList={seriesList} />
             </Page>
         )

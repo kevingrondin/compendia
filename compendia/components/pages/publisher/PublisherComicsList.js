@@ -7,7 +7,7 @@ export function PublisherComicsList({ comicsList }) {
         <>
             {comicsList && comicsList.length > 0 ? (
                 <CoverListGrid>
-                    {comics.map((comic) => (
+                    {comicsList.map((comic) => (
                         <li key={comic.id}>
                             <ComicCover
                                 comicID={comic.id}

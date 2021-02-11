@@ -8,8 +8,8 @@ import { useSubscribeToSeries, useUnsubscribeFromSeries } from "@hooks/mutations
 export function SubscribeButton({ seriesID, comicID, marginClass }) {
     const { isLoading, isError, error, data } = usePullListSeries(seriesID)
     const [showOptions, setShowOptions] = useState(false)
-    const subscribeMutation = useSubscribeToSeries(seriesID, comicID)
-    const unubscribeMutation = useUnsubscribeFromSeries(seriesID, comicID)
+    const subscribeMutation = useSubscribeToSeries(seriesID, comicID ? comicID : null)
+    const unubscribeMutation = useUnsubscribeFromSeries(seriesID, comicID ? comicID : null)
 
     if (isLoading) return <div>Loading...</div>
     else if (isError) return <div>Error: {error.message}</div>
@@ -30,6 +30,6 @@ export function SubscribeButton({ seriesID, comicID, marginClass }) {
 }
 SubscribeButton.propTypes = {
     seriesID: PropTypes.number.isRequired,
-    comicID: PropTypes.number.isRequired,
+    comicID: PropTypes.number,
     marginClass: PropTypes.string,
 }

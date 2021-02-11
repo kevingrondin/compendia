@@ -1,6 +1,4 @@
 import PropTypes from "prop-types"
-import { ComicCover } from "../comic/ComicCover"
-import { DetailListGrid } from "@components/common/DetailListGrid"
 import { PageLink } from "@components/common/PageLink"
 
 export function PublisherSeriesList({ seriesList }) {
@@ -10,7 +8,11 @@ export function PublisherSeriesList({ seriesList }) {
                 seriesList.map((series) => (
                     <li key={series.id} className="list-none">
                         <div className="text-blue-primary-200 text-md flex mr-4">
-                            <PageLink href="/" linkText={series.name} hasArrow={true} />
+                            <PageLink
+                                href={`/series/${series.id}`}
+                                linkText={series.name}
+                                hasArrow={true}
+                            />
                         </div>
                     </li>
                 ))

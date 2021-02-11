@@ -11,28 +11,28 @@ export function PageLink({ href, linkText, extraContent, hasArrow = false, class
     }
 
     return (
-        <div className={`${typeof extraContent === "string" ? "" : "flex"}`}>
-            <span
-                className={`border-b-4 border-gray-300 hover:border-blue-primary-200 ${
-                    className ? className : null
-                }`}
+        <Link href={href} passHref>
+            <a
+                className={`${typeof extraContent === "string" ? "" : "flex"}
+             ${className ? className : null}`}
             >
-                <Link href={href} passHref>
+                <span className="border-b-4 border-gray-300 hover:border-blue-primary-200">
                     {linkText}
-                </Link>
-            </span>
-            {hasArrow ? (
-                <ArrowIcon
-                    colorClass="text-blue-primary-200"
-                    className="pl-1 mt-1"
-                    height="35"
-                    width="35"
-                    viewBox="-8 -12 60 55"
-                    direction="right"
-                />
-            ) : null}
-            {extraContent ? extra : null}
-        </div>
+                </span>
+                {extraContent ? extra : null}
+
+                {hasArrow ? (
+                    <ArrowIcon
+                        colorClass="text-blue-primary-200"
+                        className="pl-1"
+                        height="28"
+                        width="35"
+                        viewBox="-8 -12 60 55"
+                        direction="right"
+                    />
+                ) : null}
+            </a>
+        </Link>
     )
 }
 PageLink.propTypes = {
