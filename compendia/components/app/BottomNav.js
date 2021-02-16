@@ -34,29 +34,29 @@ const bottomNavListItem = {
     },
 }
 
-const BottomNav = () => (
-    <nav style={bottomNav}>
-        <ul style={bottomNavList}>
-            <li style={bottomNavListItem}>
-                <button>
-                    <img src="/releases.svg" alt="Go to releases" />
-                </button>
-                Releases
-            </li>
-            <li style={bottomNavListItem}>
-                <button>
-                    <img src="/search.svg" alt="Go to search" />
-                </button>
-                Search
-            </li>
-            <li style={bottomNavListItem}>
-                <button>
-                    <img src="/collection.svg" alt="Go to collection" />
-                </button>
-                Collection
-            </li>
-        </ul>
-    </nav>
-)
-
-export default BottomNav
+export function BottomNav() {
+    return (
+        <nav style={bottomNav}>
+            <ul style={bottomNavList}>
+                <li style={bottomNavListItem}>
+                    <button>
+                        <img src="/releases.svg" alt="Go to releases" />
+                    </button>
+                    Releases
+                </li>
+                <li style={bottomNavListItem}>
+                    <button>
+                        <img src="/search.svg" alt="Go to search" />
+                    </button>
+                    Search
+                </li>
+                <li style={bottomNavListItem}>
+                    <button>
+                        <img src="/collection.svg" alt="Go to collection" />
+                    </button>
+                    Collection
+                </li>
+            </ul>
+        </nav>
+    )
+}

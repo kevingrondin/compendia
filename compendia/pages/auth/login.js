@@ -1,13 +1,11 @@
-import { useState, useEffect } from "react"
 import Head from "next/head"
 import Router from "next/router"
-
+import { useState, useEffect } from "react"
 import { OAuthExtension } from "@magic-ext/oauth"
 import { Magic } from "magic-sdk"
-import { useUser } from "../../hooks/magic"
-
-import { validateEmail } from "../../util/validateEmail"
-import Button from "../../components/utils/Button"
+import { useUser } from "@hooks/magic"
+import { validateEmail } from "@util/validateEmail"
+import { Button } from "@components/common/buttons/Button"
 
 export default function Login() {
     useUser({ redirectTo: "/", redirectIfFound: true })
@@ -25,16 +23,18 @@ export default function Login() {
         magic?.preload()
     }, [magic])
 
+    // TODO move these functions outside of the component and pass in whatever they need
+
     async function handleLoginWithEmail(email) {
         try {
-            setDisabled(true) // disable login button to prevent multiple emails from being triggered
+            setDisabled(true)
             let didToken = await magic.auth.loginWithMagicLink({
                 email,
                 redirectURI: `${process.env.NEXT_PUBLIC_SERVER_URL}/auth/callback`,
             })
             await authenticateWithServer(didToken)
         } catch (error) {
-            setDisabled(false) // re-enable login button - user may have requested to edit their email
+            setDisabled(false)
             console.log(error)
         }
     }
@@ -61,9 +61,9 @@ export default function Login() {
                     <div className="flex justify-center h-1/5">
                         <img src="/CompendiaLogo.svg" />
                     </div>
-                    <div className="bg-white flex flex-col justify-center items-center content-center h-4/5 rounded-tl-4xl">
-                        <h1 className="p-10 text-blue-primary-100 text-3xl font-bold">
-                            Login / Sign Up
+                    <div className="bg-white flex flex-col justify-center items-center content-center h-2/3 rounded-tl-4xl">
+                        <h1 className="p-10 text-blue-primary-100 text-5xl font-bold">
+                            Welcome to Compendia!
                         </h1>
 
                         <div className="p-2">
@@ -88,7 +88,7 @@ export default function Login() {
                                         email && validateEmail(email) && handleLoginWithEmail(email)
                                     }}
                                 >
-                                    Send Link to Login
+                                    Login / Sign Up
                                 </Button>
                             </form>
                         </div>

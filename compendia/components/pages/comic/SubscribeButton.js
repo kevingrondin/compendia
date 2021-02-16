@@ -1,68 +1,35 @@
-import { useState } from "react"
-import { useMutation, useQueryClient, useQuery } from "react-query"
 import PropTypes from "prop-types"
-import axios from "axios"
-import ActionButton from "../../buttons/ActionButton"
-import SubscribeOptions from "./SubscribeOptions"
+import { useState } from "react"
+import { OptionsButton } from "@components/common/buttons/OptionsButton"
+import { SubscribeOptions } from "@components/pages/comic/SubscribeOptions"
+import { usePullListSeries } from "@hooks/queries/pull-list"
+import { useSubscribeToSeries, useUnsubscribeFromSeries } from "@hooks/mutations/pull-list"
 
-const getPullListSeries = (seriesID) =>
-    useQuery(
-        ["pull-list-series", seriesID],
-        async () => {
-            const { data } = await axios.get(`/api/collection/pull-list/series/${seriesID}`)
-            return data
-        },
-        { staleTime: Infinity }
-    )
-
-export default function SubscribeButton({ seriesID, comicID, className, marginClass }) {
-    const queryClient = useQueryClient()
-    const { isLoading, isError, error, data } = getPullListSeries(seriesID)
+export function SubscribeButton({ seriesID, comicID, marginClass }) {
+    const { isLoading, isError, error, data } = usePullListSeries(seriesID)
     const [showOptions, setShowOptions] = useState(false)
-
-    const subscribeToSeries = useMutation(
-        () => axios.post(`/api/collection/pull-list/series/${seriesID}`),
-        {
-            onSuccess: (seriesDetails) => {
-                queryClient.setQueryData(["pull-list-series", seriesID], { ...seriesDetails.data })
-                queryClient.refetchQueries(["pull-list-comics", comicID])
-            },
-        }
-    )
-
-    const unsubscribeFromSeries = useMutation(
-        () => axios.delete(`/api/collection/pull-list/series/${seriesID}`),
-        {
-            onSuccess: () => {
-                queryClient.setQueryData(["pull-list-series", seriesID], { isSubscribed: false })
-                queryClient.refetchQueries(["pull-list-comics", comicID])
-            },
-        }
-    )
+    const subscribeMutation = useSubscribeToSeries(seriesID, comicID ? comicID : null)
+    const unubscribeMutation = useUnsubscribeFromSeries(seriesID, comicID ? comicID : null)
 
     if (isLoading) return <div>Loading...</div>
     else if (isError) return <div>Error: {error.message}</div>
     else
         return (
-            <ActionButton
-                addText="Subscribe"
-                removeText="Subscribed"
+            <OptionsButton
+                primaryText="Subscribe"
+                secondaryText="Subscribed"
                 isActive={data.isSubscribed}
-                onAdd={subscribeToSeries}
-                onRemove={unsubscribeFromSeries}
-                isOptionsButton={true}
+                onPrimaryClick={subscribeMutation}
+                onSecondaryClick={unubscribeMutation}
                 options={<SubscribeOptions seriesID={seriesID} isOptionsVisible={showOptions} />}
                 setShowOptions={(val) => setShowOptions(val)}
                 showOptions={showOptions}
-                className={className}
                 marginClass={marginClass}
             />
         )
 }
-
 SubscribeButton.propTypes = {
     seriesID: PropTypes.number.isRequired,
-    comicID: PropTypes.number.isRequired,
-    className: PropTypes.string,
+    comicID: PropTypes.number,
     marginClass: PropTypes.string,
 }

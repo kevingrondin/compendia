@@ -1,63 +1,66 @@
-const db = require("../../../database").instance
-import { magic } from "../../../util/magic"
 import jwt from "jsonwebtoken"
-import { setTokenCookie } from "../../../util/cookie"
+const db = require("../../../util/database").instance
+import { magic } from "@util/magic"
+import { setTokenCookie } from "@util/cookie"
 
-// Create new user in db using issuer ID and email from Magic metadata
-const createNewUser = async (metadata, client) => {
-    try {
-        const userInsert = `INSERT INTO users (user_id, email) VALUES ($1, $2) RETURNING user_id, email`
-        const userInsertParams = [metadata.issuer, metadata.email]
-        const userInsertResult = await client.query(userInsert, userInsertParams)
-        return userInsertResult
-    } catch (error) {
-        console.log(error)
-    }
+async function insertNewUser(client, res, metadata) {
+    const insert = `INSERT INTO users (user_id, email) VALUES ($1, $2)
+        RETURNING user_id, email`
+    const params = [metadata.issuer, metadata.email]
+    const result = await client.query(insert, params)
+
+    if (result.rows.length !== 1) res.status(500).json({ message: "Could not create new user" })
+    else return result.row[0]
 }
 
+async function getExistingUser(client, res, userID) {
+    const query = `SELECT user_id, email FROM users WHERE user_id = $1`
+    const params = [userID]
+    const result = await client.query(query, params)
+
+    if (result.rows.length !== 1) res.status(404).json({ message: "User not found" })
+    else return result.rows[0]
+}
+
+async function getOrCreateUser(client, res, userID) {
+    const existingUser = await getExistingUser(client, res, userID)
+    const user = {}
+
+    if (existingUser.user_id) {
+        user.id = existingUser.user_id
+        user.email = existingUser.email
+    } else {
+        const newUser = await insertNewUser(client, res, metadata)
+        user.id = newUser.user_id
+        user.email = newUser.email
+    }
+
+    return user
+}
+
+// async function getCollectionID(client, res, userID) {
+//     const query = `SELECT collection_id FROM collections WHERE user_id = $1`
+//     const params = [userID]
+//     const result = await client.query(query, params)
+
+//     if (result.rows.length !== 1) res.status(500).json({ message: "Collection ID was not found" })
+//     else return result.rows[0].collectionID
+// }
+
 export default async function login(req, res) {
+    const client = await db.connect()
     try {
-        // Get user metadata from Magic Auth
         const didToken = req.headers.authorization.substr(7)
         await magic.token.validate(didToken)
         const metadata = await magic.users.getMetadataByToken(didToken)
 
-        // Search db for existing user with Magic issuer ID, otherwise create one
-        const client = await db.connect()
-        const user = {}
-        try {
-            const userQuery = `SELECT user_id, email FROM users WHERE user_id = $1`
-            const userQueryParams = [metadata.issuer]
-            const userResult = await client.query(userQuery, userQueryParams)
+        const user = await getOrCreateUser(client, res, metadata.issuer)
 
-            // Populate user object from either existing user or new user
-            if (userResult.rows.length < 1) {
-                const newUser = await createNewUser(metadata, client)
-                if (newUser.rows.length > 0) {
-                    user.id = newUser.rows[0].user_id
-                    user.email = newUser.rows[0].email
-                } else throw new Error("New user was not added to db")
-            } else {
-                user.id = userResult.rows[0].user_id
-                user.email = userResult.rows[0].email
-            }
+        //TODO store collection ID in token cookie for use across the application
+        // const collectionID = await getCollectionID(client, res, user.id)
+        // user.collectionID = collectionID
 
-            // Get collection ID for user and add it to the user object
-            const collectionQuery = `SELECT collection_id FROM collections WHERE user_id = $1`
-            const collectionQueryParams = [user.id]
-            const collectionResult = await client.query(collectionQuery, collectionQueryParams)
-            if (collectionResult.rows.length > 0) {
-                user.collectionID = collectionResult.rows[0].collection_id
-            } else throw new Error("Collection ID was not found for new user")
-        } catch (error) {
-            console.log(error)
-        } finally {
-            await client.end()
-            await client.release()
-        }
-
-        // Create and save cookie to remember user
-        let token = jwt.sign(
+        const token = jwt.sign(
             {
                 id: user.id,
                 publicAddress: metadata.publicAddress,
@@ -72,5 +75,8 @@ export default async function login(req, res) {
     } catch (error) {
         console.log(error)
         res.status(500).json({ error: error.message })
+    } finally {
+        await client.end()
+        await client.release()
     }
 }

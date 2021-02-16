@@ -1,78 +1,86 @@
-import { useQuery, useQueryClient } from "react-query"
+import { useQueryClient } from "react-query"
 import { useRouter } from "next/router"
-import { useEffect } from "react"
-import axios from "axios"
-
-import Page from "../../components/pages/Page"
-import ComicCover from "../../components/pages/comic/ComicCover"
-import PageHeading from "../../components/pages/PageHeading"
-import Category from "../../components/pages/Category"
-
-const useCreatorDetail = (creatorID) =>
-    useQuery(
-        ["creator-detail", creatorID],
-        async () => {
-            const { data } = await axios.get(`/api/creators/${creatorID}?sortBy=releaseDate`)
-            return data
-        },
-        { enabled: false, staleTime: Infinity }
-    )
+import { useEffect, useState } from "react"
+import { Page } from "@components/common/Page"
+import { PageHeading } from "@components/common/PageHeading"
+import { CreatorComicsList } from "@components/pages/creator/CreatorComicsList"
+import { FilterOptions } from "@components/pages/creator/FilterOptions"
+import { FilterIcon } from "@icons/Filter"
+import { SVGOptionsButton } from "@components/common/buttons/OptionsButton"
+import { useCreatorComics, useCreatorDetail } from "@hooks/queries/creator"
 
 export default function CreatorDetail() {
     const queryClient = useQueryClient()
     const router = useRouter()
     const { creatorID } = router.query
-    const { isLoading, isError, error, data: creator } = useCreatorDetail(parseInt(creatorID))
+
+    const [filterTypes, setFilterTypes] = useState(["W", "A", "CA"])
+    const [showFilterOptions, setShowFilterOptions] = useState(false)
+
+    const {
+        isLoading: creatorIsLoading,
+        isError: creatorIsError,
+        error: creatorError,
+        data: creator,
+    } = useCreatorDetail(parseInt(creatorID))
+
+    const {
+        isLoading: comicsIsLoading,
+        isError: comicsIsError,
+        error: comicsError,
+        data: comicsData,
+    } = useCreatorComics(parseInt(creatorID), filterTypes)
+
+    const comics = comicsData && comicsData.comics ? comicsData.comics : []
 
     useEffect(() => {
-        if (creatorID) queryClient.refetchQueries(["creator-detail", parseInt(creatorID)])
+        if (creatorID) {
+            queryClient.refetchQueries(["creator-detail", parseInt(creatorID)])
+            queryClient.refetchQueries(["creator-comics", parseInt(creatorID)])
+        }
     }, [creatorID])
 
-    if (isLoading) return <div>Loading...</div>
-    else if (isError) return <div>Error: {error.message}</div>
-    else if (!creatorID || creator === undefined) return <></>
+    useEffect(() => {
+        queryClient.refetchQueries(["creator-comics", parseInt(creatorID), filterTypes.join("/")])
+    }, [filterTypes])
+
+    if (creatorIsLoading || comicsIsLoading) return <div>Loading...</div>
+    else if (creatorIsError || comicsIsError)
+        return (
+            <div>
+                Error:{" "}
+                {`${comicsError && comicsError.message} ${creatorError && creatorError.message}`}
+            </div>
+        )
+    else if (!creatorID || creator === undefined || comics === undefined) return <></>
     else {
         return (
             <Page title={`Creator - ${creator.name}`}>
-                <div>
-                    <PageHeading>
-                        <div className="flex flex-col">
-                            <span className="text-2xl">Comics by</span>
-                            {creator.name}
-                        </div>
-                    </PageHeading>
-                    <div className="flex flex-wrap">
-                        <ul>
-                            {creator.comics.map((comic) => (
-                                <li key={comic.id}>
-                                    <ComicCover
-                                        comicID={comic.id}
-                                        cover={comic.cover}
-                                        title={comic.title}
-                                        footer={
-                                            <ul className="flex flex-wrap">
-                                                {comic.creatorTypes.map((type, index) => (
-                                                    <li
-                                                        key={`${creatorID}-${comic.id}-${type}`}
-                                                        className="flex"
-                                                    >
-                                                        <Category size="SM">{type}</Category>
-                                                        {index !==
-                                                            comic.creatorTypes.length - 1 && (
-                                                            <span className="text-2xl mx-1 text-blue-primary-200">
-                                                                /
-                                                            </span>
-                                                        )}
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        }
-                                    />
-                                </li>
-                            ))}
-                        </ul>
+                <PageHeading>
+                    <div className="flex flex-col">
+                        <span className="text-2xl">Comics by</span>
+                        {creator.name}
                     </div>
+                </PageHeading>
+
+                <div className="flex justify-end mb-8 -mt-3">
+                    <SVGOptionsButton
+                        options={
+                            <FilterOptions
+                                creatorID={creatorID}
+                                filterTypes={filterTypes}
+                                setFilterTypes={setFilterTypes}
+                                setShowFilterOptions={setShowFilterOptions}
+                            />
+                        }
+                        showOptions={showFilterOptions}
+                        setShowOptions={setShowFilterOptions}
+                    >
+                        <FilterIcon />
+                    </SVGOptionsButton>
                 </div>
+
+                <CreatorComicsList comics={comics} creatorID={creatorID} />
             </Page>
         )
     }

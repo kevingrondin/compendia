@@ -1,13 +1,12 @@
-import { useState, useEffect } from "react"
-import { useMutation, useQueryClient, useQuery } from "react-query"
 import PropTypes from "prop-types"
+import { useState, useEffect } from "react"
+import { useQueryClient } from "react-query"
 import { format } from "date-fns"
-import axios from "axios"
-
-import { formatDateStringForView } from "../../../util/date"
-
-import Button from "../../buttons/Button"
-import EditIcon from "../../icons/Edit"
+import { formatDateStringForView } from "@util/date"
+import { Button } from "@components/common/buttons/Button"
+import { EditIcon } from "@icons/Edit"
+import { useCollectedComic } from "@hooks/queries/collection"
+import { useUpdateCollectionFields } from "@hooks/mutations/collection"
 
 const CollectionDetail = ({ isEditMode, field, label, children }) => (
     <label className="flex flex-col pr-10 pb-5">
@@ -21,7 +20,6 @@ const CollectionDetail = ({ isEditMode, field, label, children }) => (
         )}
     </label>
 )
-
 CollectionDetail.propTypes = {
     isEditMode: PropTypes.bool.isRequired,
     field: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
@@ -29,22 +27,10 @@ CollectionDetail.propTypes = {
     children: PropTypes.element.isRequired,
 }
 
-function useCollectedComicDetail(id) {
-    return useQuery(
-        ["collected-comic-detail", id],
-        async () => {
-            const { data } = await axios.get(`/api/collection/comics/${id}`)
-            return data
-        },
-        { staleTime: Infinity }
-    )
-}
-
-export default function CollectionDetails({ comicID }) {
-    const queryClient = useQueryClient()
-    const { isLoading, isError, data } = useCollectedComicDetail(comicID)
-
+//TODO refactor this to be simpler and easier to read
+export function CollectionDetails({ comicID }) {
     const [isEditMode, setIsEditMode] = useState(false)
+    const [showUpdateButton, setShowUpdateButton] = useState(false)
     const [editDateCollected, setEditDateCollected] = useState()
     const [editPurchasePrice, setEditPurchasePrice] = useState()
     const [editBoughtAt, setEditBoughtAt] = useState()
@@ -52,9 +38,42 @@ export default function CollectionDetails({ comicID }) {
     const [editQuantity, setEditQuantity] = useState()
     const [editNotes, setEditNotes] = useState()
 
+    const queryClient = useQueryClient()
+    const { isLoading, isError, data } = useCollectedComic(comicID)
+    const collectionDetailsMutation = useUpdateCollectionFields(comicID, setIsEditMode)
+
+    useEffect(() => {
+        queryClient.refetchQueries(["collected-comic-detail", comicID])
+    }, [])
+
     useEffect(() => {
         if (!isLoading && !isError && data) resetCollectionFields()
     }, [data])
+
+    useEffect(() => {
+        if (!isLoading && !isError && data) {
+            if (
+                editDateCollected !== data.dateCollected ||
+                editPurchasePrice !== data.purchasePrice ||
+                editBoughtAt !== data.boughtAt ||
+                editCondition !== data.condition ||
+                editQuantity !== data.quantity ||
+                editNotes !== data.notes
+            ) {
+                setShowUpdateButton(true)
+            } else {
+                setShowUpdateButton(false)
+            }
+        }
+    }, [
+        data,
+        editDateCollected,
+        editPurchasePrice,
+        editBoughtAt,
+        editCondition,
+        editQuantity,
+        editNotes,
+    ])
 
     const resetCollectionFields = () => {
         setEditDateCollected(data.dateCollected)
@@ -64,16 +83,6 @@ export default function CollectionDetails({ comicID }) {
         setEditQuantity(data.quantity)
         setEditNotes(data.notes)
     }
-
-    const updateCollectionFields = useMutation(
-        (data) => axios.put(`/api/collection/comics/${comicID}`, data),
-        {
-            onSuccess: (res) => {
-                setIsEditMode(false)
-                queryClient.setQueryData(["collected-comic-detail", comicID], { ...res.data })
-            },
-        }
-    )
 
     return (
         <div>
@@ -93,8 +102,10 @@ export default function CollectionDetails({ comicID }) {
                         <input
                             className="rounded-xl border-2"
                             type="date"
-                            value={editDateCollected || ""}
-                            onChange={(e) => setEditDateCollected(e.target.value)}
+                            value={editDateCollected}
+                            onChange={(e) => {
+                                setEditDateCollected(e.target.value)
+                            }}
                         />
                     </CollectionDetail>
 
@@ -105,8 +116,10 @@ export default function CollectionDetails({ comicID }) {
                     >
                         <select
                             className="rounded-xl border-2"
-                            value={editCondition || ""}
-                            onChange={(e) => setEditCondition(e.target.value)}
+                            value={editCondition}
+                            onChange={(e) => {
+                                setEditCondition(e.target.value)
+                            }}
                         >
                             <option value="">- Select -</option>
                             <option value="Near Mint">Near Mint</option>
@@ -125,8 +138,10 @@ export default function CollectionDetails({ comicID }) {
                             type="number"
                             min="1"
                             max="999"
-                            value={editQuantity || ""}
-                            onChange={(e) => setEditQuantity(e.target.value)}
+                            value={editQuantity}
+                            onChange={(e) => {
+                                setEditQuantity(e.target.value)
+                            }}
                         />
                     </CollectionDetail>
                 </div>
@@ -141,8 +156,10 @@ export default function CollectionDetails({ comicID }) {
                             className="w-28 rounded-xl border-2"
                             type="text"
                             maxLength="10"
-                            value={editPurchasePrice || ""}
-                            onChange={(e) => setEditPurchasePrice(e.target.value)}
+                            value={editPurchasePrice}
+                            onChange={(e) => {
+                                setEditPurchasePrice(e.target.value)
+                            }}
                         />
                     </CollectionDetail>
 
@@ -155,8 +172,10 @@ export default function CollectionDetails({ comicID }) {
                             className="rounded-xl border-2"
                             type="text"
                             maxLength="50"
-                            value={editBoughtAt || ""}
-                            onChange={(e) => setEditBoughtAt(e.target.value)}
+                            value={editBoughtAt}
+                            onChange={(e) => {
+                                setEditBoughtAt(e.target.value)
+                            }}
                         />
                     </CollectionDetail>
                 </div>
@@ -167,10 +186,12 @@ export default function CollectionDetails({ comicID }) {
                 {isEditMode ? (
                     <textarea
                         className="rounded-xl rounded-br-none border-2"
-                        value={editNotes || ""}
+                        value={editNotes}
                         maxLength="2000"
                         rows="3"
-                        onChange={(e) => setEditNotes(e.target.value)}
+                        onChange={(e) => {
+                            setEditNotes(e.target.value)
+                        }}
                     />
                 ) : (
                     <div className={` ${!editNotes && "font-bold text-2xl"}`}>
@@ -182,26 +203,36 @@ export default function CollectionDetails({ comicID }) {
             {isEditMode && (
                 <>
                     <div className="flex justify-end items-end">
-                        <Button
-                            className="self-center mr-4"
-                            onClick={() => {
-                                const dateParts = editDateCollected.split("-")
+                        {showUpdateButton && (
+                            <Button
+                                className="self-center mr-4"
+                                onClick={() => {
+                                    const dateParts =
+                                        editDateCollected && editDateCollected.split("-")
 
-                                updateCollectionFields.mutate({
-                                    dateCollected: format(
-                                        new Date(dateParts[0], dateParts[1] - 1, dateParts[2]),
-                                        "yyyy-MM-dd"
-                                    ),
-                                    purchasePrice: editPurchasePrice,
-                                    boughtAt: editBoughtAt,
-                                    condition: editCondition,
-                                    quantity: editQuantity,
-                                    notes: editNotes,
-                                })
-                            }}
-                        >
-                            Update
-                        </Button>
+                                    collectionDetailsMutation.mutate({
+                                        dateCollected: editDateCollected
+                                            ? format(
+                                                  new Date(
+                                                      dateParts[0],
+                                                      dateParts[1] - 1,
+                                                      dateParts[2]
+                                                  ),
+                                                  "yyyy-MM-dd"
+                                              )
+                                            : "",
+                                        purchasePrice: editPurchasePrice,
+                                        boughtAt: editBoughtAt,
+                                        condition: editCondition,
+                                        quantity: editQuantity,
+                                        notes: editNotes,
+                                    })
+                                }}
+                            >
+                                Update
+                            </Button>
+                        )}
+
                         <Button
                             className="self-center"
                             isSecondary={true}

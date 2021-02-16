@@ -1,7 +1,6 @@
 import { useEffect } from "react"
 import { useRouter } from "next/router"
-
-import { useUser } from "../hooks/magic"
+import { useUser } from "@hooks/magic"
 
 export default function Home() {
     const router = useRouter()
