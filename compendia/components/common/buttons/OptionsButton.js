@@ -30,17 +30,15 @@ export const Options = ({
     options,
     bypassOutsideClick,
     roundedClass = "",
-    xPosition = "left-3/4 transform -translate-x-2/3",
-    yPosition = "top-11",
-    position = "absolute",
+    isSubOptions = false,
 }) => {
     const optionsRef = useOptionsRef(setShowOptions, bypassOutsideClick)
 
     return (
         <div
             ref={optionsRef}
-            className={`bg-gray-500 ml-4 text-white ${roundedClass}
-                ${position} ${xPosition} ${yPosition}
+            className={`bg-gray-500 text-white ${roundedClass}
+                ${isSubOptions === false ? "absolute top-11 transform -translate-x-3/4" : ""}
                 ${!showOptions ? "hidden " : ""}
                 ${showOptions ? "rounded-tl-none" : ""}`}
         >
@@ -50,9 +48,7 @@ export const Options = ({
 }
 Options.propTypes = {
     roundedClass: PropTypes.string,
-    xPosition: PropTypes.string,
-    yPosition: PropTypes.string,
-    position: PropTypes.string,
+    isSubOptions: PropTypes.bool,
     options: PropTypes.element,
     showOptions: PropTypes.bool,
     setShowOptions: PropTypes.func,
@@ -62,9 +58,6 @@ Options.propTypes = {
 export const OptionsToggle = ({
     className,
     roundedClass,
-    xPosition,
-    yPosition,
-    position,
     isDisabled,
     options,
     showOptions,
@@ -72,7 +65,7 @@ export const OptionsToggle = ({
     bypassOutsideClick,
 }) => {
     return (
-        <div className="flex flex-col">
+        <div className="flex flex-col relative">
             <button
                 className={`flex relative w-8 py-2 h-full cursor-pointer shadow-sm border-l-2 border-b-4 hover:border-b-2 hover:border-t-2
                     ${roundedClass} rounded-l-none ${secondaryColors} ${className}`}
@@ -94,9 +87,6 @@ export const OptionsToggle = ({
                 showOptions={showOptions}
                 setShowOptions={setShowOptions}
                 bypassOutsideClick={bypassOutsideClick}
-                xPosition={xPosition}
-                yPosition={yPosition}
-                position={position}
             />
         </div>
     )
@@ -104,9 +94,6 @@ export const OptionsToggle = ({
 OptionsToggle.propTypes = {
     className: PropTypes.string,
     roundedClass: PropTypes.string,
-    xPosition: PropTypes.string,
-    yPosition: PropTypes.string,
-    position: PropTypes.string,
     isDisabled: PropTypes.bool,
     options: PropTypes.element,
     showOptions: PropTypes.bool,
@@ -134,7 +121,7 @@ export function OptionsButton({
 
     if (isActive === true) {
         return (
-            <div className={`flex flex-col relative ${marginClass}`}>
+            <div className={`inline-block w-min ${marginClass ? marginClass : ""}`}>
                 <div className="flex">
                     <button
                         onClick={() => onSecondaryClick.mutate()}

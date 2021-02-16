@@ -168,9 +168,7 @@ function SubscribeOptionsItem({
                 showOptions={showSubOptions}
                 setShowOptions={setShowSubOptions}
                 bypassOutsideClick={true}
-                position=""
-                xPosition=""
-                yPosition=""
+                isSubOptions={true}
             />
         </div>
     )

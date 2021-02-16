@@ -9,8 +9,10 @@ export function Page({ title, children }) {
                 <title>{title}</title>
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-            <Header />
-            <div className="p-8 overflow-x-hidden flex flex-col flex-auto h-full">{children}</div>
+            <div className="flex flex-col justify-start h-screen">
+                <Header />
+                <div className="p-8 overflow-x-hidden flex-grow flex flex-col">{children}</div>
+            </div>
         </>
     )
 }

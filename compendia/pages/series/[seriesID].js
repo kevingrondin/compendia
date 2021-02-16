@@ -29,10 +29,11 @@ export default function SeriesDetail() {
                     <div className="flex flex-col">
                         <span className="text-2xl">Releases of</span>
                         {series.name}
+                        <span className="text-base mt-4">
+                            <SubscribeButton seriesID={series.id} />
+                        </span>
                     </div>
                 </PageHeading>
-
-                <SubscribeButton seriesID={series.id} />
 
                 <SeriesEntriesList entries={entries} />
             </Page>
