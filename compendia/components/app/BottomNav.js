@@ -1,62 +1,45 @@
-const bottomNav = {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    position: "absolute",
-    bottom: "0",
-    width: "100%",
-    backgroundImage: "white",
-    boxShadow: "0px 2px 7px -1px rgba(0, 0, 0, 0.75)",
-}
+import Link from "next/link"
+import { PullListIcon } from "@components/icons/PullList"
+import { SearchIcon } from "@components/icons/Search"
+import { CollectionIcon } from "@components/icons/Collection"
 
-const bottomNavList = {
-    display: "flex",
-    justifyContent: "space-evenly",
-    alignItems: "center",
-}
-
-const bottomNavListItem = {
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
-    listStyle: "none",
-    padding: "0.5rem 1.7rem",
-    fontSize: "0.8rem",
-
-    button: {
-        background: "transparent",
-        border: "none",
+const icons = [
+    {
+        name: "Releases",
+        img: <PullListIcon color="text-blue-primary-400" width="w-8" height="h-8" />,
+        href: "/releases",
     },
-
-    img: {
-        width: "2rem",
+    {
+        name: "Search",
+        img: <SearchIcon color="text-blue-primary-400" width="w-8" height="h-8" />,
+        href: "/search",
     },
-}
+    {
+        name: "Collection",
+        img: <CollectionIcon color="text-blue-primary-400" width="w-8" height="h-8" />,
+        href: "/collection",
+    },
+]
 
 export function BottomNav() {
     return (
-        <nav style={bottomNav}>
-            <ul style={bottomNavList}>
-                <li style={bottomNavListItem}>
-                    <button>
-                        <img src="/releases.svg" alt="Go to releases" />
-                    </button>
-                    Releases
-                </li>
-                <li style={bottomNavListItem}>
-                    <button>
-                        <img src="/search.svg" alt="Go to search" />
-                    </button>
-                    Search
-                </li>
-                <li style={bottomNavListItem}>
-                    <button>
-                        <img src="/collection.svg" alt="Go to collection" />
-                    </button>
-                    Collection
-                </li>
+        <nav className="flex justify-center items-center absolute bottom-0 w-full shadow-sm border-t-2 border-blue-primary-300 bg-gradient-to-r from-blue-primary-200 to-blue-primary-50">
+            <ul className="flex justify-evenly items-center">
+                {icons.map((icon) => {
+                    return (
+                        <li key={icon.name} className="list-none py-2 px-7 text-sm">
+                            <Link href={icon.href} passHref>
+                                <a>{icon.img}</a>
+                            </Link>
+                        </li>
+                    )
+                })}
             </ul>
         </nav>
     )
 }
+
+// ;<button className="bg-transparent border-none flex flex-col justify-center items-center">
+//     <img className="w-8" src={icon.img} alt={`Go to ${icon.name}`} />
+//     {icon.name}
+// </button>

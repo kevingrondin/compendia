@@ -1,5 +1,5 @@
 import PropTypes from "prop-types"
-import { ReleasesIcon } from "@icons/Releases"
+import { AllReleasesIcon } from "@icons/AllReleases"
 import { PullListIcon } from "@icons/PullList"
 
 export function ReleasesTypeTabs({ activeTab, onTabClick }) {
@@ -11,7 +11,12 @@ export function ReleasesTypeTabs({ activeTab, onTabClick }) {
                 }`}
                 onClick={() => onTabClick("pull list")}
             >
-                <PullListIcon isActive={activeTab === "pull list"} />
+                <PullListIcon
+                    color={activeTab === "pull list" ? "text-white" : "text-gray-300"}
+                    width="w-6"
+                    height="h-6"
+                    className="mr-2"
+                />
                 <span>Pull List</span>
             </button>
             <button
@@ -20,7 +25,7 @@ export function ReleasesTypeTabs({ activeTab, onTabClick }) {
                 }`}
                 onClick={() => onTabClick("all releases")}
             >
-                <ReleasesIcon isActive={activeTab === "all releases"} />
+                <AllReleasesIcon isActive={activeTab === "all releases"} />
                 <span>All Releases</span>
             </button>
         </div>
