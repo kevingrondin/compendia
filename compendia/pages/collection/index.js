@@ -10,7 +10,7 @@ export default function Collection() {
         <Page title={`Compendia - Collection`}>
             <Category size="LG">
                 <PageLink
-                    linkText="Collected Comics"
+                    linkText="Collected"
                     href="/"
                     hasUnderline={false}
                     hasArrow={true}
@@ -21,7 +21,7 @@ export default function Collection() {
 
             <Category size="LG" className="mt-8">
                 <PageLink
-                    linkText="Subscribed Series"
+                    linkText="Subscribed"
                     href="/"
                     hasUnderline={false}
                     hasArrow={true}

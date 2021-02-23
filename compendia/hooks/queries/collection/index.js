@@ -44,3 +44,23 @@ export function useLists() {
         { staleTime: 600000 }
     )
 }
+
+export const useListDetail = (listID) =>
+    useQuery(
+        ["list-detail", listID],
+        async () => {
+            const { data } = await axios.get(`/api/collection/lists/${listID}`)
+            return data
+        },
+        { enabled: false, staleTime: Infinity }
+    )
+
+export const useListComics = (listID) =>
+    useQuery(
+        ["list-comics", listID],
+        async () => {
+            const { data } = await axios.get(`/api/collection/lists/${listID}/comics`)
+            return data
+        },
+        { enabled: false, staleTime: Infinity }
+    )

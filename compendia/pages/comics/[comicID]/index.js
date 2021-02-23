@@ -39,7 +39,7 @@ function Title({ comic }) {
                 href={`/series/${comic.seriesID}`}
                 linkText={comic.title}
                 extraContent={comic.itemNumber}
-                className="justify-center"
+                className="justify-center md:justify-start"
             />
         </h2>
     )

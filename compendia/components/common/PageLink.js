@@ -43,7 +43,7 @@ export function PageLink({
                 {hasArrow ? (
                     <ArrowIcon
                         color="text-blue-primary-200"
-                        className="p-1 self-center"
+                        className="p-1 pl-2 self-center"
                         width={arrowWidthClass}
                         height={arrowHeightClass}
                         direction="right"
