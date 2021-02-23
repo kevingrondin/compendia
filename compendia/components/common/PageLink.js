@@ -2,32 +2,50 @@ import PropTypes from "prop-types"
 import Link from "next/link"
 import { ArrowIcon } from "@icons/Arrow"
 
-export function PageLink({ href, linkText, extraContent, hasArrow = false, className }) {
-    let extra = <></>
-    if (typeof extraContent === "string") {
-        extra = ` ${extraContent}`
-    } else if (typeof extraContent === "object") {
-        extra = <div>{extraContent}</div>
-    }
+function useExtraContent(extraContent) {
+    if (typeof extraContent === "string") return ` ${extraContent}`
+    else if (typeof extraContent === "object") return <div>{extraContent}</div>
+    else return <></>
+}
+
+export function PageLink({
+    href,
+    linkText,
+    extraContent,
+    hasArrow = false,
+    arrowWidthClass = "",
+    arrowHeightClass = "",
+    hasUnderline = true,
+    isDarkMode = false,
+    className = "",
+}) {
+    const extra = useExtraContent(extraContent)
 
     return (
         <Link href={href} passHref>
-            <a
-                className={`${typeof extraContent === "string" ? "" : "flex"}
-             ${className ? className : null}`}
-            >
-                <span className="border-b-4 border-gray-300 hover:border-blue-primary-200">
+            <a className={`flex  ${className}`}>
+                <span
+                    className={`${
+                        hasUnderline
+                            ? `border-b-4 ${
+                                  isDarkMode
+                                      ? "border-blue-primary-400 hover:border-white"
+                                      : "border-blue-primary-200 hover:border-blue-primary-300"
+                              }`
+                            : ""
+                    }`}
+                >
                     {linkText}
                 </span>
-                {extraContent ? extra : null}
+
+                {extraContent ? <>&nbsp;{extra}</> : null}
 
                 {hasArrow ? (
                     <ArrowIcon
-                        colorClass="text-blue-primary-200"
-                        className="pl-1"
-                        height="28"
-                        width="35"
-                        viewBox="-8 -12 60 55"
+                        color="text-blue-primary-200"
+                        className="p-1 self-center"
+                        width={arrowWidthClass}
+                        height={arrowHeightClass}
                         direction="right"
                     />
                 ) : null}
@@ -40,5 +58,8 @@ PageLink.propTypes = {
     linkText: PropTypes.string.isRequired,
     extraContent: PropTypes.oneOfType([PropTypes.element, PropTypes.string]),
     hasArrow: PropTypes.bool,
+    arrowWidthClass: PropTypes.string,
+    arrowHeightClass: PropTypes.string,
+    isDarkMode: PropTypes.bool,
     className: PropTypes.string,
 }

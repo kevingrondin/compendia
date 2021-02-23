@@ -67,19 +67,14 @@ export const OptionsToggle = ({
     return (
         <div className="flex flex-col relative">
             <button
-                className={`flex relative w-8 py-2 h-full cursor-pointer shadow-sm border-l-2 border-b-4 hover:border-b-2 hover:border-t-2
+                className={`flex justify-center items-center pr-1 relative w-8 h-full cursor-pointer shadow-sm border-l-2 border-b-4 hover:border-b-2 hover:border-t-2
                     ${roundedClass} rounded-l-none ${secondaryColors} ${className}`}
                 onClick={() => {
                     setShowOptions(!showOptions)
                 }}
                 disabled={isDisabled}
             >
-                <ArrowIcon
-                    direction={showOptions ? "up" : "down"}
-                    colorClass="text-white"
-                    width="100"
-                    viewBox="-10 -20 60 55"
-                />
+                <ArrowIcon direction={showOptions ? "up" : "down"} color="text-white" width="w-5" />
             </button>
             <Options
                 roundedClass={roundedClass}

@@ -7,7 +7,7 @@ export function Lists({ comicID }) {
     const comicListMutation = useToggleComicInList(comicID, lists)
 
     return (
-        <div className="pb-10 pr-10">
+        <div className="pr-10">
             <h2 className="font-bold text-2xl">Lists</h2>
 
             <ul className="flex flex-col">

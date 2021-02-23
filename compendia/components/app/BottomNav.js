@@ -23,13 +23,16 @@ const icons = [
 
 export function BottomNav() {
     return (
-        <nav className="flex justify-center items-center absolute bottom-0 w-full shadow-sm border-t-2 border-blue-primary-300 bg-gradient-to-r from-blue-primary-200 to-blue-primary-50">
+        <nav className="sm:hidden flex justify-center items-center absolute bottom-0 w-full shadow-sm border-t-2 border-blue-primary-300 bg-gradient-to-r from-blue-primary-200 to-blue-primary-50">
             <ul className="flex justify-evenly items-center">
                 {icons.map((icon) => {
                     return (
                         <li key={icon.name} className="list-none py-2 px-7 text-sm">
                             <Link href={icon.href} passHref>
-                                <a>{icon.img}</a>
+                                <div className="flex flex-col justify-center items-center cursor-pointer">
+                                    <a>{icon.img}</a>
+                                    <span>{icon.name}</span>
+                                </div>
                             </Link>
                         </li>
                     )
@@ -38,8 +41,3 @@ export function BottomNav() {
         </nav>
     )
 }
-
-// ;<button className="bg-transparent border-none flex flex-col justify-center items-center">
-//     <img className="w-8" src={icon.img} alt={`Go to ${icon.name}`} />
-//     {icon.name}
-// </button>

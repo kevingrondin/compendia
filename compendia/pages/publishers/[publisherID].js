@@ -27,12 +27,11 @@ export default function PublisherDetail() {
     else {
         return (
             <Page title={`${publisher.name}`}>
-                <PageHeading>
-                    <div className="flex flex-col">
-                        <span className="text-2xl">Published by</span>
-                        {publisher.name}
-                    </div>
-                </PageHeading>
+                <PageHeading
+                    subHeading="Published by"
+                    heading={publisher.name}
+                    isSubHeadingFirst={true}
+                />
 
                 <Category size="LG">Recent Comics</Category>
                 <PublisherComicsList comicsList={comicsList} />

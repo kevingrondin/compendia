@@ -1,26 +1,18 @@
 import PropTypes from "prop-types"
 
-export function AllReleasesIcon({ isActive }) {
+export function AllReleasesIcon({ color, width, height, className }) {
     return (
-        <svg width="24px" height="24px" viewBox="0 0 24 24">
-            <g id="Symbols" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
-                <g id="amp_stories-24px">
-                    <rect id="Rectangle" x="0" y="0" width="24" height="24"></rect>
-                    <g
-                        id="Group"
-                        transform="translate(3.000000, 4.000000)"
-                        fill={isActive ? "#FFFFFF" : "#6B7280"}
-                        fillRule="nonzero"
-                    >
-                        <rect id="Rectangle" x="4" y="0" width="10" height="15"></rect>
-                        <rect id="Rectangle" x="0" y="2" width="2" height="11"></rect>
-                        <rect id="Rectangle" x="16" y="2" width="2" height="11"></rect>
-                    </g>
-                </g>
-            </g>
+        <svg
+            className={`fill-current ${color} ${width} ${height} ${className}`}
+            viewBox="0 0 24 24"
+        >
+            <path d="M7 4h10v15H7zM3 6h2v11H3zM19 6h2v11h-2z" />
         </svg>
     )
 }
 AllReleasesIcon.propTypes = {
-    isActive: PropTypes.bool,
+    color: PropTypes.string,
+    width: PropTypes.string,
+    height: PropTypes.string,
+    className: PropTypes.string,
 }

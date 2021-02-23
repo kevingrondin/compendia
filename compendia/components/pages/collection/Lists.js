@@ -1,5 +1,6 @@
 import { PageLink } from "@components/common/PageLink"
 import { useLists } from "@hooks/queries/collection"
+import { usePluralize } from "@hooks/usePluralize"
 
 export function Lists() {
     const { isLoading, isError, error, data: lists } = useLists()
@@ -8,16 +9,22 @@ export function Lists() {
     else if (isError) return <div>Error: {`${error && error.message}`}</div>
     else {
         return (
-            <div className="flex">
+            <div className="flex flex-col">
                 {lists && lists.length > 0 ? (
                     lists.map((list) => (
                         <li key={list.id} className="list-none">
-                            <div className="text-blue-primary-200 text-md flex mr-4">
+                            <div className="flex items-center text-blue-primary-200 text-md mr-4">
                                 <PageLink
                                     href={`/collection/lists/${list.id}`}
-                                    linkText={list.name}
-                                    hasArrow={true}
+                                    linkText={`${list.name} `}
                                 />
+                                <span className="text-sm">
+                                    &nbsp;
+                                    {`- ${list.numComics ? list.numComics : 0} ${usePluralize(
+                                        "comic",
+                                        list.numComics
+                                    )} `}
+                                </span>
                             </div>
                         </li>
                     ))

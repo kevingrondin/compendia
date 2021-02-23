@@ -13,11 +13,7 @@ export function SubscribedSeriesList() {
                     data.subscribedSeriesList.map((series) => (
                         <li key={series.id} className="list-none">
                             <div className="text-blue-primary-200 text-md flex mr-4">
-                                <PageLink
-                                    href={`/series/${series.id}`}
-                                    linkText={series.name}
-                                    hasArrow={true}
-                                />
+                                <PageLink href={`/series/${series.id}`} linkText={series.name} />
                             </div>
                         </li>
                     ))

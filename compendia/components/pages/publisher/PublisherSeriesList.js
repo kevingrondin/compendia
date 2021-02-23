@@ -3,19 +3,17 @@ import { PageLink } from "@components/common/PageLink"
 
 export function PublisherSeriesList({ seriesList }) {
     return (
-        <div className="flex">
+        <div className="flex mb-20">
             {seriesList && seriesList.length > 0 ? (
-                seriesList.map((series) => (
-                    <li key={series.id} className="list-none">
-                        <div className="text-blue-primary-200 text-md flex mr-4">
-                            <PageLink
-                                href={`/series/${series.id}`}
-                                linkText={series.name}
-                                hasArrow={true}
-                            />
-                        </div>
-                    </li>
-                ))
+                <ul>
+                    {seriesList.map((series) => (
+                        <li key={series.id} className="list-none pb-4">
+                            <div className="text-blue-primary-200 text-md flex mr-4">
+                                <PageLink href={`/series/${series.id}`} linkText={series.name} />
+                            </div>
+                        </li>
+                    ))}
+                </ul>
             ) : (
                 <p className="text-center text-xl mt-12 mb-20">No series by this publisher...</p>
             )}

@@ -13,17 +13,17 @@ export default function Releases() {
 
     return (
         <Page title="Compendia - Releases">
-            <ReleasesHeading comicDay={comicDay} />
+            <ReleasesHeading comicDay={comicDay}>
+                <menu className="flex flex-wrap-reverse justify-center items-center p-0 mt-2 sm:flex-nowrap md:justify-start">
+                    <ReleasesTypeTabs onTabClick={setActiveTab} activeTab={activeTab} />
 
-            <menu className="flex flex-wrap-reverse justify-center items-center p-0 sm:flex-nowrap md:justify-start">
-                <ReleasesTypeTabs onTabClick={setActiveTab} activeTab={activeTab} />
-
-                <ReleaseDaySelector
-                    getNextComicDay={() => setComicDay(useComicDay("next", comicDay))}
-                    getPrevComicDay={() => setComicDay(useComicDay("prev", comicDay))}
-                    comicDay={comicDay}
-                />
-            </menu>
+                    <ReleaseDaySelector
+                        getNextComicDay={() => setComicDay(useComicDay("next", comicDay))}
+                        getPrevComicDay={() => setComicDay(useComicDay("prev", comicDay))}
+                        comicDay={comicDay}
+                    />
+                </menu>
+            </ReleasesHeading>
 
             {activeTab === "pull list" ? (
                 <PullListReleases comicDay={comicDay} />

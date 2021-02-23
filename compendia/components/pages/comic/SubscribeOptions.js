@@ -34,16 +34,8 @@ const variants = [
         label: "Retailer Exclusives",
     },
     {
-        key: "includeDRSVariants",
-        label: "Diamond Retailer Summit Variants",
-    },
-    {
         key: "includeStoreVariants",
         label: "Store Variants",
-    },
-    {
-        key: "includeRRPVariants",
-        label: "Retailer Roundtable Program Variants",
     },
 ]
 
@@ -149,16 +141,15 @@ function SubscribeOptionsItem({
                 {label}
                 {subOptions ? (
                     <button
-                        className={`flex relative w-8 ml-2 cursor-pointer`}
+                        className={`flex relative w-8 ml-2 cursor-pointer focus:outline-none`}
                         onClick={() => {
                             setShowSubOptions(!showSubOptions)
                         }}
                     >
                         <ArrowIcon
                             direction={showSubOptions ? "up" : "down"}
-                            colorClass="text-white"
-                            width="100"
-                            viewBox="-10 -20 60 55"
+                            color="text-white"
+                            height="h-2"
                         />
                     </button>
                 ) : null}

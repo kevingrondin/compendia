@@ -2,7 +2,6 @@ import PropTypes from "prop-types"
 import { format } from "date-fns"
 import { useComicDay } from "@hooks/useComicDay"
 import { PageHeading } from "@components/common/PageHeading"
-
 const comicDaysMatch = (date1, date2) =>
     date1.getFullYear() === date2.getFullYear() &&
     date1.getMonth() === date2.getMonth() &&
@@ -24,9 +23,15 @@ function getHeadingText(comicDay) {
     return headingText
 }
 
-export function ReleasesHeading({ comicDay }) {
-    return <PageHeading>Here's {getHeadingText(comicDay)} comics.</PageHeading>
+export function ReleasesHeading({ comicDay, children: releasesControls }) {
+    return (
+        <PageHeading
+            heading={`Here's ${getHeadingText(comicDay)} comics.`}
+            controls={releasesControls}
+        />
+    )
 }
 ReleasesHeading.propTypes = {
     comicDay: PropTypes.instanceOf(Date).isRequired,
+    children: PropTypes.element,
 }

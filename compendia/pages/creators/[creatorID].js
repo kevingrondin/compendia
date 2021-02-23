@@ -56,29 +56,28 @@ export default function CreatorDetail() {
     else {
         return (
             <Page title={`Creator - ${creator.name}`}>
-                <PageHeading>
-                    <div className="flex flex-col">
-                        <span className="text-2xl">Comics by</span>
-                        {creator.name}
-                    </div>
-                </PageHeading>
-
-                <div className="flex justify-end mb-8 -mt-3">
-                    <SVGOptionsButton
-                        options={
-                            <FilterOptions
-                                creatorID={creatorID}
-                                filterTypes={filterTypes}
-                                setFilterTypes={setFilterTypes}
-                                setShowFilterOptions={setShowFilterOptions}
-                            />
-                        }
-                        showOptions={showFilterOptions}
-                        setShowOptions={setShowFilterOptions}
-                    >
-                        <FilterIcon />
-                    </SVGOptionsButton>
-                </div>
+                <PageHeading
+                    subHeading="Comics by"
+                    heading={creator.name}
+                    isSubHeadingFirst={true}
+                    controls={
+                        <SVGOptionsButton
+                            options={
+                                <FilterOptions
+                                    creatorID={creatorID}
+                                    filterTypes={filterTypes}
+                                    setFilterTypes={setFilterTypes}
+                                    setShowFilterOptions={setShowFilterOptions}
+                                />
+                            }
+                            showOptions={showFilterOptions}
+                            setShowOptions={setShowFilterOptions}
+                        >
+                            <FilterIcon />
+                        </SVGOptionsButton>
+                    }
+                    justifyControls="justify-end"
+                />
 
                 <CreatorComicsList comics={comics} creatorID={creatorID} />
             </Page>

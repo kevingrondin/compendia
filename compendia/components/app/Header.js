@@ -3,6 +3,28 @@ import { useEffect } from "react"
 import { useRouter } from "next/router"
 import { useUser } from "@hooks/magic"
 import { SettingsIcon } from "@icons/Settings"
+import { PullListIcon } from "@components/icons/PullList"
+import { SearchIcon } from "@components/icons/Search"
+import { CollectionIcon } from "@components/icons/Collection"
+import { PageLink } from "@components/common/PageLink"
+
+const icons = [
+    {
+        name: "Releases",
+        img: <PullListIcon color="text-blue-primary-400" width="w-8" height="h-8" />,
+        href: "/releases",
+    },
+    {
+        name: "Search",
+        img: <SearchIcon color="text-blue-primary-400" width="w-8" height="h-8" />,
+        href: "/search",
+    },
+    {
+        name: "Collection",
+        img: <CollectionIcon color="text-blue-primary-400" width="w-8" height="h-8" />,
+        href: "/collection",
+    },
+]
 
 export function Header() {
     const router = useRouter()
@@ -19,14 +41,34 @@ export function Header() {
                     <img src="/CompendiaLogo.svg" alt="Compendia Logo" className="w-12" />
                 </a>
             </Link>
+            <div className="flex">
+                <nav className="hidden sm:flex justify-center items-center">
+                    <ul className="flex justify-evenly items-center">
+                        {icons.map((icon) => {
+                            return (
+                                <li
+                                    key={icon.name}
+                                    className="list-none py-2 px-7 text-blue-primary-400"
+                                >
+                                    <PageLink
+                                        href={icon.href}
+                                        linkText={icon.name}
+                                        isDarkMode={true}
+                                    />
+                                </li>
+                            )
+                        })}
+                    </ul>
+                </nav>
 
-            {user && (
-                <Link href="/settings" passHref>
-                    <a>
-                        <SettingsIcon />
-                    </a>
-                </Link>
-            )}
+                {user && (
+                    <Link href="/settings" passHref>
+                        <a>
+                            <SettingsIcon />
+                        </a>
+                    </Link>
+                )}
+            </div>
         </header>
     )
 }

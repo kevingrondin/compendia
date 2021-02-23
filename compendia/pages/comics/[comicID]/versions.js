@@ -24,12 +24,11 @@ export default function ComicVersions() {
     else {
         return (
             <Page title={`Versions of - ${comic.title} ${comic.itemNumber}`}>
-                <PageHeading>
-                    <div className="flex flex-col">
-                        <span className="text-2xl">Other Versions of</span>
-                        {`${comic.title} ${comic.itemNumber}`}
-                    </div>
-                </PageHeading>
+                <PageHeading
+                    subHeading="Other Versions of"
+                    heading={`${comic.title} ${comic.itemNumber}`}
+                    isSubHeadingFirst={true}
+                />
 
                 <ComicVersionsList comics={versions} />
             </Page>

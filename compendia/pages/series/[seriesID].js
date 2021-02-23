@@ -25,15 +25,16 @@ export default function SeriesDetail() {
     else {
         return (
             <Page title={`${series.name} - Series`}>
-                <PageHeading>
-                    <div className="flex flex-col">
-                        <span className="text-2xl">Releases of</span>
-                        {series.name}
+                <PageHeading
+                    subHeading="Releases of"
+                    heading={series.name}
+                    isSubHeadingFirst={true}
+                    controls={
                         <span className="text-base mt-4">
                             <SubscribeButton seriesID={series.id} />
                         </span>
-                    </div>
-                </PageHeading>
+                    }
+                />
 
                 <SeriesEntriesList entries={entries} />
             </Page>

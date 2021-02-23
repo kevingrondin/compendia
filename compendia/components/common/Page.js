@@ -11,7 +11,7 @@ export function Page({ title, children }) {
             </Head>
             <div className="flex flex-col justify-start h-screen">
                 <Header />
-                <div className="p-8 overflow-x-hidden flex-grow flex flex-col">{children}</div>
+                <div className="p-6 overflow-x-hidden flex-grow flex flex-col">{children}</div>
             </div>
         </>
     )
