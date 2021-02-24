@@ -8,6 +8,7 @@ import { FilterOptions } from "@components/pages/creator/FilterOptions"
 import { FilterIcon } from "@icons/Filter"
 import { SVGOptionsButton } from "@components/common/buttons/OptionsButton"
 import { useCreatorComics, useCreatorDetail } from "@hooks/queries/creator"
+import { DisappearedLoading } from "react-loadingg"
 
 export default function CreatorDetail() {
     const queryClient = useQueryClient()
@@ -44,7 +45,7 @@ export default function CreatorDetail() {
         queryClient.refetchQueries(["creator-comics", parseInt(creatorID), filterTypes.join("/")])
     }, [filterTypes])
 
-    if (creatorIsLoading || comicsIsLoading) return <div>Loading...</div>
+    if (creatorIsLoading || comicsIsLoading) return <DisappearedLoading />
     else if (creatorIsError || comicsIsError)
         return (
             <div>

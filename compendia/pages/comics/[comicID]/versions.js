@@ -5,6 +5,7 @@ import { Page } from "@components/common/Page"
 import { PageHeading } from "@components/common/PageHeading"
 import { ComicVersionsList } from "@components/pages/comic/ComicVersionsList"
 import { useComicVersions } from "@hooks/queries/comic"
+import { DisappearedLoading } from "react-loadingg"
 
 export default function ComicVersions() {
     const queryClient = useQueryClient()
@@ -18,7 +19,7 @@ export default function ComicVersions() {
         if (comicID) queryClient.refetchQueries(["comic-versions", parseInt(comicID)])
     }, [comicID])
 
-    if (isLoading) return <div>Loading...</div>
+    if (isLoading) return <DisappearedLoading />
     else if (isError) return <div>Error: {`${error && error.message}`}</div>
     else if (!comicID || versions === undefined) return <></>
     else {

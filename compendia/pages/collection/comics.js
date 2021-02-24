@@ -2,12 +2,13 @@ import { Page } from "@components/common/Page"
 import { PageHeading } from "@components/common/PageHeading"
 import { useCollectedComics } from "@hooks/queries/collection"
 import { CollectedComicsList } from "@components/pages/collection/CollectedComicsList"
+import { DisappearedLoading } from "react-loadingg"
 
 export default function CollectedComics() {
     const { isLoading, isError, error, data } = useCollectedComics()
     const collectedComics = data && data.collectedComics ? data.collectedComics : []
 
-    if (isLoading) return <div>Loading...</div>
+    if (isLoading) return <DisappearedLoading />
     else if (isError) return <div>Error: {`${error && error.message}`}</div>
     else if (collectedComics === undefined) return <></>
     else {

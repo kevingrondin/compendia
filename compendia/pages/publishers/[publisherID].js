@@ -7,6 +7,7 @@ import { PublisherSeriesList } from "@components/pages/publisher/PublisherSeries
 import { PublisherComicsList } from "@components/pages/publisher/PublisherComicsList"
 import { usePublisher } from "@hooks/queries/publisher"
 import { Category } from "@components/common/Category"
+import { DisappearedLoading } from "react-loadingg"
 
 export default function PublisherDetail() {
     const queryClient = useQueryClient()
@@ -21,7 +22,7 @@ export default function PublisherDetail() {
         if (publisherID) queryClient.refetchQueries(["publisher-detail", parseInt(publisherID)])
     }, [publisherID])
 
-    if (isLoading) return <div>Loading...</div>
+    if (isLoading) return <DisappearedLoading />
     else if (isError) return <div>Error: {`${error && error.message}`}</div>
     else if (!publisherID || seriesList === undefined || comicsList === undefined) return <></>
     else {

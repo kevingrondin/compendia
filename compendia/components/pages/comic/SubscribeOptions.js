@@ -7,6 +7,7 @@ import { ArrowIcon } from "@icons/Arrow"
 import { Options } from "@components/common/buttons/OptionsButton"
 import { usePullListSeries } from "@hooks/queries/pull-list"
 import { useUpdatePullListDetails } from "@hooks/mutations/pull-list"
+import { DisappearedLoading } from "react-loadingg"
 
 const variants = [
     {
@@ -253,7 +254,7 @@ export function SubscribeOptions({ seriesID, isOptionsVisible }) {
             : setShowUpdateButton(true)
     }, [subscribeOptions])
 
-    if (isLoading) return <div>Loading...</div>
+    if (isLoading) return <DisappearedLoading />
     else if (isError) return <div>Error: {error.message}</div>
     else if (!data) return <></>
     else

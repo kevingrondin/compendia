@@ -1,11 +1,12 @@
 import { ComicCover } from "@components/pages/comic/ComicCover"
 import { CoverListGrid } from "@components/common/CoverListGrid"
 import { useCollectedComics } from "@hooks/queries/collection"
+import { DisappearedLoading } from "react-loadingg"
 
 export function CollectedComicsList() {
     const { isLoading, isError, error, data } = useCollectedComics()
 
-    if (isLoading) return <div>Loading...</div>
+    if (isLoading) return <DisappearedLoading />
     else if (isError) return <div>Error: {`${error && error.message}`}</div>
     else {
         return (

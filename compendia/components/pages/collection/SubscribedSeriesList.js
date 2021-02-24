@@ -1,10 +1,11 @@
 import { PageLink } from "@components/common/PageLink"
 import { useSubscribedSeries } from "@hooks/queries/collection"
+import { DisappearedLoading } from "react-loadingg"
 
 export function SubscribedSeriesList() {
     const { isLoading, isError, error, data } = useSubscribedSeries()
 
-    if (isLoading) return <div>Loading...</div>
+    if (isLoading) return <DisappearedLoading />
     else if (isError) return <div>Error: {`${error && error.message}`}</div>
     else {
         return (

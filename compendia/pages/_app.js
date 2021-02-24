@@ -10,7 +10,7 @@ export default function App({ Component, pageProps }) {
         <QueryClientProvider client={queryClient}>
             <Component {...pageProps} />
             <BottomNav />
-            <ReactQueryDevtools initialIsOpen />
+            {/* <ReactQueryDevtools initialIsOpen /> */}
         </QueryClientProvider>
     )
 }

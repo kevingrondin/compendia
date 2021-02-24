@@ -4,6 +4,7 @@ import { OptionsButton } from "@components/common/buttons/OptionsButton"
 import { SubscribeOptions } from "@components/pages/comic/SubscribeOptions"
 import { usePullListSeries } from "@hooks/queries/pull-list"
 import { useSubscribeToSeries, useUnsubscribeFromSeries } from "@hooks/mutations/pull-list"
+import { DisappearedLoading } from "react-loadingg"
 
 export function SubscribeButton({ seriesID, comicID, marginClass }) {
     const { isLoading, isError, error, data } = usePullListSeries(seriesID)
@@ -11,7 +12,7 @@ export function SubscribeButton({ seriesID, comicID, marginClass }) {
     const subscribeMutation = useSubscribeToSeries(seriesID, comicID ? comicID : null)
     const unubscribeMutation = useUnsubscribeFromSeries(seriesID, comicID ? comicID : null)
 
-    if (isLoading) return <div>Loading...</div>
+    if (isLoading) return <DisappearedLoading />
     else if (isError) return <div>Error: {error.message}</div>
     else
         return (

@@ -16,6 +16,7 @@ import { ComicDetails } from "@components/pages/comic/ComicDetails"
 import { Lists } from "@components/pages/comic/Lists"
 import { useComic } from "@hooks/queries/comic"
 import { usePluralize } from "@hooks/usePluralize"
+import { DisappearedLoading } from "react-loadingg"
 
 function Cover({ comic, onClick }) {
     return (
@@ -176,7 +177,7 @@ export default function Comic() {
         if (comicID) queryClient.refetchQueries(["comic-detail", parseInt(comicID)])
     }, [comicID])
 
-    if (isLoading) return <div>Loading...</div>
+    if (isLoading) return <DisappearedLoading />
     else if (isError) return <div>Error: {error.message}</div>
     else if (!comicID || comic === undefined) return <></>
     else {

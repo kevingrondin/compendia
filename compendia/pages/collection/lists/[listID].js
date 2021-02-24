@@ -6,6 +6,7 @@ import { PageHeading } from "@components/common/PageHeading"
 import { CoverListGrid } from "@components/common/CoverListGrid"
 import { ComicCover } from "@components/pages/comic/ComicCover"
 import { useListComics, useListDetail } from "@hooks/queries/collection"
+import { DisappearedLoading } from "react-loadingg"
 
 function ListComics({ comics }) {
     return (
@@ -59,7 +60,7 @@ export default function CreatorDetail() {
         }
     }, [listID])
 
-    if (listIsLoading || comicsIsLoading) return <div>Loading...</div>
+    if (listIsLoading || comicsIsLoading) return <DisappearedLoading />
     else if (listIsError || comicsIsError)
         return (
             <div>

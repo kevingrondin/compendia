@@ -3,11 +3,12 @@ import { ComicCover } from "@components/pages/comic/ComicCover"
 import { Category } from "@components/common/Category"
 import { useAllReleases } from "@hooks/queries/releases"
 import { CoverListGrid } from "@components/common/CoverListGrid"
+import { DisappearedLoading } from "react-loadingg"
 
 export function AllReleases({ comicDay }) {
     const { isLoading, isError, error, data: releasesByPublisher } = useAllReleases(comicDay)
 
-    if (isLoading) return <div>Loading...</div>
+    if (isLoading) return <DisappearedLoading />
     else if (isError) return <div>Error: {error.message}</div>
     else if (releasesByPublisher && releasesByPublisher.length > 0)
         return (

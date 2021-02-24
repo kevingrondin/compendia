@@ -6,6 +6,7 @@ import { PageHeading } from "@components/common/PageHeading"
 import { SeriesEntriesList } from "@components/pages/series/SeriesEntriesList"
 import { useSeries } from "@hooks/queries/series"
 import { SubscribeButton } from "@components/pages/comic/SubscribeButton"
+import { DisappearedLoading } from "react-loadingg"
 
 export default function SeriesDetail() {
     const queryClient = useQueryClient()
@@ -19,7 +20,7 @@ export default function SeriesDetail() {
         if (seriesID) queryClient.refetchQueries(["series-detail", parseInt(seriesID)])
     }, [seriesID])
 
-    if (isLoading) return <div>Loading...</div>
+    if (isLoading) return <DisappearedLoading />
     else if (isError) return <div>Error: {`${error && error.message}`}</div>
     else if (!seriesID || entries === undefined) return <></>
     else {
