@@ -31,7 +31,7 @@ export function BottomNav() {
                             <Link href={icon.href} passHref>
                                 <div className="flex flex-col justify-center items-center cursor-pointer">
                                     <a>{icon.img}</a>
-                                    <span>{icon.name}</span>
+                                    <span className="text-blue-primary-400">{icon.name}</span>
                                 </div>
                             </Link>
                         </li>

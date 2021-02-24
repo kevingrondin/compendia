@@ -8,7 +8,6 @@ async function getLists(client, userID) {
     const params = [userID]
     const result = await client.query(query, params)
 
-    console.log(result.rows)
     return result.rows
 }
 

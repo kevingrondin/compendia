@@ -10,8 +10,8 @@ export default function Collection() {
         <Page title={`Compendia - Collection`}>
             <Category size="LG">
                 <PageLink
-                    linkText="Collected"
-                    href="/"
+                    linkText="Collected Comics"
+                    href="/collection/comics"
                     hasUnderline={false}
                     hasArrow={true}
                     arrowHeightClass="h-7"
@@ -21,8 +21,8 @@ export default function Collection() {
 
             <Category size="LG" className="mt-8">
                 <PageLink
-                    linkText="Subscribed"
-                    href="/"
+                    linkText="Subscribed Series"
+                    href="/collection/subscriptions"
                     hasUnderline={false}
                     hasArrow={true}
                     arrowHeightClass="h-7"
@@ -31,13 +31,7 @@ export default function Collection() {
             <SubscribedSeriesList />
 
             <Category size="LG" className="mt-8">
-                <PageLink
-                    linkText="Lists"
-                    href="/"
-                    hasUnderline={false}
-                    hasArrow={true}
-                    arrowHeightClass="h-7"
-                />
+                Your Lists
             </Category>
             <Lists />
         </Page>

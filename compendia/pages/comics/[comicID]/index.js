@@ -201,7 +201,7 @@ export default function Comic() {
                         </article>
                     </div>
 
-                    <div className="max-w-2xl m-auto">
+                    <div className="max-w-3xl m-auto">
                         <Divider>
                             <ComicCreators creators={comic.creators} />
                         </Divider>

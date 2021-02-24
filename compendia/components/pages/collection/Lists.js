@@ -12,7 +12,7 @@ export function Lists() {
             <div className="flex flex-col">
                 {lists && lists.length > 0 ? (
                     lists.map((list) => (
-                        <li key={list.id} className="list-none">
+                        <li key={list.id} className="list-none mb-3">
                             <div className="flex items-center text-blue-primary-200 text-md mr-4">
                                 <PageLink
                                     href={`/collection/lists/${list.id}`}

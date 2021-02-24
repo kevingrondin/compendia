@@ -30,7 +30,7 @@ export function PageLink({
                             ? `border-b-4 ${
                                   isDarkMode
                                       ? "border-blue-primary-400 hover:border-white"
-                                      : "border-blue-primary-200 hover:border-blue-primary-300"
+                                      : "border-blue-primary-100 hover:border-blue-primary-300"
                               }`
                             : ""
                     }`}
