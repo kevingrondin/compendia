@@ -154,12 +154,14 @@ FullCoverModal.propTypes = {
 }
 
 function Divider({ children }) {
-    return (
-        <>
-            <hr />
-            <div className="my-8">{children}</div>
-        </>
-    )
+    if (children)
+        return (
+            <>
+                <hr />
+                <div className="my-8">{children}</div>
+            </>
+        )
+    else return <></>
 }
 Divider.propTypes = {
     children: PropTypes.element.isRequired,

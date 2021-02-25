@@ -1,4 +1,4 @@
-const db = require("../../util/database").instance
+const db = require("../../../util/database").instance
 
 async function getReleases(client, comicDay) {
     const query = `SELECT comic_id, title, item_number, cover, p.publisher_id, p.name as publisher_name
