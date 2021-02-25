@@ -17,6 +17,7 @@ import { Lists } from "@components/pages/comic/Lists"
 import { useComic } from "@hooks/queries/comic"
 import { usePluralize } from "@hooks/usePluralize"
 import { DisappearedLoading } from "react-loadingg"
+import { EmptyResultsMessage } from "@components/common/EmptyResultsMessage"
 
 function Cover({ comic, onClick }) {
     return (
@@ -123,7 +124,7 @@ function Description({ comic }) {
             {comic.description ? (
                 <p className="my-8 max-w-md m-auto md:mx-0">{comic.description}</p>
             ) : (
-                <p className="mt-8 text-gray-600 text-xl">No Description...</p>
+                <EmptyResultsMessage>No Description...</EmptyResultsMessage>
             )}
         </>
     )

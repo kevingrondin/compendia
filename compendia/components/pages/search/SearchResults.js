@@ -1,3 +1,4 @@
+import { EmptyResultsMessage } from "@components/common/EmptyResultsMessage"
 import PropTypes from "prop-types"
 import { DisappearedLoading } from "react-loadingg"
 import { ComicSearchResults } from "./ComicSearchResults"
@@ -19,7 +20,7 @@ function hasNoResults(results) {
 export function SearchResults({ results, isLoading }) {
     if (isLoading) return <DisappearedLoading />
     else if (!results || hasNoResults(results))
-        return <p className="text-gray-600 text-center mt-20">No results...</p>
+        return <EmptyResultsMessage>No results...</EmptyResultsMessage>
     else
         return (
             <div className="grid grid-cols-1 gap-10 mt-4">

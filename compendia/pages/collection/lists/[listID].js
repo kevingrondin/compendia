@@ -7,6 +7,7 @@ import { CoverListGrid } from "@components/common/CoverListGrid"
 import { ComicCover } from "@components/pages/comic/ComicCover"
 import { useListComics, useListDetail } from "@hooks/queries/collection"
 import { DisappearedLoading } from "react-loadingg"
+import { EmptyResultsMessage } from "@components/common/EmptyResultsMessage"
 
 function ListComics({ comics }) {
     return (
@@ -26,7 +27,7 @@ function ListComics({ comics }) {
                     </CoverListGrid>
                 </div>
             ) : (
-                <p className="text-center text-xl mt-12 mb-20">No comics in this list...</p>
+                <EmptyResultsMessage>No comics in this list...</EmptyResultsMessage>
             )}
         </>
     )
