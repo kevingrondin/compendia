@@ -2,6 +2,7 @@ import PropTypes from "prop-types"
 import { ComicCover } from "@components/pages/comic/ComicCover"
 import { Category } from "@components/common/Category"
 import { CoverListGrid } from "@components/common/CoverListGrid"
+import { EmptyResultsMessage } from "@components/common/EmptyResultsMessage"
 
 export function CreatorComicsList({ comics, creatorID }) {
     return (
@@ -38,7 +39,7 @@ export function CreatorComicsList({ comics, creatorID }) {
                     </CoverListGrid>
                 </div>
             ) : (
-                <p className="text-center text-xl mt-12 mb-20">No comics...</p>
+                <EmptyResultsMessage>No comics by this creator...</EmptyResultsMessage>
             )}
         </>
     )

@@ -6,9 +6,20 @@ import { ImprintSearchResults } from "./ImprintSearchResults"
 import { PublisherSearchResults } from "./PublisherSearchResults"
 import { SeriesSearchResults } from "./SeriesSearchResults"
 
+function hasNoResults(results) {
+    return (
+        results.comics.length < 1 &&
+        results.series.length < 1 &&
+        results.publishers.length < 1 &&
+        results.imprints.length < 1 &&
+        results.creators.length < 1
+    )
+}
+
 export function SearchResults({ results, isLoading }) {
     if (isLoading) return <DisappearedLoading />
-    else if (!results) return <></>
+    else if (!results || hasNoResults(results))
+        return <p className="text-gray-600 text-center mt-20">No results...</p>
     else
         return (
             <div className="grid grid-cols-1 gap-10 mt-4">

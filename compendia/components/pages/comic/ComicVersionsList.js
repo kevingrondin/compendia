@@ -2,6 +2,7 @@ import PropTypes from "prop-types"
 import { ComicCover } from "@components/pages/comic/ComicCover"
 import { Category } from "@components/common/Category"
 import { CoverListGrid } from "@components/common/CoverListGrid"
+import { EmptyResultsMessage } from "@components/common/EmptyResultsMessage"
 
 export function ComicVersionsList({ comics }) {
     return (
@@ -26,7 +27,7 @@ export function ComicVersionsList({ comics }) {
                     ))}
                 </CoverListGrid>
             ) : (
-                <p className="text-center text-xl mt-12 mb-20">No other versions...</p>
+                <EmptyResultsMessage>No other versions of this comic...</EmptyResultsMessage>
             )}
         </>
     )

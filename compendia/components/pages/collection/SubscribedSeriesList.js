@@ -1,3 +1,4 @@
+import { EmptyResultsMessage } from "@components/common/EmptyResultsMessage"
 import { PageLink } from "@components/common/PageLink"
 import { useSubscribedSeries } from "@hooks/queries/collection"
 import { DisappearedLoading } from "react-loadingg"
@@ -19,7 +20,7 @@ export function SubscribedSeriesList() {
                         </li>
                     ))
                 ) : (
-                    <p className="text-center text-xl mt-12 mb-20">No subscribed series...</p>
+                    <EmptyResultsMessage>No subscribed series...</EmptyResultsMessage>
                 )}
             </div>
         )

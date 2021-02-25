@@ -3,6 +3,7 @@ import { ComicCover } from "@components/pages/comic/ComicCover"
 import { usePullList } from "@hooks/queries/pull-list"
 import { CoverListGrid } from "@components/common/CoverListGrid"
 import { DisappearedLoading } from "react-loadingg"
+import { EmptyResultsMessage } from "@components/common/EmptyResultsMessage"
 
 export function PullListReleases({ comicDay }) {
     const { isLoading, isError, error, data: comics } = usePullList(comicDay)
@@ -23,7 +24,7 @@ export function PullListReleases({ comicDay }) {
                 ))}
             </CoverListGrid>
         )
-    else return <p>Your Pull List is empty this week...</p>
+    else return <EmptyResultsMessage>Your Pull List is empty this week...</EmptyResultsMessage>
 }
 PullListReleases.propTypes = {
     comicDay: PropTypes.instanceOf(Date).isRequired,

@@ -1,5 +1,6 @@
 import PropTypes from "prop-types"
 import { PageLink } from "@components/common/PageLink"
+import { EmptyResultsMessage } from "@components/common/EmptyResultsMessage"
 
 export function PublisherSeriesList({ seriesList }) {
     return (
@@ -15,7 +16,7 @@ export function PublisherSeriesList({ seriesList }) {
                     ))}
                 </ul>
             ) : (
-                <p className="text-center text-xl mt-12 mb-20">No series by this publisher...</p>
+                <EmptyResultsMessage>No series by this publisher...</EmptyResultsMessage>
             )}
         </div>
     )

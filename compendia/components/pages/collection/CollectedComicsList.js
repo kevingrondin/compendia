@@ -2,6 +2,7 @@ import { ComicCover } from "@components/pages/comic/ComicCover"
 import { CoverListGrid } from "@components/common/CoverListGrid"
 import { useCollectedComics } from "@hooks/queries/collection"
 import { DisappearedLoading } from "react-loadingg"
+import { EmptyResultsMessage } from "@components/common/EmptyResultsMessage"
 
 export function CollectedComicsList() {
     const { isLoading, isError, error, data } = useCollectedComics()
@@ -24,7 +25,7 @@ export function CollectedComicsList() {
                         ))}
                     </CoverListGrid>
                 ) : (
-                    <p className="text-center text-xl mt-12 mb-20">No collected comics...</p>
+                    <EmptyResultsMessage>No comics in your collection...</EmptyResultsMessage>
                 )}
             </>
         )

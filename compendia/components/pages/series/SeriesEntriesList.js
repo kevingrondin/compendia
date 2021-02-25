@@ -1,6 +1,7 @@
 import PropTypes from "prop-types"
 import { ComicCover } from "@components/pages/comic/ComicCover"
 import { CoverListGrid } from "@components/common/CoverListGrid"
+import { EmptyResultsMessage } from "@components/common/EmptyResultsMessage"
 
 export function SeriesEntriesList({ entries }) {
     return (
@@ -18,7 +19,7 @@ export function SeriesEntriesList({ entries }) {
                     ))}
                 </CoverListGrid>
             ) : (
-                <p className="text-center text-xl mt-12 mb-20">No releases in this series...</p>
+                <EmptyResultsMessage>No comics in this series...</EmptyResultsMessage>
             )}
         </>
     )

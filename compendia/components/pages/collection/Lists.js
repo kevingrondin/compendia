@@ -1,3 +1,4 @@
+import { EmptyResultsMessage } from "@components/common/EmptyResultsMessage"
 import { PageLink } from "@components/common/PageLink"
 import { useLists } from "@hooks/queries/collection"
 import { usePluralize } from "@hooks/usePluralize"
@@ -30,7 +31,7 @@ export function Lists() {
                         </li>
                     ))
                 ) : (
-                    <p className="text-center text-xl mt-12 mb-20">No lists...</p>
+                    <EmptyResultsMessage>No comic lists...</EmptyResultsMessage>
                 )}
             </div>
         )
