@@ -2,11 +2,12 @@ import Router, { useRouter } from "next/router"
 import { useState, useEffect } from "react"
 import { Magic } from "magic-sdk"
 import { OAuthExtension } from "@magic-ext/oauth"
+import DisappearedLoading from "react-loadingg/lib/DisappearedLoading"
 
 export default function Callback() {
     const [magic, setMagic] = useState(null)
     const [errorMsg, setErrorMsg] = useState("")
-    const [showValidatingToken, setShowValidatingToken] = useState(false)
+    const [isLoading, setIsLoading] = useState(false)
     const router = useRouter()
 
     useEffect(() => {
@@ -19,13 +20,11 @@ export default function Callback() {
         magic && finishEmailRedirectLogin()
     }, [magic, router.query])
 
-    // TODO move these functions outside and pass in what it needs
-
-    const finishEmailRedirectLogin = async () => {
+    async function finishEmailRedirectLogin() {
         if (router.query.magic_credential) {
             try {
-                let didToken = await magic.auth.loginWithCredential()
-                setShowValidatingToken(true)
+                const didToken = await magic.auth.loginWithCredential()
+                setIsLoading(true)
                 await authenticateWithServer(didToken)
             } catch (error) {
                 console.log(error)
@@ -34,27 +33,17 @@ export default function Callback() {
         }
     }
 
-    const authenticateWithServer = async (didToken) => {
-        let res = await fetch("/api/auth/login", {
+    async function authenticateWithServer(didToken) {
+        const res = await fetch("/api/auth/login", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                Authorization: "Bearer " + didToken,
+                Authorization: `Bearer ${didToken}`,
             },
         })
         res.status === 200 && Router.push("/")
     }
 
-    return (
-        <>
-            {errorMsg ? (
-                <div className="text-red-500">{errorMsg}</div>
-            ) : (
-                <div className="w-full text-center">
-                    <div className="my-4 mx-0">Retrieving auth token...</div>
-                    {showValidatingToken && <div className="my-4 mx-0">Validating token...</div>}
-                </div>
-            )}
-        </>
-    )
+    if (errorMsg) return <div className="text-red-500">{errorMsg}</div>
+    else return <DisappearedLoading />
 }
