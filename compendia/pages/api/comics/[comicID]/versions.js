@@ -1,7 +1,7 @@
 const db = require("../../../../util/database").instance
 
 async function getComicDetails(client, res, comicID) {
-    const query = `SELECT title, item_number, version_of FROM comics WHERE comic_id = $1`
+    const query = `SELECT title, item_number, version_of, is_variant_root FROM comics WHERE comic_id = $1`
     const params = [comicID]
     const result = await client.query(query, params)
 
@@ -9,18 +9,12 @@ async function getComicDetails(client, res, comicID) {
     else return result.rows[0]
 }
 
-async function getComicVersions(client, comicID, versionOf) {
-    const isParentComic = versionOf === null
-    const params = isParentComic ? [comicID] : [comicID, versionOf]
-    const query = `SELECT comic_id, title, item_number, cover, variant_type_desc as variant_type FROM comics as c
-        FULL JOIN variant_type_lookup ON variant_type = variant_type_code
-        WHERE ${
-            isParentComic
-                ? "version_of = $1"
-                : "comic_id = $2 OR (version_of = $2 AND comic_id != $1)"
-        }
-        ORDER BY c.release_date DESC
-        FETCH FIRST 30 ROWS ONLY`
+async function getComicVersions(client, comicID, versionOf, isVariantRoot) {
+    const query = `SELECT comic_id, title, item_number, cover, variant_types FROM comics as c
+    WHERE ${
+        isVariantRoot ? `version_of = $1` : `comic_id = $2 OR (version_of = $2 AND comic_id != $1)`
+    } ORDER BY c.release_date DESC FETCH FIRST 30 ROWS ONLY`
+    const params = isVariantRoot ? [comicID] : [comicID, versionOf]
     const result = await client.query(query, params)
 
     return result.rows
@@ -35,7 +29,12 @@ export default async function handler(req, res) {
     const client = await db.connect()
     try {
         const comic = await getComicDetails(client, res, comicID)
-        const comicVersionsList = await getComicVersions(client, comicID, comic.version_of)
+        const comicVersionsList = await getComicVersions(
+            client,
+            comicID,
+            comic.version_of,
+            comic.is_variant_root
+        )
 
         res.status(200).json({
             id: parseInt(comicID),
@@ -47,7 +46,14 @@ export default async function handler(req, res) {
                     title: comic.title,
                     itemNumber: comic.item_number,
                     cover: comic.cover,
-                    variantType: comic.variant_type,
+                    variantTypes: comic.variant_types
+                        ? comic.variant_types.map((type) => {
+                              if (type === "spr") return "Subsequent Printing"
+                              else if (type === "rpr") return "Reprint"
+                              else if (type === "cvr") return "Variant Cover"
+                              else if (type === "cvl") return "Cover Letter"
+                          })
+                        : comic.variant_types,
                 }
             }),
         })

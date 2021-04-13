@@ -3,9 +3,8 @@ import { getUserOrRedirect } from "@util/cookie"
 
 async function getPullListSeries(client, seriesID, userID) {
     const query = `SELECT include_single_issues, include_subsequent_printings, include_reprints, include_cover_variants,
-        include_tpbs, include_hardcovers, include_omnibuses, include_compendia, include_all, include_convention_variants,
-        include_incentive_variants, include_retailer_exclusives, include_diamond_retailer_summit_variants, include_store_variants,
-        include_retailer_roundtable_program_variants FROM pull_list_series FULL JOIN collections USING(collection_id)
+        include_tpbs, include_hardcovers, include_omnibuses, include_compendia, include_all, include_graphic_novels
+        FROM pull_list_series FULL JOIN collections USING(collection_id)
         WHERE user_id = $1 AND series_id = $2`
     const params = [userID, seriesID]
     const result = await client.query(query, params)
@@ -21,17 +20,12 @@ async function updateSeriesDetails(client, res, reqBody, seriesID, userID) {
             include_subsequent_printings = $4,
             include_reprints = $5,
             include_cover_variants = $6,
-            include_convention_variants = $7,
-	        include_incentive_variants = $8,
-	        include_retailer_exclusives = $9,
-	        include_diamond_retailer_summit_variants = $10,
-	        include_store_variants = $11,
-	        include_retailer_roundtable_program_variants = $12,
-            include_tpbs = $13,
-            include_hardcovers = $14,
-            include_omnibuses = $15,
-            include_compendia = $16,
-            include_all = $17
+            include_tpbs = $7,
+            include_hardcovers = $8,
+            include_omnibuses = $9,
+            include_compendia = $10,
+            include_all = $11,
+            include_graphic_novels = $12,
         FROM collections as c
         WHERE c.user_id = $1 AND series_id = $2
         RETURNING *`
@@ -42,17 +36,12 @@ async function updateSeriesDetails(client, res, reqBody, seriesID, userID) {
         reqBody.includeSubPrintings,
         reqBody.includeReprints,
         reqBody.includeCoverVariants,
-        reqBody.includeConVariants,
-        reqBody.includeIncVariants,
-        reqBody.includeRetailExcl,
-        reqBody.includeDRSVariants,
-        reqBody.includeStoreVariants,
-        reqBody.includeRRPVariants,
         reqBody.includeTPBs,
         reqBody.includeHardcovers,
         reqBody.includeOmnibuses,
         reqBody.includeCompendia,
         reqBody.includeAll,
+        reqBody.includeGraphicNovels,
     ]
     const result = await client.query(query, params)
 
@@ -77,10 +66,20 @@ async function clearComicsBySeries(client, seriesID, userID) {
 async function addComicsBySeriesAndFormats(client, reqBody, seriesID, userID) {
     const formats = []
     if (reqBody.includeSingleIssues) formats.push("'Comic'")
-    if (reqBody.includeTPBs) formats.push("'TPB'")
+    if (reqBody.includeTPBs) formats.push("'Trade Paperback'")
     if (reqBody.includeHardcovers) formats.push("'Hardcover'")
-    if (reqBody.includeOmnibuses) formats.push("'Omnibus'")
-    if (reqBody.includeCompendia) formats.push("'Compendium'")
+    if (reqBody.includeGraphicNovels) {
+        formats.push("'Graphic Novel'")
+        formats.push("'Graphic Novel Hardcover'")
+    }
+    if (reqBody.includeOmnibuses) {
+        formats.push("'Omnibus'")
+        formats.push("'Omnibus Hardcover'")
+    }
+    if (reqBody.includeCompendia) {
+        formats.push("'Compendium'")
+        formats.push("'Compendium Hardcover'")
+    }
 
     const query = `INSERT INTO pull_list_comics (comic_id, collection_id)
         SELECT col.collection_id, c.comic_id FROM collections as col
@@ -97,7 +96,7 @@ async function addComicsBySeriesAndFormats(client, reqBody, seriesID, userID) {
     const params = [userID, seriesID]
     await client.query(query, params)
 
-    return
+    //TODO what about reprints above?
 }
 
 async function subscribeToSeries(client, res, seriesID, userID) {
@@ -121,8 +120,6 @@ async function addComicsBySeries(client, seriesID, userID) {
         AND c.printing = 1 AND c.version_of = NULL AND c.release_date >= CURRENT_DATE`
     const params = [userID, seriesID]
     await client.query(query, params)
-
-    return
 }
 
 async function unsubscribeFromSeries(client, res, seriesID, userID) {
@@ -135,10 +132,11 @@ async function unsubscribeFromSeries(client, res, seriesID, userID) {
     if (result.rows.length !== 1) {
         await client.query("ROLLBACK")
         res.status(400).json({ message: "Could not unsubscribe from series" })
-    } else return
+    }
 }
 
 export default async function handler(req, res) {
+    //TODO Handle Graphic Novel Series
     const { seriesID } = req.query
     const user = getUserOrRedirect(req, res)
     res.setHeader("Content-Type", "application/json")
@@ -155,19 +153,12 @@ export default async function handler(req, res) {
                     includeSubPrintings: seriesDetails.details.include_subsequent_printings,
                     includeReprints: seriesDetails.details.include_reprints,
                     includeCoverVariants: seriesDetails.details.include_cover_variants,
-                    includeConVariants: seriesDetails.details.include_convention_variants,
-                    includeIncVariants: seriesDetails.details.include_incentive_variants,
-                    includeRetailExcl: seriesDetails.details.include_retailer_exclusives,
-                    includeDRSVariants:
-                        seriesDetails.details.include_diamond_retailer_summit_variants,
-                    includeStoreVariants: seriesDetails.details.include_store_variants,
-                    includeRRPVariants:
-                        seriesDetails.details.include_retailer_roundtable_program_variants,
                     includeTPBs: seriesDetails.details.include_tpbs,
                     includeHardcovers: seriesDetails.details.include_hardcovers,
                     includeOmnibuses: seriesDetails.details.include_omnibuses,
                     includeCompendia: seriesDetails.details.include_compendia,
                     includeAll: seriesDetails.details.include_all,
+                    includeGraphicNovels: seriesDetails.details.include_graphic_novels,
                 })
             } else res.status(200).json({ isSubscribed: seriesDetails.isSubscribed })
         } else if (req.method === "PUT") {
@@ -191,17 +182,12 @@ export default async function handler(req, res) {
                     includeSubPrintings: updatedDetails.include_subsequent_printings,
                     includeReprints: updatedDetails.include_reprints,
                     includeCoverVariants: updatedDetails.include_cover_variants,
-                    includeConVariants: updatedDetails.include_convention_variants,
-                    includeIncVariants: updatedDetails.include_incentive_variants,
-                    includeRetailExcl: updatedDetails.include_retailer_exclusives,
-                    includeDRSVariants: updatedDetails.include_diamond_retailer_summit_variants,
-                    includeStoreVariants: updatedDetails.include_store_variants,
-                    includeRRPVariants: updatedDetails.include_retailer_roundtable_program_variants,
                     includeTPBs: updatedDetails.include_tpbs,
                     includeHardcovers: updatedDetails.include_hardcovers,
                     includeOmnibuses: updatedDetails.include_omnibuses,
                     includeCompendia: updatedDetails.include_compendia,
                     includeAll: updatedDetails.include_all,
+                    includeGraphicNovels: updatedDetails.include_graphic_novels,
                 })
             } else {
                 await client.query("ROLLBACK")
@@ -222,17 +208,12 @@ export default async function handler(req, res) {
                     includeSubPrintings: seriesDetails.include_subsequent_printings,
                     includeReprints: seriesDetails.include_reprints,
                     includeCoverVariants: seriesDetails.include_cover_variants,
-                    includeConVariants: seriesDetails.include_convention_variants,
-                    includeIncVariants: seriesDetails.include_incentive_variants,
-                    includeRetailExcl: seriesDetails.include_retailer_exclusives,
-                    includeDRSVariants: seriesDetails.include_diamond_retailer_summit_variants,
-                    includeStoreVariants: seriesDetails.include_store_variants,
-                    includeRRPVariants: seriesDetails.include_retailer_roundtable_program_variants,
                     includeTPBs: seriesDetails.include_tpbs,
                     includeHardcovers: seriesDetails.include_hardcovers,
                     includeOmnibuses: seriesDetails.include_omnibuses,
                     includeCompendia: seriesDetails.include_compendia,
                     includeAll: seriesDetails.include_all,
+                    includeGraphicNovels: seriesDetails.include_graphic_novels,
                 })
             } else {
                 await client.query("ROLLBACK")

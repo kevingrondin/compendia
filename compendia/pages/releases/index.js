@@ -8,7 +8,7 @@ import { ReleasesHeading } from "@components/pages/releases/ReleasesHeading"
 import { ReleaseDaySelector } from "@components/pages/releases/ReleaseDaySelector"
 
 export default function Releases() {
-    const [activeTab, setActiveTab] = useState("pull list")
+    const [activeTab, setActiveTab] = useState("all releases")
     const [comicDay, setComicDay] = useState(useComicDay("current", new Date()))
 
     return (

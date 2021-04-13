@@ -19,7 +19,7 @@ async function getComicDetail(client, res, comicID, collectionID) {
         p.publisher_id, p.name as publisher_name, s.series_id, s.name as series_name, i.imprint_id, i.name as imprint_name,
         EXISTS (SELECT 1 FROM collected_comics WHERE comic_id = $1 AND collection_id = $2 ) as is_collected,
         (CASE WHEN version_of IS NULL THEN (SELECT COUNT(*) FROM comics WHERE version_of = c.comic_id)
-			ELSE (SELECT COUNT(*) FROM comics WHERE version_of = c.version_of AND comic_id != c.comic_id + 1) END) as versions
+			ELSE (SELECT COUNT(*) FROM comics WHERE version_of = c.version_of AND comic_id != c.comic_id OR comic_id = $1) END) as versions
         FROM comics as c
         FULL JOIN series as s ON c.series_id = s.series_id
         FULL JOIN publishers as p ON s.publisher_id = p.publisher_id
@@ -61,9 +61,9 @@ export default async function handler(req, res) {
             itemNumber: comic.item_number,
             cover: comic.cover,
             releaseDate: format(comic.release_date, "yyyy-MM-dd"),
-            coverPrice: comic.cover_price,
-            description: comic.description,
-            ageRating: comic.age_rating,
+            coverPrice: comic.cover_price ? comic.cover_price : "",
+            description: comic.description ? comic.description : "",
+            ageRating: comic.age_rating ? comic.age_rating : "",
             format: comic.format,
             printing: comic.printing,
             publisherID: comic.publisher_id,

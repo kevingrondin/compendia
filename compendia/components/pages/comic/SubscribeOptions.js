@@ -22,22 +22,6 @@ const variants = [
         key: "includeCoverVariants",
         label: "Cover Variants",
     },
-    {
-        key: "includeConVariants",
-        label: "Convention Variants",
-    },
-    {
-        key: "includeIncVariants",
-        label: "Incentive Covers",
-    },
-    {
-        key: "includeRetailExcl",
-        label: "Retailer Exclusives",
-    },
-    {
-        key: "includeStoreVariants",
-        label: "Store Variants",
-    },
 ]
 
 const formats = [
@@ -60,6 +44,10 @@ const formats = [
     {
         key: "includeCompendia",
         label: "Compendia",
+    },
+    {
+        key: "includeGraphicNovels",
+        label: "Graphic Novels",
     },
     {
         key: "includeAll",

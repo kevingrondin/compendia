@@ -28,20 +28,6 @@ export function ReleasesTypeTabs({ activeTab, onTabClick }) {
         <div className="bg-gray-200 text-xl text-gray-500 leading-none rounded-full inline-flex">
             <Tab
                 icon={
-                    <PullListIcon
-                        color={activeTab === "pull list" ? "text-white" : "text-gray-500"}
-                        width="w-6"
-                        height="h-6"
-                        className="mr-2"
-                    />
-                }
-                title="Pull List"
-                side="left"
-                isActive={activeTab === "pull list"}
-                onClick={() => onTabClick("pull list")}
-            />
-            <Tab
-                icon={
                     <AllReleasesIcon
                         color={activeTab === "all releases" ? "text-white" : "text-gray-500"}
                         width="w-6"
@@ -50,9 +36,23 @@ export function ReleasesTypeTabs({ activeTab, onTabClick }) {
                     />
                 }
                 title="All Releases"
-                side="right"
+                side="left"
                 isActive={activeTab === "all releases"}
                 onClick={() => onTabClick("all releases")}
+            />
+            <Tab
+                icon={
+                    <PullListIcon
+                        color={activeTab === "pull list" ? "text-white" : "text-gray-500"}
+                        width="w-6"
+                        height="h-6"
+                        className="mr-2"
+                    />
+                }
+                title="Pull List"
+                side="right"
+                isActive={activeTab === "pull list"}
+                onClick={() => onTabClick("pull list")}
             />
         </div>
     )

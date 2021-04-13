@@ -78,7 +78,7 @@ function OtherVersionsButton({ comic }) {
                     href={`/comics/${comic.id}/versions`}
                     linkText={`${comic.otherVersions} Other ${usePluralize(
                         "Version",
-                        comic.otherVersions.length
+                        comic.otherVersions
                     )}`}
                     className="pb-1 mt-1"
                 />
@@ -215,7 +215,7 @@ export default function Comic() {
                         </Divider>
 
                         <Divider>
-                            {comic.isCollected ? <CollectionDetails comicID={comic.id} /> : null}
+                            {comic.isCollected ? <CollectionDetails comicID={comic.id} /> : <></>}
                         </Divider>
                     </div>
                 </div>
