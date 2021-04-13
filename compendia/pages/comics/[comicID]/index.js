@@ -36,14 +36,21 @@ Cover.propTypes = {
 
 function Title({ comic }) {
     return (
-        <h2 className="font-bold text-3xl">
-            <PageLink
-                href={`/series/${comic.seriesID}`}
-                linkText={comic.title}
-                extraContent={comic.itemNumber}
-                className="justify-center md:justify-start"
-            />
-        </h2>
+        <div className="flex flex-col justify-center md:justify-start items-center md:items-start ">
+            <h2 className="font-bold text-3xl">
+                <PageLink
+                    href={`/series/${comic.seriesID}`}
+                    linkText={comic.title}
+                    extraContent={comic.itemNumber}
+                    className=""
+                />
+            </h2>
+            {comic.coverLetter ? (
+                <h2 className="font-semibold text-xl pt-2">{`Cover ${comic.coverLetter}`}</h2>
+            ) : (
+                <></>
+            )}
+        </div>
     )
 }
 Title.propTypes = {
@@ -88,6 +95,17 @@ function OtherVersionsButton({ comic }) {
 }
 OtherVersionsButton.propTypes = {
     comic: PropTypes.object.isRequired,
+}
+
+function VariantDescription({ variantDescription }) {
+    return variantDescription ? (
+        <div className={`flex flex-col items-center md:items-start md:pl-10 px-6 pb-8`}>
+            <p className="text-gray-900 font-extrabold text-lg">Variant Description</p>
+            <p>{variantDescription}</p>
+        </div>
+    ) : (
+        <></>
+    )
 }
 
 function Buttons({ comic }) {
@@ -198,6 +216,8 @@ export default function Comic() {
                             </div>
 
                             <ComicDetails comic={comic} />
+
+                            <VariantDescription variantDescription={comic.variantDescription} />
 
                             <Buttons comic={comic} />
 

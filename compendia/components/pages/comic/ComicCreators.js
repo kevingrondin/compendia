@@ -17,7 +17,7 @@ export function ComicCreators({ creators }) {
                                     <PageLink
                                         href={`/creators/${creator.id}`}
                                         linkText={creator.name}
-                                        className="pb-1 mt-2"
+                                        className="pb-1"
                                     />
                                 </li>
                             )

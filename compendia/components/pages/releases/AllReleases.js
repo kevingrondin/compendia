@@ -5,6 +5,7 @@ import { useAllReleases } from "@hooks/queries/releases"
 import { CoverListGrid } from "@components/common/CoverListGrid"
 import { DisappearedLoading } from "react-loadingg"
 import { EmptyResultsMessage } from "@components/common/EmptyResultsMessage"
+import { PageLink } from "@components/common/PageLink"
 
 export function AllReleases({ comicDay }) {
     const { isLoading, isError, error, data: releasesByPublisher } = useAllReleases(comicDay)
@@ -16,7 +17,13 @@ export function AllReleases({ comicDay }) {
             <ul>
                 {releasesByPublisher.map((publisher) => (
                     <li className="mt-10" key={publisher.id}>
-                        <Category size="LG">{publisher.name}</Category>
+                        <Category size="LG">
+                            <PageLink
+                                href={`/publishers/${publisher.id}`}
+                                linkText={publisher.name}
+                            />
+                        </Category>
+
                         <CoverListGrid>
                             {publisher.releases.map((comic) => (
                                 <li key={comic.id}>

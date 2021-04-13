@@ -8,7 +8,7 @@ export function Page({ title, children }) {
         <>
             <Head>
                 <title>{title}</title>
-                <link rel="icon" href="/CompendiaLogo.svg" />
+                <link rel="icon" href="/favicon.ico" />
             </Head>
             <div className="flex flex-col justify-start h-screen">
                 <Header />

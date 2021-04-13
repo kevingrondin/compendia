@@ -9,12 +9,12 @@ import { useCollectedComic } from "@hooks/queries/collection"
 import { useUpdateCollectionFields } from "@hooks/mutations/collection"
 
 const CollectionDetail = ({ isEditMode, field, label, children }) => (
-    <label className="flex flex-col pr-10 pb-5">
+    <label className="flex flex-col sm:pr-10 pb-5">
         <span className="font-bold pb-2">{label}</span>
         {isEditMode ? (
             children
         ) : (
-            <div className={`text-center ${!field && "font-bold text-2xl"}`}>
+            <div className={`text-left sm:text-center ${!field ? "font-bold text-2xl" : ""}`}>
                 {field ? field : "-"}
             </div>
         )}
@@ -92,8 +92,8 @@ export function CollectionDetails({ comicID }) {
                 {!isEditMode && <EditIcon onClick={() => setIsEditMode(true)} />}
             </div>
 
-            <div className="flex flex-wrap">
-                <div className="flex">
+            <div className="flex flex-col">
+                <div className="flex flex-col sm:flex-row">
                     <CollectionDetail
                         isEditMode={isEditMode}
                         field={formatDateStringForView(editDateCollected)}
@@ -146,7 +146,7 @@ export function CollectionDetails({ comicID }) {
                     </CollectionDetail>
                 </div>
 
-                <div className="flex">
+                <div className="flex flex-col sm:flex-row">
                     <CollectionDetail
                         isEditMode={isEditMode}
                         field={editPurchasePrice}
