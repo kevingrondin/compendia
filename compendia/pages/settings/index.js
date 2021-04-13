@@ -30,15 +30,9 @@ export default function Settings() {
             <p>
                 Compendia is an app that will always respect the rights, privacy, and data of its
                 users. We store the absolute <b>bare minimum</b> when it comes to data that pertains
-                to you. Compendia is 100% open source, feel free to look through the{" "}
-                <a
-                    className="text-blue-primary-200"
-                    href="https://github.com/gchartier/Compendia"
-                    target="_blank"
-                >
-                    source code
-                </a>
-                .
+                to you; we store your email address (For login purposes only), and the comic
+                collecting data that you define on Compendia such as your collected comics,
+                subscribed series, etc.
             </p>
 
             <Category size="MD" className="mt-12">
@@ -52,6 +46,16 @@ export default function Settings() {
                     target="_blank"
                 >
                     GitHub
+                </a>
+                . <br />
+                <br />
+                Compendia is open source, feel free to look through the{" "}
+                <a
+                    className="text-blue-primary-200"
+                    href="https://github.com/gchartier/Compendia"
+                    target="_blank"
+                >
+                    source code
                 </a>
                 .
             </p>
