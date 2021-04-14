@@ -1,4 +1,5 @@
 import Link from "next/link"
+import Image from "next/image"
 import { useEffect } from "react"
 import { useRouter } from "next/router"
 import { useUser } from "@hooks/magic"
@@ -37,9 +38,13 @@ export function Header() {
     return (
         <header className="flex justify-between items-center w-full max-h-20 p-2 bg-gradient-to-r from-blue-primary-200 to bg-blue-primary-50 shadow-sm border-b-2 border-blue-primary-300">
             <Link href="/" passHref>
-                <a>
-                    <img src="/CompendiaLogo.svg" alt="Compendia Logo" className="w-12" />
-                </a>
+                <Image
+                    src="/CompendiaLogo.svg"
+                    alt="Compendia Logo"
+                    height={50}
+                    width={50}
+                    className="cursor-pointer"
+                />
             </Link>
             <div className="flex">
                 <nav className="hidden sm:flex justify-center items-center">

@@ -1,15 +1,20 @@
 import Link from "next/link"
+import Image from "next/image"
 import PropTypes from "prop-types"
 
 export function ComicCover({ comicID, title, cover, footer }) {
     return (
         <article className="cursor-pointer">
             <Link href={`/comics/${comicID}`} passHref>
-                <img
-                    className="h-52 sm:h-80 2xl:h-96 rounded"
-                    src={cover}
-                    alt={`Comic cover for ${title}`}
-                />
+                <div className="relative w-40 h-52 sm:w-60 sm:h-80 2xl:w-64 2xl:h-96">
+                    <Image
+                        src={cover}
+                        alt={`Comic cover for ${title}`}
+                        layout="fill"
+                        objectFit="contain"
+                        className="rounded"
+                    />
+                </div>
             </Link>
             {footer && <div className="w-full">{footer}</div>}
         </article>

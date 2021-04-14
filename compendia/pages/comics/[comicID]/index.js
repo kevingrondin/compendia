@@ -1,3 +1,4 @@
+import Image from "next/image"
 import PropTypes from "prop-types"
 import { useEffect, useState } from "react"
 import { useRouter } from "next/router"
@@ -21,12 +22,15 @@ import { EmptyResultsMessage } from "@components/common/EmptyResultsMessage"
 
 function Cover({ comic, onClick }) {
     return (
-        <img
-            src={comic.cover}
-            alt={`Cover art for ${comic.title} ${comic.itemNumber}`}
-            className="rounded h-72 lg:h-96 cursor-pointer"
-            onClick={onClick}
-        />
+        <div className="relative w-56 h-72 sm:w-64 sm:h-96" onClick={onClick}>
+            <Image
+                src={comic.cover}
+                alt={`Cover art for ${comic.title} ${comic.itemNumber}`}
+                layout="fill"
+                objectFit="contain"
+                className="rounded cursor-pointer"
+            />
+        </div>
     )
 }
 Cover.propTypes = {
@@ -156,11 +160,16 @@ function FullCoverModal({ comic, show, onClick }) {
         <>
             {show && (
                 <FullScreenModal onClick={onClick}>
-                    <img
-                        src={comic.cover}
-                        alt={`Cover art for ${comic.title}`}
-                        className="rounded h-4/6 sm:h-screen"
-                    />
+                    <div className="w-96">
+                        <Image
+                            src={comic.cover}
+                            alt={`Cover art for ${comic.title}`}
+                            layout="intrinsic"
+                            height={900}
+                            width={600}
+                            className="rounded"
+                        />
+                    </div>
                 </FullScreenModal>
             )}
         </>
