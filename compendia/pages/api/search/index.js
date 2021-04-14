@@ -1,7 +1,7 @@
 const db = require("../../../util/database").instance
 
 async function getComicSearchResults(client, searchQuery) {
-    const query = `SELECT comic_id, title, item_number
+    const query = `SELECT comic_id, title, item_number, cover_letter, variant_description
         FROM comics WHERE document @@ plainto_tsquery('english', $1) ORDER BY ts_rank(document, plainto_tsquery('english', $1)) DESC, release_date DESC;`
     const params = [searchQuery]
     const result = await client.query(query, params)
@@ -64,6 +64,8 @@ export default async function handler(req, res) {
                           id: comic.comic_id,
                           title: comic.title,
                           itemNumber: comic.item_number,
+                          coverLetter: comic.cover_letter,
+                          variantDescription: comic.variant_description,
                       }
                   })
                 : [],

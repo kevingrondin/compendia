@@ -31,7 +31,11 @@ export default async function handler(req, res) {
                     cover: comic.cover,
                     title: comic.title,
                     itemNumber: comic.item_number,
-                    creatorTypes: comic.creator_types,
+                    creatorTypes: comic.creator_types.map((type) => {
+                        if (type === "W") return "Writer"
+                        else if (type === "A") return "Artist"
+                        else if (type === "CA") return "Cover Artist"
+                    }),
                 }
             }),
         })

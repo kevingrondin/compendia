@@ -7,7 +7,9 @@ export function CreatorSearchResults({ creators }) {
         <>
             {creators && creators.length > 0 ? (
                 <div>
-                    <Category size="MD">Creators</Category>
+                    <Category size="MD" className="mb-4">
+                        Creators
+                    </Category>
                     <ul>
                         {creators.map((creator) => (
                             <li key={creator.id}>

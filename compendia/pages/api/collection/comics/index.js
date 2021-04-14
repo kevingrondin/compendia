@@ -3,15 +3,16 @@ import { getUserOrRedirect } from "@util/cookie"
 
 async function getCollectedComics(client, res, userID) {
     const query = `SELECT comic_id, title, item_number, cover
-        FROM collected_comics as cc FULL JOIN comics as c USING(comic_id) FULL JOIN collections as col USING(collection_id)
+        FROM collected_comics as cc LEFT JOIN comics as c USING(comic_id) LEFT JOIN collections as col USING(collection_id)
         WHERE col.user_id = $1
         ORDER BY c.release_date DESC
         FETCH FIRST 10 ROWS ONLY`
     const params = [userID]
     const result = await client.query(query, params)
 
-    if (result.rows.length !== 1) res.status(404).json({ message: "No collected comics returned" })
-    else return result.rows
+    if (result.rows.length < 1) res.status(200).json({ message: "No collected comics returned" })
+
+    return result.rows
 }
 
 export default async function handler(req, res) {
@@ -23,6 +24,7 @@ export default async function handler(req, res) {
         if (req.method === "GET") {
             const collectedComics = await getCollectedComics(client, res, user.id)
 
+            if (collectedComics.length < 1) return
             res.status(200).json({
                 collectedComics: collectedComics.map((comic) => {
                     return {

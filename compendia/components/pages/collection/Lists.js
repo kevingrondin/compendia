@@ -31,7 +31,7 @@ export function Lists() {
                         </li>
                     ))
                 ) : (
-                    <EmptyResultsMessage>No comic lists...</EmptyResultsMessage>
+                    <EmptyResultsMessage marginTop="mt-6">No comic lists...</EmptyResultsMessage>
                 )}
             </div>
         )

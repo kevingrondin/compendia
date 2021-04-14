@@ -18,7 +18,7 @@ export function ComicVersionsList({ comics }) {
                                 footer={
                                     <div className="flex justify-center mt-2">
                                         <Category size="SM">
-                                            {comic.variantType ? comic.variantType : "Other"}
+                                            {comic.variantTypes ? comic.variantTypes : "Other"}
                                         </Category>
                                     </div>
                                 }

@@ -1,3 +1,5 @@
+import moveIndex from "@util/moveIndex"
+
 const db = require("../../../util/database").instance
 
 async function getReleases(client, comicDay) {
@@ -9,6 +11,15 @@ async function getReleases(client, comicDay) {
     const result = await client.query(query, params)
 
     return result.rows
+}
+
+function movePremierPublishersToTop(publishers) {
+    const sortedArray = [...publishers]
+    const imageIndex = sortedArray.findIndex((pub) => pub.name === "Image Comics")
+    const marvelIndex = sortedArray.findIndex((pub) => pub.name === "Marvel Comics")
+    moveIndex(sortedArray, imageIndex, 0)
+    moveIndex(sortedArray, marvelIndex, 1)
+    return sortedArray
 }
 
 // Reduce comic records into an array of publishers each with their list of comic releases
@@ -42,8 +53,12 @@ export default async function handler(req, res) {
     try {
         const releases = await getReleases(client, comicDay)
         const releasesByPublisher = groupByPublisher(releases)
+        const sortedReleasesByPublisher =
+            releasesByPublisher && releasesByPublisher.length > 0
+                ? movePremierPublishersToTop(releasesByPublisher)
+                : []
 
-        res.status(200).json(releasesByPublisher)
+        res.status(200).json(sortedReleasesByPublisher)
     } catch (error) {
         console.log(error)
         res.status(500).json({ message: error.message })

@@ -7,7 +7,9 @@ export function PublisherSearchResults({ publishers }) {
         <>
             {publishers && publishers.length > 0 ? (
                 <div>
-                    <Category size="MD">Publishers</Category>
+                    <Category size="MD" className="mb-4">
+                        Publishers
+                    </Category>
                     <ul>
                         {publishers.map((publisher) => (
                             <li key={publisher.id}>

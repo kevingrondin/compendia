@@ -20,7 +20,9 @@ export function SubscribedSeriesList() {
                         </li>
                     ))
                 ) : (
-                    <EmptyResultsMessage>No subscribed series...</EmptyResultsMessage>
+                    <EmptyResultsMessage marginTop="mt-6">
+                        No subscribed series...
+                    </EmptyResultsMessage>
                 )}
             </div>
         )

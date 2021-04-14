@@ -16,7 +16,9 @@ export default function Settings() {
 
     return (
         <Page title="Settings">
-            <Category size="MD">Account</Category>
+            <Category size="MD" className="mb-4">
+                Account
+            </Category>
             <p>
                 <span className="text-blue-primary-300 font-bold">Email:</span> {user.email}
             </p>
@@ -24,7 +26,7 @@ export default function Settings() {
                 <Link href="/api/auth/logout">Log Out</Link>
             </Button>
 
-            <Category size="MD" className="mt-12">
+            <Category size="MD" className="mt-12 mb-4">
                 Privacy Policy
             </Category>
             <p>
@@ -35,7 +37,7 @@ export default function Settings() {
                 subscribed series, etc.
             </p>
 
-            <Category size="MD" className="mt-12">
+            <Category size="MD" className="mt-12 mb-4">
                 Suggestion, Concern, or Issue?
             </Category>
             <p>
@@ -60,7 +62,7 @@ export default function Settings() {
                 .
             </p>
 
-            <Category size="MD" className="mt-12">
+            <Category size="MD" className="mt-12 mb-4">
                 Donate
             </Category>
             <p>

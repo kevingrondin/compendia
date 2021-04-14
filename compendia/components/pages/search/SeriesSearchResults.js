@@ -7,7 +7,9 @@ export function SeriesSearchResults({ series }) {
         <>
             {series && series.length > 0 ? (
                 <div>
-                    <Category size="MD">Series</Category>
+                    <Category size="MD" className="mb-4">
+                        Series
+                    </Category>
                     <ul>
                         {series.map((series) => (
                             <li key={series.id}>

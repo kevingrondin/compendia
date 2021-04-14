@@ -8,7 +8,7 @@ import { SubscribedSeriesList } from "@components/pages/collection/SubscribedSer
 export default function Collection() {
     return (
         <Page title={`Compendia - Collection`}>
-            <Category size="LG">
+            <Category size="LG" className="mb-4">
                 <PageLink
                     linkText="Collected Comics"
                     href="/collection/comics"
@@ -19,7 +19,7 @@ export default function Collection() {
             </Category>
             <CollectedComicsList />
 
-            <Category size="LG" className="mt-8">
+            <Category size="LG" className="mt-8 mb-4">
                 <PageLink
                     linkText="Subscribed Series"
                     href="/collection/subscriptions"
@@ -30,7 +30,7 @@ export default function Collection() {
             </Category>
             <SubscribedSeriesList />
 
-            <Category size="LG" className="mt-8">
+            <Category size="LG" className="mt-8 mb-4">
                 Your Lists
             </Category>
             <Lists />

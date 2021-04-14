@@ -11,7 +11,7 @@ export function CollectedComicsList() {
     else if (isError) return <div>Error: {`${error && error.message}`}</div>
     else {
         return (
-            <>
+            <div className="flex">
                 {data.collectedComics && data.collectedComics.length > 0 ? (
                     <CoverListGrid>
                         {data.collectedComics.map((comic) => (
@@ -25,9 +25,11 @@ export function CollectedComicsList() {
                         ))}
                     </CoverListGrid>
                 ) : (
-                    <EmptyResultsMessage>No comics in your collection...</EmptyResultsMessage>
+                    <EmptyResultsMessage marginTop="mt-6">
+                        No comics in your collection...
+                    </EmptyResultsMessage>
                 )}
-            </>
+            </div>
         )
     }
 }

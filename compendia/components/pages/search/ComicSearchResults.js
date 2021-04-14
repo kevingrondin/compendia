@@ -7,13 +7,27 @@ export function ComicSearchResults({ comics }) {
         <>
             {comics && comics.length > 0 ? (
                 <div>
-                    <Category size="MD">Comics</Category>
+                    <Category size="MD" className="mb-4">
+                        Comics
+                    </Category>
                     <ul>
                         {comics.map((comic) => (
                             <li key={comic.id}>
                                 <PageLink
                                     href={`/comics/${comic.id}`}
-                                    linkText={`${comic.title} ${comic.itemNumber}`}
+                                    linkText={`${comic.title} ${comic.itemNumber}${
+                                        comic.coverLetter || comic.variantDescription
+                                            ? ` -${
+                                                  comic.coverLetter
+                                                      ? ` Cover ${comic.coverLetter}`
+                                                      : ""
+                                              } ${
+                                                  comic.variantDescription
+                                                      ? comic.variantDescription
+                                                      : ""
+                                              }`
+                                            : ``
+                                    }`}
                                 />
                             </li>
                         ))}

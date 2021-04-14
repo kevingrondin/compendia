@@ -34,10 +34,12 @@ export default function PublisherDetail() {
                     isSubHeadingFirst={true}
                 />
 
-                <Category size="LG">Recent Comics</Category>
+                <Category size="LG" className="mb-6">
+                    Recent Comics
+                </Category>
                 <PublisherComicsList comicsList={comicsList} />
 
-                <Category size="LG" className="mt-8">
+                <Category size="LG" className="mt-8 mb-6">
                     Recently Updated Series
                 </Category>
                 <PublisherSeriesList seriesList={seriesList} />

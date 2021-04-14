@@ -7,7 +7,9 @@ export function ImprintSearchResults({ imprints }) {
         <>
             {imprints && imprints.length > 0 ? (
                 <div>
-                    <Category size="MD">Imprints</Category>
+                    <Category size="MD" className="mb-4">
+                        Imprints
+                    </Category>
                     <ul>
                         {imprints.map((imprint) => (
                             <li key={imprint.id}>

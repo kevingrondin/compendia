@@ -1,7 +1,7 @@
 import PropTypes from "prop-types"
 
 export function Category({ children, size, className }) {
-    const styles = `text-blue-primary-200 bg-blue-100 font-bold mb-5 w-min py-1 px-2 whitespace-nowrap ${className}`
+    const styles = `text-blue-primary-200 bg-blue-100 font-bold w-min py-1 px-2 whitespace-nowrap ${className}`
 
     if (size === "SM") return <h5 className={`text-lg ${styles}`}>{children}</h5>
     else if (size === "MD") return <h4 className={`text-xl ${styles}`}>{children}</h4>

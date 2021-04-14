@@ -47,13 +47,13 @@ export default async function handler(req, res) {
                     itemNumber: comic.item_number,
                     cover: comic.cover,
                     variantTypes: comic.variant_types
-                        ? comic.variant_types.map((type) => {
-                              if (type === "spr") return "Subsequent Printing"
-                              else if (type === "rpr") return "Reprint"
-                              else if (type === "cvr") return "Variant Cover"
-                              else if (type === "cvl") return "Cover Letter"
-                          })
-                        : comic.variant_types,
+                        ? comic.variant_types
+                              .map((type) => {
+                                  if (type === "spr" || type === "rpr") return "Reprint"
+                                  else if (type === "cvr" || type === "cvl") return "Cover"
+                              })
+                              .join(" / ")
+                        : null,
                 }
             }),
         })

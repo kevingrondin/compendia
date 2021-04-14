@@ -38,7 +38,7 @@ export const Options = ({
         <div
             ref={optionsRef}
             className={`bg-gray-500 text-white ${roundedClass}
-                ${isSubOptions === false ? "absolute top-11 transform -translate-x-3/4" : ""}
+                ${isSubOptions === false ? "absolute top-11 transform -translate-x-3/4 z-10" : ""}
                 ${!showOptions ? "hidden " : ""}
                 ${showOptions ? "rounded-tl-none" : ""}`}
         >

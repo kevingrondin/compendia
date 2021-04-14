@@ -17,7 +17,7 @@ export function AllReleases({ comicDay }) {
             <ul>
                 {releasesByPublisher.map((publisher) => (
                     <li className="mt-10" key={publisher.id}>
-                        <Category size="LG">
+                        <Category size="LG" className="mb-6">
                             <PageLink
                                 href={`/publishers/${publisher.id}`}
                                 linkText={publisher.name}
