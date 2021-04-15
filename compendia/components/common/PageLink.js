@@ -23,7 +23,7 @@ export function PageLink({
 
     return (
         <Link href={href} passHref>
-            <a className={`flex  ${className}`}>
+            <a className={`flex ${className}`}>
                 <span
                     className={`${
                         hasUnderline

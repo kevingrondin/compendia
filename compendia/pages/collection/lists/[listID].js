@@ -71,7 +71,7 @@ export default function CreatorDetail() {
     else if (!listID || list === undefined || comics === undefined) return <></>
     else {
         return (
-            <Page title={`${list.name} List`}>
+            <Page title={`Compendia - ${list.name} List`}>
                 <PageHeading heading={list.name} />
                 <ListComics comics={comics} />
             </Page>

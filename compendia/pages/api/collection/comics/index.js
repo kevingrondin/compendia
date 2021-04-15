@@ -5,7 +5,7 @@ async function getCollectedComics(client, res, userID) {
     const query = `SELECT comic_id, title, item_number, cover
         FROM collected_comics as cc LEFT JOIN comics as c USING(comic_id) LEFT JOIN collections as col USING(collection_id)
         WHERE col.user_id = $1
-        ORDER BY c.release_date DESC
+        ORDER BY cc.date_collected DESC
         FETCH FIRST 10 ROWS ONLY`
     const params = [userID]
     const result = await client.query(query, params)

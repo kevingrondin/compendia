@@ -1,13 +1,13 @@
 import PropTypes from "prop-types"
 import { ComicCover } from "../comic/ComicCover"
-import { CoverListGrid } from "@components/common/CoverListGrid"
 import { EmptyResultsMessage } from "@components/common/EmptyResultsMessage"
+import { CoverListSideScroller } from "@components/common/CoverListSideScroller"
 
 export function PublisherComicsList({ comicsList }) {
     return (
-        <>
+        <div className="flex">
             {comicsList && comicsList.length > 0 ? (
-                <CoverListGrid>
+                <CoverListSideScroller>
                     {comicsList.map((comic) => (
                         <li key={comic.id}>
                             <ComicCover
@@ -17,11 +17,11 @@ export function PublisherComicsList({ comicsList }) {
                             />
                         </li>
                     ))}
-                </CoverListGrid>
+                </CoverListSideScroller>
             ) : (
                 <EmptyResultsMessage>No comics by this publisher...</EmptyResultsMessage>
             )}
-        </>
+        </div>
     )
 }
 

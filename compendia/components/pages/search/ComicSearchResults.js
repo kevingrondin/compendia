@@ -12,7 +12,7 @@ export function ComicSearchResults({ comics }) {
                     </Category>
                     <ul>
                         {comics.map((comic) => (
-                            <li key={comic.id}>
+                            <li key={comic.id} className="flex">
                                 <PageLink
                                     href={`/comics/${comic.id}`}
                                     linkText={`${comic.title} ${comic.itemNumber}${

@@ -17,7 +17,7 @@ export default function Collection() {
                     arrowHeightClass="h-7"
                 />
             </Category>
-            <CollectedComicsList />
+            <CollectedComicsList isSideScroller={true} />
 
             <Category size="LG" className="mt-8 mb-4">
                 <PageLink
