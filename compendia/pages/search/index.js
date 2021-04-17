@@ -51,7 +51,7 @@ export default function Search() {
                 heading="Search"
                 controls={<SearchBar onSubmit={(search) => setQuery(search)} />}
             />
-            {data ? <SearchResults results={data} isLoading={isLoading} /> : <></>}
+            {data ? <SearchResults results={data.results} isLoading={isLoading} /> : <></>}
         </Page>
     )
 }
