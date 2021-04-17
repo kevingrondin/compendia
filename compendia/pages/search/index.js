@@ -46,12 +46,15 @@ export default function Search() {
     }, [query])
 
     return (
-        <Page title="Compendia Search">
+        <Page title="Compendia Search" paddingY={"py-0"}>
             <PageHeading
                 heading="Search"
+                paddingTop={"pt-6"}
                 controls={<SearchBar onSubmit={(search) => setQuery(search)} />}
             />
-            {data ? <SearchResults results={data.results} isLoading={isLoading} /> : <></>}
+            <div className="flex flex-col items-center">
+                {data ? <SearchResults results={data.results} isLoading={isLoading} /> : <></>}
+            </div>
         </Page>
     )
 }

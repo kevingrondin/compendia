@@ -3,7 +3,7 @@ import PropTypes from "prop-types"
 import { Header } from "@components/app/Header"
 import { BottomNav } from "@components/app/BottomNav"
 
-export function Page({ title, children }) {
+export function Page({ title, children, paddingX = "", paddingY = "" }) {
     return (
         <>
             <Head>
@@ -12,7 +12,9 @@ export function Page({ title, children }) {
             </Head>
             <div className="flex flex-col justify-start h-screen">
                 <Header />
-                <div className="p-6 mb-16 sm:mb-0 overflow-x-hidden flex-grow flex flex-col">
+                <div
+                    className={`p-6 ${paddingX} ${paddingY} mb-16 sm:mb-0 overflow-x-hidden flex-grow flex flex-col`}
+                >
                     {children}
                 </div>
                 <BottomNav />
@@ -23,4 +25,6 @@ export function Page({ title, children }) {
 Page.propTypes = {
     title: PropTypes.string.isRequired,
     children: PropTypes.node.isRequired,
+    paddingX: PropTypes.string,
+    paddingY: PropTypes.string,
 }
