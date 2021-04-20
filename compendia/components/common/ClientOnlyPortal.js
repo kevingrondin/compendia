@@ -14,6 +14,6 @@ export function ClientOnlyPortal({ selector, children }) {
     return mounted ? createPortal(children, ref.current) : null
 }
 ClientOnlyPortal.propTypes = {
-    selector: PropTypes.string.isREquired,
+    selector: PropTypes.string.isRequired,
     children: PropTypes.node.isRequired,
 }

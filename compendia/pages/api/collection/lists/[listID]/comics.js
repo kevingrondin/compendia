@@ -9,8 +9,6 @@ async function getListComics(client, listID) {
     const params = [listID]
     const result = await client.query(query, params)
 
-    console.log(result.rows)
-
     return result.rows
 }
 

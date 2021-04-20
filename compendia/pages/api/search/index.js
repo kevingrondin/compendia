@@ -1,10 +1,10 @@
 const db = require("../../../util/database").instance
 
-async function getComicSearchResults(client, searchQuery) {
+async function getComicSearchResults(client, searchQuery, cursor) {
     const query = `SELECT comic_id, title, item_number, format, cover_letter, variant_description
         FROM comics WHERE document @@ plainto_tsquery('english', $1) ORDER BY ts_rank(document, plainto_tsquery('english', $1)) DESC, release_date DESC
-        FETCH FIRST 25 ROWS ONLY;`
-    const params = [searchQuery]
+        LIMIT 10 OFFSET $2;`
+    const params = [searchQuery, cursor * 10]
     const result = await client.query(query, params)
 
     return result.rows
@@ -47,8 +47,12 @@ async function getCreatorSearchResults(client, searchQuery) {
 }
 
 export default async function handler(req, res) {
-    const { searchQuery } = req.query
+    const { searchQuery, cursor } = req.query
     res.setHeader("Content-Type", "application/json")
+    if (!searchQuery || !cursor) {
+        res.status(200).json({ results: [] })
+        return
+    }
 
     const client = await db.connect()
     try {
@@ -56,7 +60,7 @@ export default async function handler(req, res) {
         const imprintResults = await getImprintSearchResults(client, searchQuery)
         const seriesResults = await getSeriesSearchResults(client, searchQuery)
         const creatorResults = await getCreatorSearchResults(client, searchQuery)
-        const comicResults = await getComicSearchResults(client, searchQuery)
+        const comicResults = await getComicSearchResults(client, searchQuery, cursor)
 
         const resultSets = [
             { results: publisherResults, type: "Publisher" },

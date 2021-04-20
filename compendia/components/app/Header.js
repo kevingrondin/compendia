@@ -38,13 +38,15 @@ export function Header() {
     return (
         <header className="flex justify-between items-center w-full max-h-20 p-2 bg-gradient-to-r from-blue-primary-200 to bg-blue-primary-50 shadow-sm border-b-2 border-blue-primary-300">
             <Link href="/" passHref>
-                <Image
-                    src="/CompendiaLogo.svg"
-                    alt="Compendia Logo"
-                    height={50}
-                    width={50}
-                    className="cursor-pointer"
-                />
+                <a>
+                    <Image
+                        src="/CompendiaLogo.svg"
+                        alt="Compendia Logo"
+                        height={50}
+                        width={50}
+                        className="cursor-pointer"
+                    />
+                </a>
             </Link>
             <div className="flex">
                 <nav className="hidden sm:flex justify-center items-center">

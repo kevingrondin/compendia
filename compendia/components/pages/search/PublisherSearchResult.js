@@ -4,7 +4,7 @@ import { SearchResult } from "@components/pages/search/SearchResult"
 
 export function PublisherSearchResult({ publisher }) {
     return (
-        <SearchResult key={`${publisher.type}${publisher.id}`} type={publisher.type}>
+        <SearchResult type={publisher.type}>
             <PageLink href={`/publishers/${publisher.id}`} linkText={`${publisher.name}`} />
         </SearchResult>
     )

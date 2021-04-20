@@ -1,13 +1,10 @@
 import axios from "axios"
-import { useQuery } from "react-query"
+import { useInfiniteQuery } from "react-query"
 
-export function useSearch(searchQuery) {
-    return useQuery(
-        ["search", searchQuery],
-        async () => {
-            const { data } = await axios.get(`/api/search?searchQuery=${searchQuery}`)
-            return data
-        },
-        { staleTime: 600000, enabled: false }
-    )
+export function useSearch(query) {
+    const getSearchResults = async ({ pageParam = 0 }) =>
+        await axios.get(`/api/search?searchQuery=${query}&cursor=${pageParam}`)
+    return useInfiniteQuery(["search", query], getSearchResults, {
+        getNextPageParam: (lastPage, pages) => lastPage.nextCursor,
+    })
 }

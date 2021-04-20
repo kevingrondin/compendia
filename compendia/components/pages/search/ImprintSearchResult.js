@@ -4,7 +4,7 @@ import { SearchResult } from "@components/pages/search/SearchResult"
 
 export function ImprintSearchResult({ imprint }) {
     return (
-        <SearchResult key={`${imprint.type}${imprint.id}`} type={imprint.type}>
+        <SearchResult type={imprint.type}>
             <PageLink href={`/publishers/${imprint.id}`} linkText={`${imprint.name}`} />
         </SearchResult>
     )

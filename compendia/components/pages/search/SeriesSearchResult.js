@@ -4,7 +4,7 @@ import { SearchResult } from "@components/pages/search/SearchResult"
 
 export function SeriesSearchResult({ series }) {
     return (
-        <SearchResult key={`${series.type}${series.id}`} type={series.type}>
+        <SearchResult type={series.type}>
             <PageLink href={`/series/${series.id}`} linkText={`${series.name}`} />
         </SearchResult>
     )
