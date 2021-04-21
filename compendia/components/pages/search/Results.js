@@ -3,8 +3,8 @@ import { PageLink } from "@components/common/PageLink"
 
 export function SearchResult({ type, children }) {
     return (
-        <li className="flex flex-col items-start mb-60">
-            <div className="">{children}</div>
+        <li className="flex flex-col items-start mb-6">
+            <div>{children}</div>
             <div className="text-sm pl-1">{type}</div>
         </li>
     )

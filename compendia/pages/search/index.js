@@ -60,7 +60,7 @@ function getResultsFromPages(pages) {
 
 export default function Search() {
     const [query, setQuery] = useState("")
-    const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useSearch(query)
+    const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching } = useSearch(query)
     const hasData = data?.pages?.length > 0 && data?.pages[0]?.data?.results?.length > 0
     const loadMoreRef = useRef()
     useIntersectionObserver({
@@ -70,15 +70,18 @@ export default function Search() {
     })
 
     return (
-        <Page title="Compendia Search" paddingY={"py-0"} paddingX={"px-0"}>
+        <Page title="Compendia Search" paddingY={"py-0"} paddingX={"px-0"} disableScroll={true}>
             <PageHeading
                 heading="Search"
                 paddingTop={"pt-6"}
+                marginBottom={""}
                 controls={<SearchBar onSubmit={(search) => setQuery(search)} />}
             />
-            <div className="flex flex-col items-center">
-                <ul className="flex flex-col items-center mb-2 w-screen sm:max-w-xl">
-                    {hasData ? (
+            <div className="flex flex-col items-center overflow-y-scroll pt-4">
+                <ul className="flex flex-col items-start mb-2 sm:max-w-xl">
+                    {isFetching ? (
+                        <DisappearedLoading />
+                    ) : hasData ? (
                         <>
                             {getResultsFromPages(data.pages)}{" "}
                             {isFetchingNextPage ? <DisappearedLoading /> : <></>}

@@ -7,12 +7,13 @@ export function PageHeading({
     subHeading,
     controls,
     paddingTop = "",
+    marginBottom = "mb-4 sm:mb-6",
     isSubHeadingFirst = false,
     justifyControls = "justify-center",
 }) {
     return (
         <div
-            className={`flex flex-col justify-around align-center pb-4 mb-4 border-b-4 border-blue-primary-200 border-solid ${paddingTop} sm:pb-6 sm:mb-6`}
+            className={`flex flex-col justify-around align-center pb-4 border-b-4 border-blue-primary-200 border-solid ${paddingTop} ${marginBottom} sm:pb-6`}
         >
             <div className="flex flex-col">
                 <h2
@@ -43,6 +44,7 @@ PageHeading.propTypes = {
     subHeading: PropTypes.string,
     controls: PropTypes.element,
     paddingTop: PropTypes.string,
+    marginBottom: PropTypes.string,
     isSubHeadingFirst: PropTypes.bool,
     justifyControls: PropTypes.string,
 }
