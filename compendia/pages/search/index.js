@@ -1,56 +1,102 @@
-import PropTypes from "prop-types"
+import {
+    PublisherSearchResult,
+    CreatorSearchResult,
+    ImprintSearchResult,
+    SeriesSearchResult,
+    ComicSearchResult,
+} from "@components/pages/search/Results"
 import { Page } from "@components/common/Page"
-import { PageHeading } from "@components/common/PageHeading"
-import { SearchResults } from "@components/pages/search/SearchResults"
 import { useSearch } from "@hooks/queries/search"
-import { useState } from "react"
-import { SearchIcon } from "@components/icons/Search"
+import { Fragment, useRef, useState } from "react"
+import { SearchBar } from "@components/pages/Search/SearchBar"
+import { Button } from "@components/common/buttons/Button"
+import { PageHeading } from "@components/common/PageHeading"
+import useIntersectionObserver from "@hooks/useIntersectionObserver"
+import { EmptyResultsMessage } from "@components/common/EmptyResultsMessage"
+import DisappearedLoading from "react-loadingg/lib/DisappearedLoading"
 
-function SearchBar({ onSubmit }) {
-    const [search, setSearch] = useState("")
-
-    return (
-        <div className="flex items-center justify-center">
-            <input
-                type="text"
-                value={search}
-                onChange={(e) => {
-                    setSearch(e.target.value)
-                }}
-                onKeyDown={(e) => {
-                    if (e.key === "Enter") onSubmit(search)
-                }}
-                className="rounded-full h-10 w-60 sm:w-96 border-2 my-2 bg-white border-blue-primary-200"
-            />
-            <button onClick={() => onSubmit(search)}>
-                <SearchIcon
-                    color="text-blue-primary-200 hover:text-blue-primary-300"
-                    width="w-8"
-                    className="ml-2"
-                />
-            </button>
-        </div>
-    )
+function getResultsFromPages(pages) {
+    return pages.map((page) => {
+        return (
+            <Fragment key={page.data.pageNum}>
+                {page.data.results.map((result) => {
+                    if (result.type === "Publisher")
+                        return (
+                            <PublisherSearchResult
+                                key={`${result.type}${result.id}`}
+                                publisher={result}
+                            />
+                        )
+                    if (result.type === "Imprint")
+                        return (
+                            <ImprintSearchResult
+                                key={`${result.type}${result.id}`}
+                                imprint={result}
+                            />
+                        )
+                    if (result.type === "Series")
+                        return (
+                            <SeriesSearchResult
+                                key={`${result.type}${result.id}`}
+                                series={result}
+                            />
+                        )
+                    if (result.type === "Creator")
+                        return (
+                            <CreatorSearchResult
+                                key={`${result.type}${result.id}`}
+                                creator={result}
+                            />
+                        )
+                    if (result.type === "Comic")
+                        return (
+                            <ComicSearchResult key={`${result.type}${result.id}`} comic={result} />
+                        )
+                })}
+            </Fragment>
+        )
+    })
 }
-SearchBar.propTypes = { onSubmit: PropTypes.func.isRequired }
 
 export default function Search() {
     const [query, setQuery] = useState("")
-    const { data, error, fetchNextPage, hasNextPage, isFetching } = useSearch(query)
+    const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useSearch(query)
+    const hasData = data?.pages?.length > 0 && data?.pages[0]?.data?.results?.length > 0
+    const loadMoreRef = useRef()
+    useIntersectionObserver({
+        target: loadMoreRef,
+        onIntersect: fetchNextPage,
+        enabled: hasNextPage,
+    })
 
     return (
-        <Page title="Compendia Search" paddingY={"py-0"}>
+        <Page title="Compendia Search" paddingY={"py-0"} paddingX={"px-0"}>
             <PageHeading
                 heading="Search"
                 paddingTop={"pt-6"}
                 controls={<SearchBar onSubmit={(search) => setQuery(search)} />}
             />
             <div className="flex flex-col items-center">
-                {data && data.pages ? (
-                    <SearchResults pages={data.pages} isLoading={isFetching} />
-                ) : (
-                    <></>
-                )}
+                <ul className="flex flex-col items-center mb-2 w-screen sm:max-w-xl">
+                    {hasData ? (
+                        <>
+                            {getResultsFromPages(data.pages)}{" "}
+                            {isFetchingNextPage ? <DisappearedLoading /> : <></>}
+                            <Button
+                                className={`${
+                                    data.pages.length > 1 || isFetchingNextPage ? "invisible" : ""
+                                }`}
+                                ref={loadMoreRef}
+                                onClick={() => fetchNextPage()}
+                                disabled={isFetchingNextPage}
+                            >
+                                Load More Results
+                            </Button>
+                        </>
+                    ) : (
+                        <EmptyResultsMessage>No results...</EmptyResultsMessage>
+                    )}
+                </ul>
             </div>
         </Page>
     )

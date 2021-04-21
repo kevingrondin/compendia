@@ -46,29 +46,41 @@ async function getCreatorSearchResults(client, searchQuery) {
     return result.rows
 }
 
+async function getAllResultSets(client, searchQuery, pageNum) {
+    const publisherResults = await getPublisherSearchResults(client, searchQuery)
+    const imprintResults = await getImprintSearchResults(client, searchQuery)
+    const seriesResults = await getSeriesSearchResults(client, searchQuery)
+    const creatorResults = await getCreatorSearchResults(client, searchQuery)
+    const comicResults = await getComicSearchResults(client, searchQuery, pageNum)
+
+    return [
+        { results: publisherResults, type: "Publisher" },
+        { results: imprintResults, type: "Imprint" },
+        { results: seriesResults, type: "Series" },
+        { results: creatorResults, type: "Creator" },
+        { results: comicResults, type: "Comic" },
+    ]
+}
+
+async function getComicResultSet(client, searchQuery, pageNum) {
+    const comicResults = await getComicSearchResults(client, searchQuery, pageNum)
+    return [{ results: comicResults, type: "Comic" }]
+}
+
 export default async function handler(req, res) {
-    const { searchQuery, cursor } = req.query
+    const { searchQuery, pageNum } = req.query
     res.setHeader("Content-Type", "application/json")
-    if (!searchQuery || !cursor) {
+    if (!searchQuery || !pageNum) {
         res.status(200).json({ results: [] })
         return
     }
 
     const client = await db.connect()
     try {
-        const publisherResults = await getPublisherSearchResults(client, searchQuery)
-        const imprintResults = await getImprintSearchResults(client, searchQuery)
-        const seriesResults = await getSeriesSearchResults(client, searchQuery)
-        const creatorResults = await getCreatorSearchResults(client, searchQuery)
-        const comicResults = await getComicSearchResults(client, searchQuery, cursor)
-
-        const resultSets = [
-            { results: publisherResults, type: "Publisher" },
-            { results: imprintResults, type: "Imprint" },
-            { results: seriesResults, type: "Series" },
-            { results: creatorResults, type: "Creator" },
-            { results: comicResults, type: "Comic" },
-        ]
+        const resultSets =
+            pageNum < 1
+                ? await getAllResultSets(client, searchQuery, pageNum)
+                : await getComicResultSet(client, searchQuery, pageNum)
 
         const combinedResults = []
         resultSets.forEach((resultSet) =>
@@ -97,6 +109,7 @@ export default async function handler(req, res) {
 
         res.status(200).json({
             results: combinedResults,
+            pageNum,
         })
     } catch (error) {
         console.log(error)
