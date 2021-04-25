@@ -21,7 +21,8 @@ export default function Settings() {
                     Account
                 </Category>
                 <p>
-                    <span className="text-blue-primary-300 font-bold">Email:</span> {user.email}
+                    <span className="text-blue-primary-300 font-bold">Email:</span>{" "}
+                    {user?.email ?? "no email found..."}
                 </p>
                 <Button className="w-32 mt-4">
                     <Link href="/api/auth/logout">Log Out</Link>
