@@ -10,7 +10,7 @@ async function insertNewUser(client, res, metadata) {
     const result = await client.query(insert, params)
 
     if (result.rows.length !== 1) res.status(500).json({ message: "Could not create new user" })
-    else return result.row[0]
+    else return result.rows[0]
 }
 
 async function getExistingUser(client, res, userID) {
@@ -22,11 +22,10 @@ async function getExistingUser(client, res, userID) {
     else return result.rows[0]
 }
 
-async function getOrCreateUser(client, res, userID) {
-    const existingUser = await getExistingUser(client, res, userID)
+async function getOrCreateUser(client, res, metadata) {
+    const existingUser = await getExistingUser(client, res, metadata.issuer)
     const user = {}
-
-    if (existingUser.user_id) {
+    if (existingUser?.user_id) {
         user.id = existingUser.user_id
         user.email = existingUser.email
     } else {
@@ -38,15 +37,6 @@ async function getOrCreateUser(client, res, userID) {
     return user
 }
 
-// async function getCollectionID(client, res, userID) {
-//     const query = `SELECT collection_id FROM collections WHERE user_id = $1`
-//     const params = [userID]
-//     const result = await client.query(query, params)
-
-//     if (result.rows.length !== 1) res.status(500).json({ message: "Collection ID was not found" })
-//     else return result.rows[0].collectionID
-// }
-
 export default async function login(req, res) {
     const client = await db.connect()
     try {
@@ -54,11 +44,7 @@ export default async function login(req, res) {
         await magic.token.validate(didToken)
         const metadata = await magic.users.getMetadataByToken(didToken)
 
-        const user = await getOrCreateUser(client, res, metadata.issuer)
-
-        //TODO store collection ID in token cookie for use across the application
-        // const collectionID = await getCollectionID(client, res, user.id)
-        // user.collectionID = collectionID
+        const user = await getOrCreateUser(client, res, metadata)
 
         const token = jwt.sign(
             {
