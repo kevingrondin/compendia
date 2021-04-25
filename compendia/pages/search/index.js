@@ -8,7 +8,7 @@ import {
 import { Page } from "@components/common/Page"
 import { useSearch } from "@hooks/queries/search"
 import { Fragment, useRef, useState } from "react"
-import { SearchBar } from "@components/pages/Search/SearchBar"
+import { SearchBar } from "@components/pages/search/SearchBar"
 import { Button } from "@components/common/buttons/Button"
 import { PageHeading } from "@components/common/PageHeading"
 import useIntersectionObserver from "@hooks/useIntersectionObserver"
