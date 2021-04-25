@@ -12,7 +12,7 @@ export function CollectedComicsList({ isSideScroller = false }) {
     if (isLoading) return <DisappearedLoading />
     else if (isError) return <div>Error: {`${error && error.message}`}</div>
     else {
-        const collectedComics = data.collectedComics.map((comic) => (
+        const collectedComics = data.collectedComics?.map((comic) => (
             <li key={comic.id}>
                 <ComicCover
                     comicID={comic.id}
