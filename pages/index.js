@@ -7,10 +7,11 @@ export default function Home() {
     const user = useUser()
 
     useEffect(() => {
-        router.prefetch("/releases")
-        router.prefetch("/auth/login")
+        //router.prefetch("/releases")
+        //router.prefetch("/auth/login")
 
-        user ? router.push("/releases") : router.push("/auth/login")
+        //user ? router.push("/releases") : router.push("/auth/login")
+        router.push("/releases")
     }, [])
 
     return <></>
