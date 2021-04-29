@@ -1,4 +1,4 @@
-const db = require("../../../../util/database").instance
+import { db } from "@util/database"
 
 async function getCreatorDetails(client, creatorID) {
     const query = `SELECT cr.name, cr.creator_id FROM creators as cr WHERE cr.creator_id = $1`

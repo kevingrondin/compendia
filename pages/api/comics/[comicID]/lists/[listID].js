@@ -1,5 +1,5 @@
 import { getUserOrRedirect } from "@util/cookie"
-const db = require("../../../../../util/database").instance
+import { db } from "@util/database"
 
 async function removeComicFromList(client, comicID, listID) {
     const query = `DELETE FROM comic_list_comics WHERE comic_id = $1 AND comic_list_id = $2`

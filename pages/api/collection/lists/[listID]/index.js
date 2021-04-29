@@ -1,5 +1,5 @@
 import { getUserOrRedirect } from "@util/cookie"
-const db = require("../../../../../util/database").instance
+import { db } from "@util/database"
 
 async function getListDetails(client, listID) {
     const query = `SELECT name, comic_list_id FROM comic_lists WHERE comic_list_id = $1`

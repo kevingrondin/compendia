@@ -1,4 +1,4 @@
-const db = require("../../../../util/database").instance
+import { db } from "@util/database"
 
 async function getSeriesDetails(client, res, seriesID) {
     const query = `SELECT name, (SELECT COUNT(*) FROM comics WHERE series_id = $1) as entries_count

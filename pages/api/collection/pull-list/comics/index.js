@@ -1,4 +1,4 @@
-const db = require("../../../../../util/database").instance
+import { db } from "@util/database"
 import { getUserOrRedirect } from "@util/cookie"
 
 async function getPullListComics(client, comicDay, userID) {

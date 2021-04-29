@@ -1,4 +1,4 @@
-const db = require("../../../../util/database").instance
+import { db } from "@util/database"
 
 async function getCreatorComics(client, creatorTypes, creatorID) {
     const hasCreatorTypes = creatorTypes && creatorTypes.length > 0 && creatorTypes[0] !== "All"

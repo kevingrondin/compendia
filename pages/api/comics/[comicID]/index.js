@@ -1,6 +1,6 @@
 import { getUserOrRedirect } from "@util/cookie"
 import { format } from "date-fns"
-const db = require("../../../../util/database").instance
+import { db } from "@util/database"
 
 async function getCollectionID(client, res, userID) {
     const query = `SELECT collection_id FROM collections WHERE user_id = $1`

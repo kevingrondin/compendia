@@ -1,4 +1,4 @@
-const db = require("../../../util/database").instance
+import { db } from "@util/database"
 
 async function getComicSearchResults(client, searchQuery, cursor) {
     const query = `SELECT comic_id, title, item_number, format, cover_letter, variant_description

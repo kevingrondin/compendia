@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken"
-const db = require("../../../util/database").instance
+import { db } from "@util/database"
 import { magic } from "@util/magic"
 import { setTokenCookie } from "@util/cookie"
 

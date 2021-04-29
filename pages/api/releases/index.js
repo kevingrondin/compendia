@@ -1,6 +1,5 @@
 import moveIndex from "@util/moveIndex"
-
-const db = require("../../../util/database").instance
+import { db } from "@util/database"
 
 async function getReleases(client, comicDay) {
     const query = `SELECT comic_id, title, item_number, cover, p.publisher_id, p.name as publisher_name
