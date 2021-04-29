@@ -28,3 +28,5 @@ Compendia is a comic book collecting web application designed to be a simple sol
 -
 
 ## Future Developments
+
+-
