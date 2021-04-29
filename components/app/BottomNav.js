@@ -23,7 +23,7 @@ const icons = [
 
 export function BottomNav() {
     return (
-        <nav className="sm:hidden flex justify-center items-center absolute bottom-0 w-full shadow-sm border-t-2 border-blue-primary-300 bg-gradient-to-r from-blue-primary-200 to-blue-primary-50">
+        <nav className="sm:hidden flex justify-center items-center sticky bottom-0 w-full shadow-sm border-t-2 border-blue-primary-300 bg-gradient-to-r from-blue-primary-200 to-blue-primary-50">
             <ul className="flex justify-evenly items-center">
                 {icons.map((icon) => {
                     return (
