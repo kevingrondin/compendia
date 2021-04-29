@@ -13,7 +13,7 @@ export function Page({ title, children, paddingX = "", paddingY = "", disableScr
             <div className={`flex flex-col justify-start h-screen`}>
                 <Header />
                 <div
-                    className={`flex flex-col flex-grow p-6 mb-16 sm:mb-0 overflow-x-hidden 
+                    className={`flex flex-col flex-grow p-6 sm:mb-0 overflow-x-hidden 
                     ${paddingX} ${paddingY} ${disableScroll ? "overflow-y-hidden" : ""}`}
                 >
                     {children}

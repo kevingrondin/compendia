@@ -6,17 +6,17 @@ import { CollectionIcon } from "@components/icons/Collection"
 const icons = [
     {
         name: "Releases",
-        img: <PullListIcon color="text-blue-primary-400" width="w-8" height="h-8" />,
+        img: <PullListIcon color="text-blue-primary-400" width="w-6" height="h-6" />,
         href: "/releases",
     },
     {
         name: "Search",
-        img: <SearchIcon color="text-blue-primary-400" width="w-8" height="h-8" />,
+        img: <SearchIcon color="text-blue-primary-400" width="w-6" height="h-6" />,
         href: "/search",
     },
     {
         name: "Collection",
-        img: <CollectionIcon color="text-blue-primary-400" width="w-8" height="h-8" />,
+        img: <CollectionIcon color="text-blue-primary-400" width="w-6" height="h-6" />,
         href: "/collection",
     },
 ]
