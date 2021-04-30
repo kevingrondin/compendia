@@ -9,7 +9,11 @@ import { useSubscribeToSeries, useUnsubscribeFromSeries } from "@hooks/mutations
 export function SubscribeButton({ seriesID, isGraphicNovelSeries, comicID, marginClass }) {
     const { isLoading, isError, error, data } = usePullListSeries(seriesID)
     const [showOptions, setShowOptions] = useState(false)
-    const subscribeMutation = useSubscribeToSeries(seriesID, comicID ? comicID : null)
+    const subscribeMutation = useSubscribeToSeries(
+        seriesID,
+        isGraphicNovelSeries,
+        comicID ? comicID : null
+    )
     const unubscribeMutation = useUnsubscribeFromSeries(seriesID, comicID ? comicID : null)
 
     if (isLoading) return <DisappearedLoading />

@@ -70,7 +70,7 @@ export default function Search() {
     })
 
     return (
-        <Page title="Compendia Search" paddingY={"py-0"} paddingX={"px-5"} disableScroll={true}>
+        <Page title="Compendia Search" paddingY={"py-0"} paddingX={"px-0"} disableScroll={true}>
             <PageHeading
                 heading="Search"
                 paddingTop={"pt-6"}
@@ -78,7 +78,7 @@ export default function Search() {
                 controls={<SearchBar onSubmit={(search) => setQuery(search)} />}
             />
             <div className="flex flex-col items-center overflow-y-scroll pt-4">
-                <ul className="flex flex-col items-start mb-2 sm:max-w-xl">
+                <ul className="flex flex-col items-start mb-2 mx-6 sm:max-w-xl">
                     {isFetching ? (
                         <DisappearedLoading />
                     ) : hasData ? (

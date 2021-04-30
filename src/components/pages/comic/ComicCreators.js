@@ -10,7 +10,10 @@ export function ComicCreators({ creators }) {
                     <ul className="flex flex-wrap">
                         {creators.map((creator) => {
                             return (
-                                <li key={creator.id} className="text-lg mb-3 mr-12">
+                                <li
+                                    key={creator.id}
+                                    className="flex flex-col items-start text-lg mb-3 mr-12"
+                                >
                                     <span className="font-semibold">
                                         {creator.types.join(" / ") + ":"}
                                     </span>

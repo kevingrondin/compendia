@@ -25,7 +25,7 @@ async function updateSeriesDetails(client, res, reqBody, seriesID, userID) {
             include_omnibuses = $9,
             include_compendia = $10,
             include_all = $11,
-            include_graphic_novels = $12,
+            include_graphic_novels = $12
         FROM collections as c
         WHERE c.user_id = $1 AND series_id = $2
         RETURNING *`
@@ -41,7 +41,7 @@ async function updateSeriesDetails(client, res, reqBody, seriesID, userID) {
         reqBody.includeOmnibuses,
         reqBody.includeCompendia,
         reqBody.includeAll,
-        reqBody.includeGraphicNovels,
+        reqBody.isGraphicNovelSeries,
     ]
     const result = await client.query(query, params)
 
@@ -112,11 +112,11 @@ async function addComicsBySeriesAndFormats(
     await client.query(query, params)
 }
 
-async function subscribeToSeries(client, res, seriesID, userID) {
-    const query = `INSERT INTO pull_list_series(collection_id, series_id)
-        SELECT collection_id, $1 FROM collections WHERE user_id = $2
+async function subscribeToSeries(client, res, seriesID, isGraphicNovelSeries, userID) {
+    const query = `INSERT INTO pull_list_series(collection_id, series_id, include_single_issues, include_graphic_novels)
+        SELECT collection_id, $1, $2, $3 FROM collections WHERE user_id = $4
         RETURNING *`
-    const params = [seriesID, userID]
+    const params = [seriesID, !isGraphicNovelSeries, isGraphicNovelSeries, userID]
     const result = await client.query(query, params)
 
     if (result.rows.length !== 1) {
@@ -153,7 +153,8 @@ async function unsubscribeFromSeries(client, res, seriesID, userID) {
 }
 
 export default async function handler(req, res) {
-    const { seriesID, isGraphicNovelSeries } = req.query
+    const { seriesID } = req.query
+    const isGraphicNovelSeries = req.query.isGraphicNovelSeries === "true"
     const user = getUserOrRedirect(req, res)
     res.setHeader("Content-Type", "application/json")
 
@@ -212,7 +213,13 @@ export default async function handler(req, res) {
         } else if (req.method === "POST") {
             await client.query("BEGIN")
 
-            const seriesDetails = await subscribeToSeries(client, res, seriesID, user.id)
+            const seriesDetails = await subscribeToSeries(
+                client,
+                res,
+                seriesID,
+                isGraphicNovelSeries,
+                user.id
+            )
 
             if (seriesDetails.pull_list_series_id) {
                 await addComicsBySeries(client, seriesID, isGraphicNovelSeries, user.id)

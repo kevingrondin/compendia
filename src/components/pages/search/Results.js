@@ -18,6 +18,7 @@ export function ComicSearchResult({ comic }) {
     return (
         <SearchResult type={`${comic.type} - ${comic.format}`}>
             <PageLink
+                isTextLeft={true}
                 href={`/comics/${comic.id}`}
                 linkText={`${comic.title}${comic.itemNumber ? ` ${comic?.itemNumber}` : ""}${
                     comic.coverLetter || comic.variantDescription
@@ -37,7 +38,7 @@ ComicSearchResult.propTypes = {
 export function SeriesSearchResult({ series }) {
     return (
         <SearchResult type={series.type}>
-            <PageLink href={`/series/${series.id}`} linkText={`${series.name}`} />
+            <PageLink isTextLeft={true} href={`/series/${series.id}`} linkText={`${series.name}`} />
         </SearchResult>
     )
 }
@@ -48,7 +49,11 @@ SeriesSearchResult.propTypes = {
 export function CreatorSearchResult({ creator }) {
     return (
         <SearchResult type={creator.type}>
-            <PageLink href={`/creators/${creator.id}`} linkText={`${creator.name}`} />
+            <PageLink
+                isTextLeft={true}
+                href={`/creators/${creator.id}`}
+                linkText={`${creator.name}`}
+            />
         </SearchResult>
     )
 }
@@ -59,7 +64,11 @@ CreatorSearchResult.propTypes = {
 export function ImprintSearchResult({ imprint }) {
     return (
         <SearchResult type={imprint.type}>
-            <PageLink href={`/publishers/${imprint.id}`} linkText={`${imprint.name}`} />
+            <PageLink
+                isTextLeft={true}
+                href={`/publishers/${imprint.id}`}
+                linkText={`${imprint.name}`}
+            />
         </SearchResult>
     )
 }
@@ -70,7 +79,11 @@ ImprintSearchResult.propTypes = {
 export function PublisherSearchResult({ publisher }) {
     return (
         <SearchResult type={publisher.type}>
-            <PageLink href={`/publishers/${publisher.id}`} linkText={`${publisher.name}`} />
+            <PageLink
+                isTextLeft={true}
+                href={`/publishers/${publisher.id}`}
+                linkText={`${publisher.name}`}
+            />
         </SearchResult>
     )
 }

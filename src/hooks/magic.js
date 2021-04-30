@@ -1,7 +1,7 @@
 import { useEffect } from "react"
 import Router from "next/router"
 
-import useSWR from "swr" //TODO Refactor SWR to react-query
+import useSWR from "swr"
 
 const fetchUser = (url) =>
     fetch(url)

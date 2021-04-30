@@ -9,7 +9,7 @@ export function PublisherComicsList({ comicsList }) {
             {comicsList && comicsList.length > 0 ? (
                 <CoverListSideScroller>
                     {comicsList.map((comic) => (
-                        <li key={comic.id}>
+                        <li key={comic.id} className="pr-4 sm:pr-8">
                             <ComicCover
                                 comicID={comic.id}
                                 cover={comic.cover}

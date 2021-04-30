@@ -13,7 +13,7 @@ export function CollectedComicsList({ isSideScroller = false }) {
     else if (isError) return <div>Error: {`${error && error.message}`}</div>
     else {
         const collectedComics = data.collectedComics?.map((comic) => (
-            <li key={comic.id}>
+            <li key={comic.id} className="pr-4 sm:pr-8">
                 <ComicCover
                     comicID={comic.id}
                     cover={comic.cover}

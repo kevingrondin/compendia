@@ -27,7 +27,6 @@ CollectionDetail.propTypes = {
     children: PropTypes.element.isRequired,
 }
 
-//TODO refactor this to be simpler and easier to read
 export function CollectionDetails({ comicID }) {
     const [isEditMode, setIsEditMode] = useState(false)
     const [showUpdateButton, setShowUpdateButton] = useState(false)

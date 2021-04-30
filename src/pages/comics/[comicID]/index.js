@@ -22,12 +22,12 @@ import { CollectionDetails } from "@components/pages/comic/CollectionDetails"
 
 function Cover({ comic, onClick }) {
     return (
-        <div className="relative w-56 h-72 sm:w-64 sm:h-96" onClick={onClick}>
+        <div className="relative w-52 h-80 sm:w-64 sm:h-96" onClick={onClick}>
             <Image
                 src={comic.cover}
-                alt={`Cover art for ${comic.title} ${comic.itemNumber}`}
+                alt={`Cover art for ${comic.title} ${comic.itemNumber ? comic.itemNumber : ""}`}
                 layout="fill"
-                objectFit="contain"
+                objectFit="cover"
                 className="rounded cursor-pointer"
             />
         </div>
@@ -40,8 +40,8 @@ Cover.propTypes = {
 
 function Title({ comic }) {
     return (
-        <div className="flex flex-col justify-center md:justify-start items-center md:items-start ">
-            <h2 className="font-bold text-3xl">
+        <div className="flex flex-wrap flex-col justify-center md:justify-start items-center md:items-start ">
+            <h2 className="font-bold text-3xl inline">
                 <PageLink
                     href={`/series/${comic.seriesID}`}
                     linkText={comic.title}

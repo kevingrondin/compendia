@@ -11,6 +11,7 @@ function useExtraContent(extraContent) {
 export function PageLink({
     href,
     linkText,
+    isTextLeft = false,
     extraContent,
     hasArrow = false,
     arrowWidthClass = "",
@@ -23,11 +24,17 @@ export function PageLink({
 
     return (
         <Link href={href} passHref>
-            <a className={`flex ${className}`}>
+            <a
+                className={`inline-flex justify-center
+                ${hasArrow ? "" : "flex-wrap"}
+                ${isTextLeft ? "text-left" : "text-center"}
+                ${className}`}
+            >
                 <span
-                    className={`${
+                    className={`
+                    ${
                         hasUnderline
-                            ? `border-b-4 ${
+                            ? `border-b-4 mb-2 ${
                                   isDarkMode
                                       ? "border-blue-primary-400 hover:border-white"
                                       : "border-blue-primary-100 hover:border-blue-primary-300"
@@ -56,6 +63,7 @@ export function PageLink({
 PageLink.propTypes = {
     href: PropTypes.string.isRequired,
     linkText: PropTypes.string.isRequired,
+    isTextLeft: PropTypes.bool,
     extraContent: PropTypes.oneOfType([PropTypes.element, PropTypes.string]),
     hasArrow: PropTypes.bool,
     arrowWidthClass: PropTypes.string,
