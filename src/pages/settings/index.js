@@ -1,10 +1,10 @@
-import { useEffect } from "react"
-import { useRouter } from "next/router"
-import { useUser } from "@hooks/magic"
-import { Category } from "@components/common/Category"
-import { Page } from "@components/common/Page"
-import { Button } from "@components/common/buttons/Button"
 import Link from "next/link"
+import { useEffect } from "react"
+import { useUser } from "@hooks/magic"
+import { useRouter } from "next/router"
+import { Page } from "@components/common/Page"
+import { Category } from "@components/common/Category"
+import { Button } from "@components/common/buttons/Button"
 
 export default function Settings() {
     const router = useRouter()
@@ -16,7 +16,7 @@ export default function Settings() {
 
     return (
         <Page title="Settings">
-            <div className="w-6/12">
+            <div className="sm:w-6/12">
                 <Category size="MD" className="mb-4">
                     Account
                 </Category>

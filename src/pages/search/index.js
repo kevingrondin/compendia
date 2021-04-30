@@ -8,12 +8,12 @@ import {
 import { Page } from "@components/common/Page"
 import { useSearch } from "@hooks/queries/search"
 import { Fragment, useRef, useState } from "react"
-import { SearchBar } from "@components/pages/search/SearchBar"
 import { Button } from "@components/common/buttons/Button"
 import { PageHeading } from "@components/common/PageHeading"
+import { SearchBar } from "@components/pages/search/SearchBar"
 import useIntersectionObserver from "@hooks/useIntersectionObserver"
-import { EmptyResultsMessage } from "@components/common/EmptyResultsMessage"
 import DisappearedLoading from "react-loadingg/lib/DisappearedLoading"
+import { EmptyResultsMessage } from "@components/common/EmptyResultsMessage"
 
 function getResultsFromPages(pages) {
     return pages.map((page) => {
@@ -70,7 +70,7 @@ export default function Search() {
     })
 
     return (
-        <Page title="Compendia Search" paddingY={"py-0"} paddingX={"px-0"} disableScroll={true}>
+        <Page title="Compendia Search" paddingY={"py-0"} paddingX={"px-5"} disableScroll={true}>
             <PageHeading
                 heading="Search"
                 paddingTop={"pt-6"}

@@ -1,7 +1,7 @@
 import { db } from "@util/database"
 
 async function getSeriesDetails(client, res, seriesID) {
-    const query = `SELECT name, (SELECT COUNT(*) FROM comics WHERE series_id = $1) as entries_count
+    const query = `SELECT name, is_graphic_novel_series, (SELECT COUNT(*) FROM comics WHERE series_id = $1) as entries_count
         FROM series WHERE series_id = $1`
     const params = [seriesID]
     const result = await client.query(query, params)
@@ -36,6 +36,7 @@ export default async function handler(req, res) {
         res.status(200).json({
             id: parseInt(seriesID),
             name: series.name,
+            isGraphicNovelSeries: series.is_graphic_novel_series,
             entriesCount: series.entries_count,
             entries: seriesEntriesList.map((comic) => {
                 return {

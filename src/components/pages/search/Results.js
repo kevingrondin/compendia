@@ -19,7 +19,7 @@ export function ComicSearchResult({ comic }) {
         <SearchResult type={`${comic.type} - ${comic.format}`}>
             <PageLink
                 href={`/comics/${comic.id}`}
-                linkText={`${comic.title} ${comic.itemNumber}${
+                linkText={`${comic.title}${comic.itemNumber ? ` ${comic?.itemNumber}` : ""}${
                     comic.coverLetter || comic.variantDescription
                         ? ` -${comic.coverLetter ? ` Cover ${comic.coverLetter}` : ""} ${
                               comic.variantDescription ? comic.variantDescription : ""

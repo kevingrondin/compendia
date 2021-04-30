@@ -6,7 +6,7 @@ export function useAddComicToPullList(comicID) {
 
     return useMutation(() => axios.post(`/api/collection/pull-list/comics/${comicID}`), {
         onSuccess: () => {
-            queryClient.setQueryData(["pull-list-comics", comicID], { isComicPulled: true })
+            queryClient.setQueryData(["pull-list-comic", comicID], { isComicPulled: true })
         },
     })
 }
@@ -16,20 +16,26 @@ export function useRemoveComicFromPullList(comicID) {
 
     return useMutation(() => axios.delete(`/api/collection/pull-list/comics/${comicID}`), {
         onSuccess: () => {
-            queryClient.setQueryData(["pull-list-comics", comicID], { isComicPulled: false })
+            queryClient.setQueryData(["pull-list-comic", comicID], { isComicPulled: false })
         },
     })
 }
 
-export function useSubscribeToSeries(seriesID, comicID) {
+export function useSubscribeToSeries(seriesID, isGraphicNovelSeries, comicID) {
     const queryClient = useQueryClient()
 
-    return useMutation(() => axios.post(`/api/collection/pull-list/series/${seriesID}`), {
-        onSuccess: (seriesDetails) => {
-            queryClient.setQueryData(["pull-list-series", seriesID], { ...seriesDetails.data })
-            if (comicID) queryClient.refetchQueries(["pull-list-comics", comicID])
-        },
-    })
+    return useMutation(
+        () =>
+            axios.post(
+                `/api/collection/pull-list/series/${seriesID}?isGraphicNovelSeries=${isGraphicNovelSeries}`
+            ),
+        {
+            onSuccess: (seriesDetails) => {
+                queryClient.setQueryData(["pull-list-series", seriesID], { ...seriesDetails.data })
+                if (comicID) queryClient.refetchQueries(["pull-list-comic", comicID])
+            },
+        }
+    )
 }
 
 export function useUnsubscribeFromSeries(seriesID, comicID) {
@@ -38,7 +44,7 @@ export function useUnsubscribeFromSeries(seriesID, comicID) {
     return useMutation(() => axios.delete(`/api/collection/pull-list/series/${seriesID}`), {
         onSuccess: () => {
             queryClient.setQueryData(["pull-list-series", seriesID], { isSubscribed: false })
-            if (comicID) queryClient.refetchQueries(["pull-list-comics", comicID])
+            if (comicID) queryClient.refetchQueries(["pull-list-comic", comicID])
         },
     })
 }

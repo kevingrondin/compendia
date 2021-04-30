@@ -1,13 +1,13 @@
 import _ from "lodash"
 import PropTypes from "prop-types"
-import useDeepCompareEffect from "use-deep-compare-effect"
+import { ArrowIcon } from "@icons/Arrow"
+import { DisappearedLoading } from "react-loadingg"
 import { useEffect, useState, useReducer } from "react"
 import { Button } from "@components/common/buttons/Button"
-import { ArrowIcon } from "@icons/Arrow"
-import { Options } from "@components/common/buttons/OptionsButton"
+import useDeepCompareEffect from "use-deep-compare-effect"
 import { usePullListSeries } from "@hooks/queries/pull-list"
+import { Options } from "@components/common/buttons/OptionsButton"
 import { useUpdatePullListDetails } from "@hooks/mutations/pull-list"
-import { DisappearedLoading } from "react-loadingg"
 
 const variants = [
     {
@@ -44,10 +44,6 @@ const formats = [
     {
         key: "includeCompendia",
         label: "Compendia",
-    },
-    {
-        key: "includeGraphicNovels",
-        label: "Graphic Novels",
     },
     {
         key: "includeAll",

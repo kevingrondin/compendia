@@ -1,12 +1,12 @@
-import PropTypes from "prop-types"
 import { useState } from "react"
+import PropTypes from "prop-types"
+import { DisappearedLoading } from "react-loadingg"
+import { usePullListSeries } from "@hooks/queries/pull-list"
 import { OptionsButton } from "@components/common/buttons/OptionsButton"
 import { SubscribeOptions } from "@components/pages/comic/SubscribeOptions"
-import { usePullListSeries } from "@hooks/queries/pull-list"
 import { useSubscribeToSeries, useUnsubscribeFromSeries } from "@hooks/mutations/pull-list"
-import { DisappearedLoading } from "react-loadingg"
 
-export function SubscribeButton({ seriesID, comicID, marginClass }) {
+export function SubscribeButton({ seriesID, isGraphicNovelSeries, comicID, marginClass }) {
     const { isLoading, isError, error, data } = usePullListSeries(seriesID)
     const [showOptions, setShowOptions] = useState(false)
     const subscribeMutation = useSubscribeToSeries(seriesID, comicID ? comicID : null)
@@ -20,6 +20,7 @@ export function SubscribeButton({ seriesID, comicID, marginClass }) {
                 primaryText="Subscribe"
                 secondaryText="Subscribed"
                 isActive={data.isSubscribed}
+                hideToggleWhenActive={isGraphicNovelSeries}
                 onPrimaryClick={subscribeMutation}
                 onSecondaryClick={unubscribeMutation}
                 options={<SubscribeOptions seriesID={seriesID} isOptionsVisible={showOptions} />}
@@ -31,6 +32,7 @@ export function SubscribeButton({ seriesID, comicID, marginClass }) {
 }
 SubscribeButton.propTypes = {
     seriesID: PropTypes.number.isRequired,
+    isGraphicNovelSeries: PropTypes.bool.isRequired,
     comicID: PropTypes.number,
     marginClass: PropTypes.string,
 }

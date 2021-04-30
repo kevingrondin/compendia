@@ -109,6 +109,7 @@ export function OptionsButton({
     options,
     showOptions,
     setShowOptions,
+    hideToggleWhenActive = false,
 }) {
     const [show, setShow] = useState(false)
     const showOptionsGetter = showOptions ? showOptions : show
@@ -122,7 +123,7 @@ export function OptionsButton({
                         onClick={() => onSecondaryClick.mutate()}
                         disabled={isDisabled}
                         className={`text-center text-white text-lg py-2 px-4 max-h-14 cursor-pointer shadow-sm border-b-4 hover:border-b-2 hover:border-t-2 
-                            ${roundedClass} rounded-r-none
+                            ${roundedClass} ${hideToggleWhenActive ? "" : "rounded-r-none"}
                             ${secondaryColors} ${className}`}
                     >
                         <span className="flex items-center">
@@ -131,13 +132,18 @@ export function OptionsButton({
                             <CheckIcon />
                         </span>
                     </button>
-                    <OptionsToggle
-                        roundedClass={roundedClass}
-                        isDisabled={isDisabled}
-                        options={options}
-                        showOptions={showOptionsGetter}
-                        setShowOptions={showOptionsSetter}
-                    />
+
+                    {hideToggleWhenActive ? (
+                        <></>
+                    ) : (
+                        <OptionsToggle
+                            roundedClass={roundedClass}
+                            isDisabled={isDisabled}
+                            options={options}
+                            showOptions={showOptionsGetter}
+                            setShowOptions={showOptionsSetter}
+                        />
+                    )}
                 </div>
             </div>
         )
@@ -171,6 +177,7 @@ OptionsButton.propTypes = {
     options: PropTypes.element.isRequired,
     showOptions: PropTypes.bool,
     setShowOptions: PropTypes.func,
+    hideToggleWhenActive: PropTypes.bool,
 }
 
 export function SVGOptionsButton({

@@ -63,15 +63,21 @@ async function clearComicsBySeries(client, seriesID, userID) {
     return
 }
 
-async function addComicsBySeriesAndFormats(client, reqBody, seriesID, userID) {
+async function addComicsBySeriesAndFormats(
+    client,
+    reqBody,
+    seriesID,
+    isGraphicNovelSeries,
+    userID
+) {
     const formats = []
-    if (reqBody.includeSingleIssues) formats.push("'Comic'")
-    if (reqBody.includeTPBs) formats.push("'Trade Paperback'")
-    if (reqBody.includeHardcovers) formats.push("'Hardcover'")
-    if (reqBody.includeGraphicNovels) {
+    if (isGraphicNovelSeries) {
         formats.push("'Graphic Novel'")
         formats.push("'Graphic Novel Hardcover'")
     }
+    if (reqBody.includeSingleIssues) formats.push("'Single Issue'")
+    if (reqBody.includeTPBs) formats.push("'Trade Paperback'")
+    if (reqBody.includeHardcovers) formats.push("'Hardcover'")
     if (reqBody.includeOmnibuses) {
         formats.push("'Omnibus'")
         formats.push("'Omnibus Hardcover'")
@@ -86,17 +92,24 @@ async function addComicsBySeriesAndFormats(client, reqBody, seriesID, userID) {
         CROSS JOIN comics as c FULL JOIN series as s USING(series_id)
         WHERE col.user_id = $1 AND c.series_id = $2 AND
         c.format IN (${formats.join(", ")})
-        ${!reqBody.includePrintings ? "AND c.printing = 1" : ""}
         ${
-            reqBody.includeSingleIssues && !reqBody.includeVariantCovers
-                ? "AND c.version_of = NULL"
-                : ""
+            isGraphicNovelSeries === false
+                ? `${
+                      reqBody.includeSubPrintings === false
+                          ? "AND NOT ('spr' = ANY (variant_types))"
+                          : ""
+                  }
+                ${reqBody.includeReprints === false ? "AND NOT ('rpr' = ANY (variant_types))" : ""}
+                ${
+                    reqBody.includeVariantCovers === false
+                        ? "AND NOT (('cvr' = ANY (variant_types)) OR (('cvl' = ANY (variant_types)) AND (is_variant_root = false OR is_temp_variant_root = true)))"
+                        : ""
+                }`
+                : ``
         }
         AND c.release_date >= CURRENT_DATE`
     const params = [userID, seriesID]
     await client.query(query, params)
-
-    //TODO what about reprints above?
 }
 
 async function subscribeToSeries(client, res, seriesID, userID) {
@@ -112,12 +125,16 @@ async function subscribeToSeries(client, res, seriesID, userID) {
     } else return result.rows[0]
 }
 
-async function addComicsBySeries(client, seriesID, userID) {
+async function addComicsBySeries(client, seriesID, isGraphicNovelSeries, userID) {
     const query = `INSERT INTO pull_list_comics (comic_id, collection_id)
         SELECT col.collection_id, c.comic_id FROM collections as col
         CROSS JOIN comics as c FULL JOIN series as s USING(series_id)
-        WHERE col.user_id = $1 AND c.series_id = $2 AND c.format = 'Comic'
-        AND c.printing = 1 AND c.version_of = NULL AND c.release_date >= CURRENT_DATE`
+        WHERE col.user_id = $1 AND c.series_id = $2 AND ${
+            isGraphicNovelSeries
+                ? `(c.format = 'Graphic Novel' OR c.format = 'Graphic Novel Hardcover')`
+                : `c.format = 'Single Issue'`
+        }
+        AND c.is_variant_root = true AND c.is_temp_variant_root = false AND c.release_date >= CURRENT_DATE`
     const params = [userID, seriesID]
     await client.query(query, params)
 }
@@ -136,8 +153,7 @@ async function unsubscribeFromSeries(client, res, seriesID, userID) {
 }
 
 export default async function handler(req, res) {
-    //TODO Handle Graphic Novel Series
-    const { seriesID } = req.query
+    const { seriesID, isGraphicNovelSeries } = req.query
     const user = getUserOrRedirect(req, res)
     res.setHeader("Content-Type", "application/json")
 
@@ -199,7 +215,7 @@ export default async function handler(req, res) {
             const seriesDetails = await subscribeToSeries(client, res, seriesID, user.id)
 
             if (seriesDetails.pull_list_series_id) {
-                await addComicsBySeries(client, seriesID, user.id)
+                await addComicsBySeries(client, seriesID, isGraphicNovelSeries, user.id)
                 await client.query("COMMIT")
 
                 res.status(201).json({

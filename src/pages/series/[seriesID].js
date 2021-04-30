@@ -32,7 +32,10 @@ export default function SeriesDetail() {
                     isSubHeadingFirst={true}
                     controls={
                         <span className="text-base mt-4">
-                            <SubscribeButton seriesID={series.id} />
+                            <SubscribeButton
+                                seriesID={series.id}
+                                isGraphicNovelSeries={series.isGraphicNovelSeries}
+                            />
                         </span>
                     }
                 />

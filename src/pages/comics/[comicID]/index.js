@@ -1,24 +1,24 @@
 import Image from "next/image"
 import PropTypes from "prop-types"
-import { useEffect, useState } from "react"
 import { useRouter } from "next/router"
+import { useEffect, useState } from "react"
 import { useQueryClient } from "react-query"
 import { Page } from "@components/common/Page"
-import { FullScreenModal } from "@components/common/FullScreenModal"
-import { PageLink } from "@components/common/PageLink"
+import { useComic } from "@hooks/queries/comic"
 import { useComicDay } from "@hooks/useComicDay"
 import { getDateFromPGString } from "@util/date"
-import { CollectionDetails } from "@components/pages/comic/CollectionDetails"
-import { CollectButton } from "@components/pages/comic/CollectButton"
-import { PullButton } from "@components/pages/comic/PullButton"
-import { SubscribeButton } from "@components/pages/comic/SubscribeButton"
-import { ComicCreators } from "@components/pages/comic/ComicCreators"
-import { ComicDetails } from "@components/pages/comic/ComicDetails"
-import { Lists } from "@components/pages/comic/Lists"
-import { useComic } from "@hooks/queries/comic"
 import { usePluralize } from "@hooks/usePluralize"
 import { DisappearedLoading } from "react-loadingg"
+import { Lists } from "@components/pages/comic/Lists"
+import { PageLink } from "@components/common/PageLink"
+import { PullButton } from "@components/pages/comic/PullButton"
+import { ComicDetails } from "@components/pages/comic/ComicDetails"
+import { FullScreenModal } from "@components/common/FullScreenModal"
+import { CollectButton } from "@components/pages/comic/CollectButton"
+import { ComicCreators } from "@components/pages/comic/ComicCreators"
+import { SubscribeButton } from "@components/pages/comic/SubscribeButton"
 import { EmptyResultsMessage } from "@components/common/EmptyResultsMessage"
+import { CollectionDetails } from "@components/pages/comic/CollectionDetails"
 
 function Cover({ comic, onClick }) {
     return (
@@ -130,6 +130,7 @@ function Buttons({ comic }) {
 
             <SubscribeButton
                 seriesID={comic.seriesID}
+                isGraphicNovelSeries={comic.isGraphicNovelSeries}
                 comicID={comic.id}
                 marginClass="sm:mb-6 mx-3"
             />
@@ -212,7 +213,11 @@ export default function Comic() {
     else if (!comicID || comic === undefined) return <></>
     else {
         return (
-            <Page title={`${comic.title} ${comic.itemNumber} - ${comic.publisherName}`}>
+            <Page
+                title={`${comic.title}${comic.itemNumber ? ` ${comic.itemNumber}` : ""} - ${
+                    comic.publisherName
+                }`}
+            >
                 <div className="flex flex-col justify-center mb-10">
                     <div className="flex flex-wrap justify-center">
                         <Cover comic={comic} onClick={() => setShowFullCover(!showFullCover)} />
