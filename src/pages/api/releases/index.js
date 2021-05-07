@@ -16,8 +16,8 @@ function movePremierPublishersToTop(publishers) {
     const sortedArray = [...publishers]
     const imageIndex = sortedArray.findIndex((pub) => pub.name === "Image Comics")
     const marvelIndex = sortedArray.findIndex((pub) => pub.name === "Marvel Comics")
-    moveIndex(sortedArray, imageIndex, 0)
-    moveIndex(sortedArray, marvelIndex, 1)
+    if (imageIndex > -1) moveIndex(sortedArray, imageIndex, 0)
+    if (marvelIndex > -1) moveIndex(sortedArray, marvelIndex, 1)
     return sortedArray
 }
 
