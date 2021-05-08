@@ -21,7 +21,7 @@ Compendia is an open-source comic book collecting web application where you can 
 
 ## Problem
 
-Film fans have IMDb, book fans have Goodreads, but what do comic fans have? As a comic book reader and collector myself, I wanted an app that I could use as a digital companion to my collection as well as a tool to find new comics to read. There are a few websites / apps out there that try to address this gap, but they all have a not-so-great user experience, and are not friendly to new comic book readers or people looking to get into comics for the first time.
+Film fans have IMDb, book fans have Goodreads, but what do comic fans have? As a comic book reader and collector myself, I wanted an app that I could use as a digital companion to my collection as well as a tool to find new comics to read. There are a few websites / apps out there that try to address this gap, but they all have a not-so-great user experience, do not place value on [creator-owned](https://en.wikipedia.org/wiki/Creator_ownership_in_comics) / independent comic stories and are not friendly to new comic book readers or people looking to get into comics for the first time.
 
 ## Action
 
@@ -29,7 +29,7 @@ First, I began doing an in-depth research of the comic industry and then began d
 
 ## Result
 
-Now, Compendia is a fully-functioning MVP of the vision I had of a Comic Collector's companion. While it does have a great initial set of features, I plan on maintaining and improving it with even more functionality as time goes on.
+Now, Compendia is a fully-functioning MVP of the vision I had of a Comic Collector's companion. While it does have a great initial set of features, I plan on maintaining and improving it with even more functionality as time goes on. My ultimate vision for Compendia is for it to be a tool to make the comic industry and the wealth of incredible stories easily navigable, and a place comic creators can go to promote their works and connect with their fans.
 
 ## Future Developments (so far)
 
