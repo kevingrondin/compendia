@@ -25,7 +25,7 @@ Film fans have IMDb, book fans have Goodreads, but what do comic fans have? As a
 
 ## Action
 
-First, I began doing an in-depth research of the comic industry and then began drafting requirements, feature sets, and designs. After consolidating the list of features and requirements down to a reasonable MVP, I started work building a web scraper that would retrieve and parse all of the new comic releases as they come out each week. Once I had a working method of retrieving data via the web scraper I wrote (which you can find [here](https://github.com/gchartier/compendia-scraper), I began development of a Compendia Android app until finally pivoting to a web app using NextJS instead.
+First, I began doing an in-depth research of the comic industry and then began drafting requirements, feature sets, and designs. After consolidating the list of features and requirements down to a reasonable MVP, I started work building a web scraper that would retrieve and parse all of the new comic releases as they come out each week. Once I had a working method of retrieving data via the web scraper I wrote (which you can find [here](https://github.com/gchartier/compendia-scraper)), I began development of a Compendia Android app until finally pivoting to a web app using NextJS instead.
 
 ## Result
 
