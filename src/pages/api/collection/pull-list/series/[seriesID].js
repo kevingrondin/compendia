@@ -126,7 +126,7 @@ async function subscribeToSeries(client, res, seriesID, isGraphicNovelSeries, us
 }
 
 async function addComicsBySeries(client, seriesID, isGraphicNovelSeries, userID) {
-    const query = `INSERT INTO pull_list_comics (comic_id, collection_id)
+    const query = `INSERT INTO pull_list_comics (collection_id, comic_id)
         SELECT col.collection_id, c.comic_id FROM collections as col
         CROSS JOIN comics as c FULL JOIN series as s USING(series_id)
         WHERE col.user_id = $1 AND c.series_id = $2 AND ${
