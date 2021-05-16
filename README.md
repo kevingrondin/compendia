@@ -1,10 +1,10 @@
-# Compendia - Full-stack comic book collecting NextJS/React web application
+# Compendia
 
 ![Vercel](http://therealsujitk-vercel-badge.vercel.app/?app=compendia)
 
 ## About
 
-Compendia is an open-source comic book collecting web application where you can explore the world of new comic book releases, track your pull list, and organize your collection. If you're a comic reader, check it out [here](https://mycompendia.com)!
+Compendia is a full-stack open-source comic book collecting web application where you can explore the world of new comic book releases, track your pull list, and organize your collection. If you're a comic reader, check it out [here](https://mycompendia.com)!
 
 ## Technologies Used
 
